@@ -9,17 +9,22 @@ const caseSchema = new Schema({
     },
     incidentDate: {
         type: Date,
-        required: true
+        required: true,
+        default: Date.now()
     },
     incidentHour: String,
     state: String,
     lga: String,
     ward: String,
     incidentDescription: String,
-    evidence: [{type: String}],
+    evidence: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Evidence",
+    },
     reporterName: String,
-    contactDetail: String,
-    victimRelationship: String,
+    reporterEmai: String,
+    reporterPhoneNumber: String,
+    victimReporterRelationship: String,
     victimFullname: String,
     victimGender: {
         type: String,
@@ -28,8 +33,18 @@ const caseSchema = new Schema({
     },
     victimOccupation: String,
     victimAge: Number,
-    phoneNumber: String,
-    email: String
+    victimPhoneNumber: String,
+    victimEmail: String,
+    suspectName: String,
+    suspectOccupation: String,
+    organizationType: {
+        type: String,
+        enum: ["Government", "Ngo", "Private", "Self Employed", "Others", "Unknown"]
+    },
+    organization: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Organization",
+    },
 });
 
 const Case = mongoose.model("Case", caseSchema);
