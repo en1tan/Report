@@ -12,7 +12,7 @@ exports.uploads = (file, fileName) => {
     cloudinary.uploader.upload(
       file,
       {
-        public_id: `stulet/property/${fileName}`,
+        public_id: `sorosoke/${fileName}`,
         resource_type: "auto",
       },
       (err, res) => {

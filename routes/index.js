@@ -1,7 +1,7 @@
 const express = require("express");
 
 const user = require("./user");
-// const property = require("./property");
+const cases = require("./case");
 // const request = require("./requests");
 // const error = require("../controllers/errors");
 
@@ -10,7 +10,7 @@ const user = require("./user");
 const router = express.Router();
 
 router.use("/user", user);
-// router.use("/property", property);
+router.use("/case", cases);
 // router.use("/request", request);
 // router.all("*", error.globalErrors);
 
