@@ -30,7 +30,7 @@ exports.addProgress = async (req, res, next) => {
   try {
     const progress = await Progress.findOneAndUpdate(
       { _id: req.params.id, caseId: req.params.caseId },
-      { $push: { reports: req.body.report } },
+      { $push: { reports: req.body } },
       { new: true }
     );
     const data = {
