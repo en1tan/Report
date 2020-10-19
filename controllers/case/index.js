@@ -39,13 +39,35 @@ exports.saveEvidence = async (req, res, next) => {
     const newEvidence = await Evidence.create({
       ...allEvidence,
     });
+    
     const updatedCase = await Case.findOneAndUpdate(
       { _id: req.params.id },
       { evidence: newEvidence._id },
       {new: true}
     );
-    res.send(updatedCase);
+
+    const data = {
+      case: updatedCase,
+    };
+
+    return successWithData(res, 201, "Evidence Saved Succesfully", data);
   } catch (err) {
     console.log(err);
   }
 };
+
+exports.editEvidence = async (req, res, next) => {
+  try {
+    const editedCase = await Property.findOneAndUpdate(
+      {  _id: req.params.id },
+      {...req.body},
+      { new: true }
+    );
+    const data = {
+      case: editedCase,
+    };
+    return successWithData(res, 201, "Case Saved Succesfully", data);
+  } catch (err) {
+
+  }
+}
