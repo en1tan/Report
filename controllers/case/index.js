@@ -52,13 +52,14 @@ exports.saveEvidence = async (req, res, next) => {
 
     return successWithData(res, 201, "Evidence Saved Succesfully", data);
   } catch (err) {
-    console.log(err);
+    return tryCatchError(res, err);
   }
 };
 
 exports.editEvidence = async (req, res, next) => {
+  console.log("here")
   try {
-    const editedCase = await Property.findOneAndUpdate(
+    const editedCase = await Case.findOneAndUpdate(
       {  _id: req.params.id },
       {...req.body},
       { new: true }
@@ -68,6 +69,6 @@ exports.editEvidence = async (req, res, next) => {
     };
     return successWithData(res, 201, "Case Saved Succesfully", data);
   } catch (err) {
-
+    return tryCatchError(res, err);
   }
 }
