@@ -11,10 +11,16 @@ const contactUsSchema = new Schema({
         type: String
     },
     email: {
-        type: String
+        type: String,
+        required: [true, "Email is required"]
+    },
+    subject: {
+        type: String,
+        required: [true, "Subject is required"]
     },
     message: {
-        type: String
+        type: String,
+        required: [true, "Message is required"]
     }
 });
 
