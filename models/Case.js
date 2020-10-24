@@ -15,20 +15,20 @@ const caseSchema = new Schema({
   incidentHour: String,
   state: String,
   lga: String,
-  ward: String,
+  address: String,
   incidentDescription: String,
   evidence: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Evidence",
   },
+  incidentReportedBy: String,
   reporterName: String,
-  reporterEmail: String,
-  reporterPhoneNumber: String,
+  contactDetails: String,
   victimReporterRelationship: String,
   victimFullname: String,
-  victimGender: {
+  gender: {
     type: String,
-    enum: ["male", "female", "other"],
+    enum: ["Male", "Female", "other"],
     default: "other",
   },
   victimOccupation: String,
@@ -49,9 +49,13 @@ const caseSchema = new Schema({
     ],
   },
   organization: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Organization",
+    type: String,
   },
+  otherDetails: String
+  // organization: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "Organization",
+  // },
 });
 
 const Case = mongoose.model("Case", caseSchema);

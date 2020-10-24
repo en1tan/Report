@@ -13,13 +13,25 @@ const {
   successNoData,
 } = require("../../utils/successHandler");
 
+exports.getAllCase = async (req, res, next) => {
+  try {
+    const cases = await Case.find();
+    const data = {
+      cases
+    };
+    return successWithData(res, 200, "Case Fetched Succesfully", data);
+  } catch (err) {
+    return tryCatchError(res, err);
+  }
+}
+
 exports.createCase = async (req, res, next) => {
   try {
     const newCase = await Case.create({
       ...req.body,
     });
     const data = {
-      property: newCase,
+      case: newCase,
     };
     return successWithData(res, 200, "Case Created Succesfully", data);
   } catch (err) {

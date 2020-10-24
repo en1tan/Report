@@ -8,6 +8,7 @@ const uploadImage = require("../../middleware/imageUpload");
 
 const router = express.Router();
 
+router.get('/', caseController.getAllCase);
 router.post('/create', caseController.createCase);
 router.patch('/:id/evidence', uploadImage, caseController.saveEvidence);
 router.patch('/:id/case', caseController.editEvidence);
