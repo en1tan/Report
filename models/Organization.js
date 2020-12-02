@@ -5,10 +5,7 @@ const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM
 const Schema = mongoose.Schema;
 
 const organizationSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-  },
+
   orgID: {
     type: String,
     default: () => nanoid()
@@ -19,7 +16,7 @@ const organizationSchema = new Schema({
   },
   orgType: {
     type: String,
-    enum: ["Government", "NGO", "Private", "Self Employed", "Others", "Unknown"]
+    enum: ["Government", "NGO", "Private", "Self Employed", "Others"]
   },
   description: {
     type: String
@@ -59,12 +56,15 @@ const organizationSchema = new Schema({
   country: {
     type: String,
   },
-  hq: {
+  hqorbranch: {
     type: String,
   },
-  dateAdded: {
+  timestamp: {
     type: Date,
     default: Date.now()
+  },
+  dateUpdated: {
+    type: Date,
   },
 });
 

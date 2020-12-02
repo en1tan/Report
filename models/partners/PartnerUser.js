@@ -24,15 +24,14 @@ const partnerUserSchema = new Schema({
   },
   lastName: {
     type: String,
-    required: [true, "First Name is required"],
+    required: [true, "Last Name is required"],
   },
   middleName: {
     type: String,
-    required: [true, "First Name is required"],
   },
   userName: {
     type: String,
-    required: [true, "First Name is required"],
+    required: [true, "User Name is required"],
   },
   email: {
     type: String,
@@ -42,16 +41,15 @@ const partnerUserSchema = new Schema({
   },
   phoneNumber: {
     type: String,
-    required: [true, "Please provide your phone number"],
+    required: [true, "Please provide the Phone Number"],
   },
   dob: {
     type: Date,
-    required: [true, "Please provide your phone number"],
+    required: [true, "Please provide the Date of Birth"],
   },
   gender: {
     type: String,
-    enum: ["Male", "Female", "other"],
-    default: "other"
+    enum: ["Male", "Female"],
   },
   userType: {
     type: String,
@@ -71,7 +69,7 @@ const partnerUserSchema = new Schema({
   avatar: String,
   password: {
     type: String,
-    required: [true, "Please provide a pasword"],
+    required: [true, "Please provide a Password"],
     minlength: 4,
   },
   onlineStatus: {
@@ -82,6 +80,13 @@ const partnerUserSchema = new Schema({
   active: {
     type: Boolean,
     default: true,
+  },
+  dateCreated: {
+    type: Date,
+    default: Date.now(),
+  },
+  dateUpdated: {
+    type: Date,
   },
 });
 

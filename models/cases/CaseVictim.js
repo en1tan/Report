@@ -20,30 +20,27 @@ const caseVictimSchema = new Schema({
   },
   lastNameOfVictim: {
     type: String,
-    required: [true, "First Name is required"],
+    required: [true, "Last Name is required"],
   },
   middleNameOfVictim: {
     type: String,
-    required: [true, "First Name is required"],
   },
   emailOfVictim: {
     type: String,
     unique: true,
-    required: [true, "Email is required"],
     lowercase: true,
   },
   phoneNumberOfVictim: {
     type: String,
-    required: [true, "Please provide your phone number"],
+    required: [true, "Please provide the Phone Number"],
   },
   dobOfVictim: {
     type: Date,
-    required: [true, "Please provide your phone number"],
+    required: [true, "Please provide the Date of Birth"],
   },
   genderOfVictim: {
     type: String,
-    enum: ["Male", "Female", "other"],
-    default: "other"
+    enum: ["Male", "Female"],
   },
   residentialAddressOfVictim: {
     type: String,
@@ -58,7 +55,21 @@ const caseVictimSchema = new Schema({
   countryOfVictim: {
     type: String
   },
-  victimOccupation: String
+  victimOccupation: String,
+  victimOrganizationType: {
+    type: String,
+    enum: ["Government", "NGO", "Private", "Self Employed", "Others", "Unknown"]
+},
+victimOrganizationID: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Organization",
+},
+victimOrganizationName: String,
+otherDetailsOfVictim: String,
+timestamp: {
+  type: Date,
+  default: Date.now(),
+},
 });
 
 const CaseVictim = mongoose.model("CaseVictim", caseVictimSchema);

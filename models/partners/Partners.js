@@ -17,12 +17,12 @@ const partnerSchema = new Schema({
   email: {
     type: String,
     unique: true,
-    required: [true, "Email is required"],
+    required: [true, "Contact Email is required"],
     lowercase: true,
   },
   phoneNumber: {
     type: String,
-    required: [true, "Please provide your phone number"],
+    required: [true, "Please provide the phone number"],
   },
   address: {
     type: String,
@@ -44,15 +44,14 @@ const partnerSchema = new Schema({
   },
   regNumber: {
     type: String,
-    required: [true, "Please provide your registration number"],
-  },
-  password: {
-    type: String,
-    required: [true, "Please provide a pasword"],
-    minlength: 4,
+    required: [true, "Please provide the registration number"],
   },
   descriptionOfOrg: {
     type: String,
+  },
+  timestamp: {
+    type: Date,
+    default: Date.now(),
   },
 });
 

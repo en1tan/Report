@@ -35,7 +35,10 @@ const contactUsSchema = new Schema({
   status: {
       type: String
   },
-
+  timestamp: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
 const ContactUs = mongoose.model("ContactUs", contactUsSchema);

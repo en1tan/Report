@@ -22,7 +22,7 @@ const caseEvidenceSchema = new Schema({
   URL: {
     type: String,
   },
-  dateAdded: {
+  timestamp: {
     type: Date,
     default: Date.now(),
   },

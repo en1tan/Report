@@ -22,7 +22,7 @@ const caseCategorySchema = new Schema({
   description: {
     type: String,
   },
-  dateAdded: {
+  timestamp: {
     type: Date,
     default: Date.now(),
   },

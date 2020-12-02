@@ -20,11 +20,10 @@ const caseSuspectSchema = new Schema({
   },
   lastNameOfSuspect: {
     type: String,
-    required: [true, "First Name is required"],
+    required: [true, "Last Name is required"],
   },
   middleNameOfSuspect: {
     type: String,
-    required: [true, "First Name is required"],
   },
   emailOfSuspect: {
     type: String,
@@ -34,16 +33,15 @@ const caseSuspectSchema = new Schema({
   },
   phoneNumberOfSuspect: {
     type: String,
-    required: [true, "Please provide your phone number"],
+    required: [true, "Please provide the Phone Number"],
   },
   dobOfSuspect: {
     type: Date,
-    required: [true, "Please provide your phone number"],
+    required: [true, "Please provide the Date of Birth"],
   },
   genderOfSuspect: {
     type: String,
-    enum: ["Male", "Female", "other"],
-    default: "other"
+    enum: ["Male", "Female"],
   },
   residentialAddressOfSuspect: {
     type: String,
@@ -68,7 +66,11 @@ const caseSuspectSchema = new Schema({
     ref: "Organization",
   },
   suspectOrganizationName: String,
-  otherDetailsOfSuspect: String
+  otherDetailsOfSuspect: String,
+  timestamp: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
 const CaseSuspect = mongoose.model("CaseSuspect", caseSuspectSchema);

@@ -34,6 +34,10 @@ const partnerBranchSchema = new Schema({
   country: {
     type: String
   },
+  timestamp: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
 

@@ -66,7 +66,10 @@ const caseSchema = new Schema({
     enum: ["mobile", "web", "sms"],
     default: "web",
   },
-  
+  timestamp: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
 const Case = mongoose.model("Case", caseSchema);
