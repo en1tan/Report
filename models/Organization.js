@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const { customAlphabet } = require("nanoid");
+const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 10);
 
 const Schema = mongoose.Schema;
 
@@ -7,7 +9,30 @@ const organizationSchema = new Schema({
     type: String,
     required: true,
   },
-  email: {
+  orgID: {
+    type: String,
+    default: () => nanoid()
+  },
+  orgName: {
+    type: String,
+    required: true,
+  },
+  orgType: {
+    type: String,
+    enum: ["Government", "NGO", "Private", "Self Employed", "Others", "Unknown"]
+  },
+  description: {
+    type: String
+  },
+  email1: {
+    type: String,
+    required: true,
+  },
+  email2: {
+    type: String,
+    required: true,
+  },
+  email3: {
     type: String,
     required: true,
   },
@@ -15,16 +40,31 @@ const organizationSchema = new Schema({
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    enum: ["Government", "NGO", "Private", "Self Employed", "Others", "Unknown"]
-  },
-  phoneNumber1: {
+  phone1: {
     type: String,
     required: true,
   },
-  phoneNumber2: {
+  phone2: {
     type: String,
+  },
+  phone3: {
+    type: String,
+  },
+  lga: {
+    type: String,
+  },
+  state: {
+    type: String,
+  },
+  country: {
+    type: String,
+  },
+  hq: {
+    type: String,
+  },
+  dateAdded: {
+    type: Date,
+    default: Date.now()
   },
 });
 

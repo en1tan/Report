@@ -3,24 +3,24 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const commentSchema = new Schema({
-    caseId: {
+    caseID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Case",
     },
-    userId: {
+    publicUserID: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "PublicUser",
     },
     comment: {
         type: String,
         required: true
     },
-    date: {
+    timestamp: {
         type: Date,
         default: Date.now()
     }
 });
 
-const Comment = mongoose.model("Comment", commentSchema);
+const CaseComment = mongoose.model("CaseComment", commentSchema);
 
-module.exports = Comment;
+module.exports = CaseComment;
