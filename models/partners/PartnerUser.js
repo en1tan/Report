@@ -24,11 +24,11 @@ const partnerUserSchema = new Schema({
   },
   lastName: {
     type: String,
-    required: [true, "First Name is required"],
+    required: [true, "Last Name is required"],
   },
   middleName: {
     type: String,
-    required: [true, "First Name is required"],
+    required: [true, "Middle Name is required"],
   },
   userName: {
     type: String,
@@ -50,8 +50,8 @@ const partnerUserSchema = new Schema({
   },
   gender: {
     type: String,
-    enum: ["Male", "Female", "other"],
-    default: "other"
+    enum: ["Male", "Female"],
+    default: "Male"
   },
   userType: {
     type: String,

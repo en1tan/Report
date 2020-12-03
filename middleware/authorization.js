@@ -1,7 +1,7 @@
 const { promisify } = require("util");
 const jwt = require("jsonwebtoken");
 
-const User = require("../models/User");
+const User = require("../models/PublicUser");
 const { validationError, normalError } = require("../utils/errorHandlers");
 
 const authorization = async (req, res, next) => {

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const { customAlphabet } = require("nanoid");
-const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 10);
+const nanoid = customAlphabet('0123456789', 10);
 
 const Schema = mongoose.Schema;
 
@@ -42,13 +42,8 @@ const publicUserSchema = new Schema({
   },
   gender: {
     type: String,
-    enum: ["Male", "Female", "other"],
-    default: "other"
-  },
-  userType: {
-    type: String,
-    enum: ["super-admin", "admin", "user"],
-    default: "user",
+    enum: ["Male", "Female"],
+    required: true
   },
   address: {
     type: String,
