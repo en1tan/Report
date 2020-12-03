@@ -22,7 +22,7 @@ const caseOtherDetailsDocSchema = new Schema({
   URL: {
     type: String,
   },
-  dateAdded: {
+  timestamp: {
     type: Date,
     default: Date.now(),
   },

@@ -16,15 +16,14 @@ const publicUserSchema = new Schema({
   },
   lastName: {
     type: String,
-    required: [true, "First Name is required"],
+    required: [true, "Last Name is required"],
   },
   middleName: {
     type: String,
-    required: [true, "First Name is required"],
   },
   userName: {
     type: String,
-    required: [true, "First Name is required"],
+    required: [true, "User Name is required"],
   },
   email: {
     type: String,
@@ -38,12 +37,17 @@ const publicUserSchema = new Schema({
   },
   dob: {
     type: Date,
-    required: [true, "Please provide your phone number"],
+    required: [true, "Please provide your Date of Birth"],
   },
   gender: {
     type: String,
-    enum: ["Male", "Female"],
-    required: true
+
+    enum: ["Male", "Female"]
+  },
+  userType: {
+    type: String,
+    enum: ["admin", "user"],
+    default: "user",
   },
   address: {
     type: String,
@@ -55,10 +59,13 @@ const publicUserSchema = new Schema({
   state: {
     type: String
   },
+  country: {
+    type: String
+  },
   avatar: String,
   password: {
     type: String,
-    required: [true, "Please provide a pasword"],
+    required: [true, "Please provide a Password"],
     minlength: 4,
   },
   onlineStatus: {

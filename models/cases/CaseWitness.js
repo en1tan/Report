@@ -20,30 +20,27 @@ const caseWitnessSchema = new Schema({
   },
   lastNameOfWitness: {
     type: String,
-    required: [true, "First Name is required"],
+    required: [true, "Last Name is required"],
   },
   middleNameOfWitness: {
     type: String,
-    required: [true, "First Name is required"],
   },
   emailOfWitness: {
     type: String,
     unique: true,
-    required: [true, "Email is required"],
     lowercase: true,
   },
   phoneNumberOfWitness: {
     type: String,
-    required: [true, "Please provide your phone number"],
+    required: [true, "Please provide the Phone Number"],
   },
   dobOfWitness: {
     type: Date,
-    required: [true, "Please provide your phone number"],
+    required: [true, "Please provide the Date of Birth"],
   },
   genderOfWitness: {
     type: String,
-    enum: ["Male", "Female", "other"],
-    default: "other"
+    enum: ["Male", "Female"],
   },
   residentialAddressOfWitness: {
     type: String,
@@ -68,7 +65,11 @@ const caseWitnessSchema = new Schema({
     ref: "Organization",
   },
   witnessOrganizationName: String,
-  otherDetailsOfWitness: String
+  otherDetailsOfWitness: String,
+  timestamp: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
 const CaseWitness = mongoose.model("CaseWitness", caseWitnessSchema);

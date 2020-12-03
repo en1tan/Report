@@ -22,7 +22,7 @@ const caseOtherDetailsSchema = new Schema({
   message: {
     type: String,
   },
-  dateAdded: {
+  timestamp: {
     type: Date,
     default: Date.now(),
   },

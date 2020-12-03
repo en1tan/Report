@@ -1,19 +1,18 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 const { customAlphabet } = require("nanoid");
 const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 10);
 
 const Schema = mongoose.Schema;
 
-const caseCategoryGroupSchema = new Schema({
-  categoryGroupID: {
+const smsSchema = new Schema({
+  senderPhone: {
     type: String,
-    default: () => nanoid()
   },
-  groupName: {
+  messageContent: {
     type: String,
-    required: [true, "Group Name is required"],
   },
-  description: {
+  status: {
     type: String,
   },
   timestamp: {
@@ -22,6 +21,6 @@ const caseCategoryGroupSchema = new Schema({
   },
 });
 
-const CaseCategoryGroup = mongoose.model("CaseCategoryGroup", caseCategoryGroupSchema);
+const sms = mongoose.model("sms", smsSchema);
 
-module.exports = CaseCategoryGroup;
+module.exports = sms;
