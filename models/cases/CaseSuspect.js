@@ -24,11 +24,11 @@ const caseSuspectSchema = new Schema({
   },
   middleNameOfSuspect: {
     type: String,
+    required: [true, "Middle Name is required"],
   },
   emailOfSuspect: {
     type: String,
     unique: true,
-    required: [true, "Email is required"],
     lowercase: true,
   },
   phoneNumberOfSuspect: {
@@ -42,6 +42,11 @@ const caseSuspectSchema = new Schema({
   genderOfSuspect: {
     type: String,
     enum: ["Male", "Female"],
+  },
+  guitStatus:{
+    type: String,
+    enum: ["Guilty", "Not-guilty", "Accomplice"],
+    default: "Not-guilty"
   },
   residentialAddressOfSuspect: {
     type: String,

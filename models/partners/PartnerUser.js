@@ -28,6 +28,7 @@ const partnerUserSchema = new Schema({
   },
   middleName: {
     type: String,
+    required: [true, "Middle Name is required"],
   },
   userName: {
     type: String,

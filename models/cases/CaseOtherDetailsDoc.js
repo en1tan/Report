@@ -13,10 +13,11 @@ const caseOtherDetailsDocSchema = new Schema({
     ref: "CaseOtherDetails",
   },
   docID: {
-      type: String
+    type: String,
+    default: () => nanoid(),
   },
   docTitle: {
-      type: String
+    type: String,
   },
   URL: {
     type: String,
@@ -27,6 +28,9 @@ const caseOtherDetailsDocSchema = new Schema({
   },
 });
 
-const CaseOtherDetailsDoc = mongoose.model("CaseOtherDetailsDoc", caseOtherDetailsDocSchema);
+const CaseOtherDetailsDoc = mongoose.model(
+  "CaseOtherDetailsDoc",
+  caseOtherDetailsDocSchema
+);
 
 module.exports = CaseOtherDetailsDoc;
