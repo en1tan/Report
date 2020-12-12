@@ -19,7 +19,7 @@ exports.createOrganization = async (req, res, next) => {
     const data = {
       organization: newOrganization,
     };
-    return successWithData(res, 200, "Case Created Succesfully", data);
+    return successWithData(res, 200, "Organization Created Succesfully", data);
   } catch (err) {
     return tryCatchError(res, err);
   }

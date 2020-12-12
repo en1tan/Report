@@ -27,7 +27,6 @@ const caseVictimSchema = new Schema({
   },
   emailOfVictim: {
     type: String,
-    unique: true,
     lowercase: true,
   },
   phoneNumberOfVictim: {

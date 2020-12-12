@@ -17,7 +17,7 @@ const caseOtherDetailsSchema = new Schema({
     enum: ["admin", "user"]
   },
   userID: {
-      type: String
+      type: mongoose.Schema.Types.ObjectId
   },
   message: {
     type: String,

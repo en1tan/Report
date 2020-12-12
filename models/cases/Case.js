@@ -13,6 +13,10 @@ const caseSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "PublicUser",
   },
+  assignedPartnerUserId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "PartnerUser",
+  },
   caseTitle: {
     type: String,
     required: [true, "Case title is required"],
@@ -51,10 +55,6 @@ const caseSchema = new Schema({
     type: String,
     enum: ["resolved", "unResolved"],
     default: "unResolved",
-  },
-  assignedPartnerUserId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "PartnerUser",
   },
   verificationStatus: {
     type: String,

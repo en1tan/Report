@@ -28,7 +28,6 @@ const caseSuspectSchema = new Schema({
   },
   emailOfSuspect: {
     type: String,
-    unique: true,
     lowercase: true,
   },
   phoneNumberOfSuspect: {
@@ -43,7 +42,7 @@ const caseSuspectSchema = new Schema({
     type: String,
     enum: ["Male", "Female"],
   },
-  guitStatus:{
+  guiltStatus:{
     type: String,
     enum: ["Guilty", "Not-guilty", "Accomplice"],
     default: "Not-guilty"
