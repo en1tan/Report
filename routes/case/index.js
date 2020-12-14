@@ -15,6 +15,7 @@ router.post('/create/:caseID/otherDetails', authorize("public"), caseController.
 router.post('/create/:caseID/caseProgress', authorize("public"), caseController.createCaseProgress);
 
 router.get('/', caseController.getAllCase);
+router.get('/:id', authorize("public"), caseController.getCase);
 router.post('/create', authorize("public"), caseController.createCase);
 
 router.post('/categoryGroup/create', authorize("public"), caseController.createCaseCategoryGroup);

@@ -34,8 +34,9 @@ const caseSchema = new Schema({
   lga: String,
   descriptionOfIncident: String,
   areYouTheVictim: {
-    type: Boolean,
-    default: false
+    type: String,
+    enum: ["Yes", "No"],
+    default: "No",
   },
   relationshipWithVictim: String,
   caseTypeStatus: {

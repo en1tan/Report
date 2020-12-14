@@ -6,6 +6,7 @@ const CaseSuspect = require("../../models/cases/CaseSuspect");
 const CaseWitness = require("../../models/cases/CaseWitness");
 const CaseOtherDetails = require("../../models/cases/CaseOtherDetails");
 const CaseProgress = require("../../models/cases/CaseProgress");
+const CaseEvidence = require("../../models/cases/CaseEvidence");
 const Evidence = require("../../models/Evidence");
 const caseEvidence = require("./evidence");
 
@@ -25,6 +26,32 @@ exports.getAllCase = async (req, res, next) => {
     const cases = await Case.find();
     const data = {
       cases
+    };
+    return successWithData(res, 200, "Case Fetched Succesfully", data);
+  } catch (err) {
+    return tryCatchError(res, err);
+  }
+}
+
+exports.getCase = async (req, res, next) => {
+  try {
+    console.log('here', req.params.id)
+    const fetchedCase = await Case.findOne({_id: req.params.id});
+    let witness;
+    let victim;
+    let suspect;
+    if(fetchedCase) {
+      witness = await CaseWitness.findOne({caseID: req.params.id});
+      victim = await CaseVictim.findOne({caseID: req.params.id});
+      suspect = await CaseSuspect.findOne({caseID: req.params.id});
+    }
+    const data = {
+      caseData: {
+        case: fetchedCase,
+        victim,
+        witness,
+        suspect
+      }
     };
     return successWithData(res, 200, "Case Fetched Succesfully", data);
   } catch (err) {
@@ -154,28 +181,32 @@ exports.createCaseProgress = async (req, res, next) => {
 
 exports.saveEvidence = async (req, res, next) => {
   try {
-    const allEvidence = {};
+    const allEvidence = [];
+    
     if (req.files && req.files.length > 0) {
       const evidenceImages = await caseEvidence.uploadEvidenceImages(req.files);
       evidenceImages.forEach((el, i) => {
-        allEvidence[`evidence${i + 1}`] = el.url;
+        allEvidence.push({fileName: `evidence${i + 1}`, URL: el.url, caseID: req.params.id})
+        // allEvidence[`evidence${i + 1}`] = el.url;
       });
     }
-    const newEvidence = await Evidence.create({
-      ...allEvidence,
-    });
+    // console.log(allEvidence);
+    const newEvidence = await CaseEvidence.insertMany(allEvidence);
+    // const newEvidence = await Evidence.create({
+    //   ...allEvidence,
+    // });
     
-    const updatedCase = await Case.findOneAndUpdate(
-      { _id: req.params.id },
-      { evidence: newEvidence._id },
-      {new: true}
-    );
+    // const updatedCase = await Case.findOneAndUpdate(
+    //   { _id: req.params.id },
+    //   { evidence: newEvidence._id },
+    //   {new: true}
+    // );
 
-    const data = {
-      case: updatedCase,
-    };
+    // const data = {
+    //   case: updatedCase,
+    // };
 
-    return successWithData(res, 201, "Evidence Saved Succesfully", data);
+    return successNoData(res, 201, "Evidence Saved Succesfully");
   } catch (err) {
     return tryCatchError(res, err);
   }
