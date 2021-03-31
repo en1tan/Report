@@ -22,6 +22,7 @@ const caseSchema = new Schema({
     required: [true, "Case title is required"],
   },
   addressOfIncident: String,
+  addressLandmark: String,
   dateOfIncident: {
     type: Date,
     required: true,
