@@ -6,15 +6,23 @@ const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM
 const Schema = mongoose.Schema;
 
 const smsSchema = new Schema({
+  
+  // Phone number used in sending message
   senderPhone: {
     type: String,
   },
+
+  // Content of the SMS recieved
   messageContent: {
     type: String,
   },
+
+  // Status of the message if it has been treated by the officials
   status: {
     type: String,
   },
+
+  // Date and time when the message was recieved on the platform
   timestamp: {
     type: Date,
     default: Date.now(),
