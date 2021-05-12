@@ -29,7 +29,7 @@ const caseSchema = new Schema({
   // Default "NotYetAssigned"
   caseTitle: {
     type: String,
-    required: [true, "Case title is required"],
+   // required: [true, "Case title is required"],
   },
 
   // Where exactly the incident took place
@@ -67,6 +67,12 @@ const caseSchema = new Schema({
     default: "No",
   },
 
+    // Type of Report
+    reportType: {
+      type: String,
+      enum: ["Standard", "QuickReport"],
+    },
+
   // What are the things the case reporter want to be done by the platform
   casePleas: String,
 
@@ -97,14 +103,14 @@ const caseSchema = new Schema({
   // If the case has been resolved and closed or unresolved and open
   resolutionStatus: {
     type: String,
-    enum: ["resolved", "unResolved"],
+    enum: ["resolved", "unResolved","onlyReport"],
     default: "unResolved",
   },
 
   // If the case has been verified
   verificationStatus: {
     type: String,
-    enum: ["verified", "unVerified"],
+    enum: ["verified", "unVerified", "onlyReport"],
     default: "unVerified",
   },
 
