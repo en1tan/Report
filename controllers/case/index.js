@@ -22,7 +22,7 @@ const {
 
 exports.getAllCase = async (req, res, next) => {
   try {
-    const cases = await Case.find();
+    const cases = await Case.find().sort("-createdAt");
     const data = {
       cases,
     };
@@ -39,7 +39,6 @@ exports.getAllCase = async (req, res, next) => {
 
 exports.getCase = async (req, res, next) => {
   try {
-    console.log("here", req.params.id);
     const fetchedCase = await Case.findOne({ _id: req.params.id });
     let witness;
     let victim;
@@ -244,6 +243,7 @@ exports.createCaseProgress = async (req, res, next) => {
 };
 
 exports.saveEvidence = async (req, res, next) => {
+  console.log(req.params);
   try {
     const allEvidence = [];
 
@@ -257,25 +257,9 @@ exports.saveEvidence = async (req, res, next) => {
           URL: el.url,
           caseID: req.params.id,
         });
-        // allEvidence[`evidence${i + 1}`] = el.url;
       });
     }
-    // console.log(allEvidence);
-    const newEvidence = await CaseEvidence.insertMany(allEvidence);
-    // const newEvidence = await Evidence.create({
-    //   ...allEvidence,
-    // });
-
-    // const updatedCase = await Case.findOneAndUpdate(
-    //   { _id: req.params.id },
-    //   { evidence: newEvidence._id },
-    //   {new: true}
-    // );
-
-    // const data = {
-    //   case: updatedCase,
-    // };
-
+    await CaseEvidence.insertMany(allEvidence);
     return successNoData(res, 201, "Evidence Saved Succesfully");
   } catch (err) {
     return tryCatchError(res, err);
@@ -294,6 +278,19 @@ exports.editEvidence = async (req, res, next) => {
       case: editedCase,
     };
     return successWithData(res, 201, "Case Saved Succesfully", data);
+  } catch (err) {
+    return tryCatchError(res, err);
+  }
+};
+
+exports.getPersonalCases = async (req, res, next) => {
+  try {
+    const cases = await Case.find({ publicUserID: req.user.id }).sort(
+      "-created",
+    );
+    return successWithData(res, 200, "Fetched cases", {
+      data: { cases },
+    });
   } catch (err) {
     return tryCatchError(res, err);
   }

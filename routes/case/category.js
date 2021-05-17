@@ -16,7 +16,7 @@ router.post(
 );
 router.post(
   "/group/:id/create",
-  authorize("super-admin"),
+  authorize("admin"),
   caseController.createCaseCategory,
 );
 
