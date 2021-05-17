@@ -63,8 +63,8 @@ const publicUserSchema = new Schema(
     // Account previlege
     userType: {
       type: String,
-      enum: ["admin", "user"],
-      default: "user",
+      enum: ["public", "partner"],
+      default: "public",
     },
 
     // Address of the User's residence

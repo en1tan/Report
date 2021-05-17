@@ -2,20 +2,20 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../../models/PublicUser");
 const {
-  validationError,
   tryCatchError,
   normalError,
+  authorizationError,
 } = require("../../utils/errorHandlers");
 const { successWithData } = require("../../utils/successHandler");
 
-const signToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+const signToken = (id, userType) => {
+  return jwt.sign({ id, userType }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
 
 const createSendToken = (user, statusCode, res, message) => {
-  const token = signToken(user._id);
+  const token = signToken(user._id, user.userType);
   const data = {
     token,
     user,
@@ -48,7 +48,10 @@ exports.signin = async (req, res, next) => {
       !user ||
       !(await user.correctPassword(password, user.password))
     ) {
-      return validationError(res, "Authentication error");
+      return authorizationError(
+        res,
+        "email or password is incorrrect",
+      );
     }
     await User.findByIdAndUpdate(
       user._id,
@@ -59,4 +62,8 @@ exports.signin = async (req, res, next) => {
   } catch (err) {
     return tryCatchError(res, err);
   }
+};
+
+exports.profile = async (req, res, next) => {
+  res.send(req.user);
 };

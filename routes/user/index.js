@@ -4,6 +4,7 @@ const partnerAuthController = require("../../controllers/auth/partnerUser");
 const validator = require("../../utils/validator");
 // const userController = require('../../controllers/users');
 
+const auth = require("../../middleware/authenticate");
 const authorize = require("../../middleware/authorization");
 
 const router = express.Router();
@@ -14,6 +15,7 @@ router.post(
   authController.signup,
 );
 router.post("/login", authController.signin);
+router.get("/profile", auth(), authController.profile);
 
 router.post("/partner/signup", partnerAuthController.signup);
 router.post("/partner/login", partnerAuthController.signin);

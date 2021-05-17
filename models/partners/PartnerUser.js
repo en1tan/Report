@@ -81,6 +81,11 @@ const partnerUserSchema = new Schema(
     // User Priviliege
     userType: {
       type: String,
+      enum: ["public", "partner"],
+      default: "partner",
+    },
+    role: {
+      type: String,
       enum: ["super-admin", "admin", "user"],
       default: "user",
     },

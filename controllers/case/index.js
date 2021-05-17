@@ -88,6 +88,20 @@ exports.createCase = async (req, res, next) => {
   }
 };
 
+exports.getAllCategoryGroup = async (req, res, next) => {
+  try {
+    const groups = await CaseCategoryGroup.find().sort("-createdAt");
+    return successWithData(
+      res,
+      200,
+      "Fetched all category groups",
+      groups,
+    );
+  } catch (err) {
+    return tryCatchError(res, err);
+  }
+};
+
 exports.createCaseCategoryGroup = async (req, res, next) => {
   try {
     const newGroup = await CaseCategoryGroup.create({
@@ -98,7 +112,7 @@ exports.createCaseCategoryGroup = async (req, res, next) => {
     };
     return successWithData(
       res,
-      200,
+      201,
       "Case Group Created Succesfully",
       data,
     );
@@ -108,10 +122,11 @@ exports.createCaseCategoryGroup = async (req, res, next) => {
 };
 
 exports.createCaseCategory = async (req, res, next) => {
+  console.log(req.body);
   try {
     const newCategory = await CaseCategory.create({
       ...req.body,
-      categoryGroupID: req.params.groupID,
+      categoryGroupID: req.params.id,
     });
     const data = {
       category: newCategory,
