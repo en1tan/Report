@@ -100,14 +100,14 @@ const caseSchema = new Schema({
     type: String
   },
 
-  // If the case has been resolved and closed or unresolved and open
+  // If the case has been resolved and closed or unresolved and open. by default for Quick report the value will be "onlyReport"
   resolutionStatus: {
     type: String,
     enum: ["resolved", "unResolved","onlyReport"],
     default: "unResolved",
   },
 
-  // If the case has been verified
+  // If the case has been verified, by default for Quick report the value will be "onlyReport"
   verificationStatus: {
     type: String,
     enum: ["verified", "unVerified", "onlyReport"],
@@ -117,8 +117,7 @@ const caseSchema = new Schema({
   // Which of the sorosoke platforms was used in reporting the case
   platformOfReport: {
     type: String,
-    enum: ["mobile", "web", "sms"],
-    default: "web",
+    enum: ["Mobile App", "Website", "SMS"],
   },
 
   // Date and time the incident was reported on the sorosoke platform

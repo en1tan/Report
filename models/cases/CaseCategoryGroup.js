@@ -22,7 +22,10 @@ const caseCategoryGroupSchema = new Schema({
   description: {
     type: String,
   },
-
+ // Category Icon Image
+ imageIcon: {
+  type: String,
+},
   // Date and Time the group was added on the platform
   timestamp: {
     type: Date,
