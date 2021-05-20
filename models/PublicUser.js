@@ -119,6 +119,13 @@ const publicUserSchema = new Schema(
 
     // Religious oreintation of the user
     religion: String,
+
+    casesIFollow: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Car",
+      },
+    ],
   },
   { timestamps: true },
 );

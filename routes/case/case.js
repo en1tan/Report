@@ -1,28 +1,37 @@
 const express = require("express");
 const caseController = require("../../controllers/case");
 const authorize = require("../../middleware/authorization");
-const uploadImage = require("../../middleware/imageUpload");
+const { arrayUpload } = require("../../middleware/imageUpload");
 
 const router = express.Router();
 
-router.get("/", authorize("admin"), caseController.getAllCase);
+router.get(
+  "/",
+  authorize(["super-admin", "admin", "staff"]),
+  caseController.getAllCase,
+);
 router.get("/personal", caseController.getPersonalCases);
 router.post("/create", caseController.createCase);
-router.get("/:id", authorize("admin"), caseController.getCase);
+router.get("/followed", caseController.getFollowedCases);
+router.get(
+  "/:id",
+  authorize(["super-admin", "admin"]),
+  caseController.getCase,
+);
 
 router.post(
   "/create/:caseID/caseVictim",
-  authorize("admin"),
+  authorize(["public", "admin", "staff"]),
   caseController.createCaseVictim,
 );
 router.post(
   "/create/:caseID/caseSuspect",
-  authorize("admin"),
+  authorize(["public", "admin", "staff"]),
   caseController.createCaseSuspect,
 );
 router.post(
   "/create/:caseID/caseWitness",
-  authorize("admin"),
+  authorize(["public", "admin", "staff"]),
   caseController.createCaseWitness,
 );
 router.post(
@@ -32,20 +41,33 @@ router.post(
 );
 router.post(
   "/create/:caseID/caseProgress",
-  authorize("admin"),
+  authorize(["public", "admin", "staff"]),
   caseController.createCaseProgress,
 );
 
 router.patch(
   "/:id/evidence",
-  authorize("admin"),
-  uploadImage,
+  arrayUpload,
   caseController.saveEvidence,
 );
 router.patch(
   "/:id/case",
-  authorize("admin"),
+  authorize(["admin", "staff"]),
   caseController.editEvidence,
+);
+
+router.patch(
+  "/:id/assign",
+  authorize("admin"),
+  caseController.assignPartnerToCase,
+);
+
+router.patch("/:id/follow", caseController.followCase);
+
+router.patch(
+  "/:id/verify",
+  authorize("verifier"),
+  caseController.verifyCase,
 );
 
 module.exports = router;

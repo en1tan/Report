@@ -32,6 +32,7 @@ const upload = multer({
   fileFilter: multerFilter,
 });
 
-const uploadImage = upload.array("evidences");
+const arrayUpload = upload.array("file");
+const singleUpload = upload.single("file");
 
-module.exports = uploadImage;
+module.exports = { arrayUpload, singleUpload };

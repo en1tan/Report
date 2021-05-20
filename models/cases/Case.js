@@ -38,7 +38,8 @@ const caseSchema = new Schema(
     // Default "NotYetAssigned"
     caseTitle: {
       type: String,
-      // required: [true, "Case title is required"],
+      default: "NotYetAssigned",
+      required: true,
     },
 
     // Where exactly the incident took place
@@ -128,6 +129,18 @@ const caseSchema = new Schema(
       enum: ["mobile", "web", "sms"],
       default: "web",
     },
+
+    // Case tags. Can be used to search later
+    tags: {
+      type: String,
+    },
+
+    followedBy: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "PublicUser",
+      },
+    ],
 
     // Date and time the incident was reported on the sorosoke platform
     timestamp: {

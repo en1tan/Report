@@ -8,7 +8,7 @@ module.exports =
   async (req, res, next) => {
     if (typeof roles === "string") roles = [roles];
     try {
-      if (roles.length > 0 && !roles.includes(req.user.role))
+      if (roles.length > 0 && !roles.includes(req.user.userType))
         return authorizationError(
           res,
           "You do not have enough privilege for this action",
