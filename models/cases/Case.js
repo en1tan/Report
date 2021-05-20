@@ -116,21 +116,27 @@ const caseSchema = new Schema(
       default: "unResolved",
     },
 
-    // If the case has been verified
-    verificationStatus: {
-      type: String,
-      enum: ["verified", "unVerified", "onlyReport"],
-      default: "unVerified",
-    },
+  // If the case has been resolved and closed or unresolved and open. by default for Quick report the value will be "onlyReport"
+  resolutionStatus: {
+    type: String,
+    enum: ["resolved", "unResolved","onlyReport"],
+    default: "unResolved",
+  },
 
-    // Which of the sorosoke platforms was used in reporting the case
-    platformOfReport: {
-      type: String,
-      enum: ["mobile", "web", "sms"],
-      default: "web",
-    },
+  // If the case has been verified, by default for Quick report the value will be "onlyReport"
+  verificationStatus: {
+    type: String,
+    enum: ["verified", "unVerified", "onlyReport"],
+    default: "unVerified",
+  },
 
-    // Case tags. Can be used to search later
+  // Which of the sorosoke platforms was used in reporting the case
+  platformOfReport: {
+    type: String,
+    enum: ["mobile", "web", "sms"],
+    default:"web"
+  },
+   // Case tags. Can be used to search later
     tags: {
       type: String,
     },

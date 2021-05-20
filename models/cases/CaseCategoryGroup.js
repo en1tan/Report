@@ -20,7 +20,6 @@ const caseCategoryGroupSchema = new Schema(
       type: String,
       required: [true, "Group Name is required"],
     },
-
     // Explanation of the type of cases within this group
     description: {
       type: String,
