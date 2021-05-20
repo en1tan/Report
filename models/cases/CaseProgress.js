@@ -1,12 +1,10 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
 const { customAlphabet } = require("nanoid");
 const nanoid = customAlphabet("0123456789", 10);
 
 const Schema = mongoose.Schema;
 
 const caseProgressSchema = new Schema({
-  
   // Unique Identifier of the case progress
   progressID: {
     type: String,
@@ -43,6 +41,12 @@ const caseProgressSchema = new Schema({
     required: true,
   },
 
+  privacyStatus: {
+    type: String,
+    enum: ["public", "private"],
+    default: "private",
+  },
+
   // Date the progress report was added
   timestamp: {
     type: Date,
@@ -50,6 +54,9 @@ const caseProgressSchema = new Schema({
   },
 });
 
-const CaseProgress = mongoose.model("CaseProgress", caseProgressSchema);
+const CaseProgress = mongoose.model(
+  "CaseProgress",
+  caseProgressSchema,
+);
 
 module.exports = CaseProgress;

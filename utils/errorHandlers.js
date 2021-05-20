@@ -1,18 +1,21 @@
-const { INTERNAL_SERVER_ERROR, BAD_REQUEST } = require("http-status-codes");
-
 const errorHandler = {
   normalError(res, statusCode, message, data) {
-    return res.status(statusCode).json({ message, data, status: "error" });
+    return res
+      .status(statusCode)
+      .json({ message, data, status: "error" });
   },
   tryCatchError(res, error) {
     console.error(error);
-    return res.status(INTERNAL_SERVER_ERROR).json({
+    return res.status(500).json({
       message: error.message,
       status: "error",
     });
   },
   validationError(res, message) {
-    return res.status(BAD_REQUEST).json({ message, status: "error" });
+    return res.status(400).json({ message, status: "error" });
+  },
+  authorizationError(res, message) {
+    return res.status(401).json({ message, status: "error" });
   },
 };
 

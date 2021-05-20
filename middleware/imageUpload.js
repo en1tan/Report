@@ -1,23 +1,28 @@
 const multer = require("multer");
-const { v4: uuidv4 } = require('uuid');
+const fs = require("fs");
+const { v4: uuidv4 } = require("uuid");
+
+if (!fs.existsSync("public/")) fs.mkdirSync("public");
 
 const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "public/");
   },
   filename: (req, file, cb) => {
-    const ext = file.mimetype.split("/")[1];
     cb(
       null,
-      `${new Date().toISOString().replace(/[\/\\:]/g, "_")}-${uuidv4()}-${
-        file.originalname
-      }`
+      `${new Date()
+        .toISOString()
+        .replace(/[\/\\:]/g, "_")}-${uuidv4()}-${file.originalname}`,
     );
   },
 });
 
 const multerFilter = (req, file, cb) => {
-  if ((file.mimetype && file.mimetype.startsWith("image")) || (file.mime && file.mime.startsWith("image"))) {
+  if (
+    (file.mimetype && file.mimetype.startsWith("image")) ||
+    (file.mime && file.mime.startsWith("image"))
+  ) {
     cb(null, true);
   } else cb(new Error("invalid filetype"), false);
 };
@@ -27,6 +32,7 @@ const upload = multer({
   fileFilter: multerFilter,
 });
 
-const uploadImage = upload.array('image');
+const arrayUpload = upload.array("file");
+const singleUpload = upload.single("file");
 
-module.exports = uploadImage;
+module.exports = { arrayUpload, singleUpload };
