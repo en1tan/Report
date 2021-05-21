@@ -106,7 +106,8 @@ const caseSchema = new Schema(
 
     // ID of the official that published the case; you can only publish a record whose case status is "case"
     publishedBy: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "PartnerUser",
     },
 
     // If the case has been resolved and closed or unresolved and open

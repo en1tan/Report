@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get(
   "/",
-  authorize(["super-admin", "admin", "staff"]),
+  authorize(["super-admin", "admin", "staff", "verifier"]),
   caseController.getAllCase,
 );
 router.get("/personal", caseController.getPersonalCases);
@@ -15,7 +15,7 @@ router.post("/create", caseController.createCase);
 router.get("/followed", caseController.getFollowedCases);
 router.get(
   "/:id",
-  authorize(["super-admin", "admin"]),
+  authorize(["super-admin", "admin", "staff", "verifier"]),
   caseController.getCase,
 );
 
@@ -62,12 +62,22 @@ router.patch(
   caseController.assignPartnerToCase,
 );
 
-router.patch("/:id/follow", caseController.followCase);
-
 router.patch(
   "/:id/verify",
-  authorize("verifier"),
+  authorize(["super-admin", "verifier"]),
   caseController.verifyCase,
 );
+
+router.patch(
+  "/:id/publish",
+  authorize(["admin", "staff"]),
+  caseController.publishCase,
+);
+router.patch(
+  "/:id/resolve",
+  authorize(["admin", "staff"]),
+  caseController.resolveCase,
+);
+router.patch("/:id/follow", caseController.followCase);
 
 module.exports = router;

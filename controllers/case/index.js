@@ -1,20 +1,13 @@
 const Case = require("../../models/cases/Case");
-const CaseCategoryGroup = require("../../models/cases/CaseCategoryGroup");
-const CaseCategory = require("../../models/cases/CaseCategory");
 const CaseVictim = require("../../models/cases/CaseVictim");
 const CaseSuspect = require("../../models/cases/CaseSuspect");
 const CaseWitness = require("../../models/cases/CaseWitness");
 const CaseOtherDetails = require("../../models/cases/CaseOtherDetails");
 const CaseProgress = require("../../models/cases/CaseProgress");
 const CaseEvidence = require("../../models/cases/CaseEvidence");
-const {
-  uploadEvidenceImages,
-  uploadCaseCategoryGroupImages,
-} = require("./cloudUpload");
+const { uploadEvidenceImages } = require("./cloudUpload");
 
-const ApiFeatures = require("../../utils/apiFeatures");
 const {
-  validationError,
   tryCatchError,
   normalError,
 } = require("../../utils/errorHandlers");
@@ -24,6 +17,7 @@ const {
 } = require("../../utils/successHandler");
 
 const _ = require("lodash");
+const { findByIdAndUpdate } = require("../../models/cases/Case");
 
 exports.followCase = async (req, res, next) => {
   try {
@@ -175,59 +169,6 @@ exports.createCase = async (req, res, next) => {
       res,
       200,
       "Case Created Succesfully",
-      data,
-    );
-  } catch (err) {
-    return tryCatchError(res, err);
-  }
-};
-
-exports.getAllCategoryGroup = async (req, res, next) => {
-  try {
-    const groups = await CaseCategoryGroup.find().sort("-createdAt");
-    return successWithData(
-      res,
-      200,
-      "Fetched all category groups",
-      groups,
-    );
-  } catch (err) {
-    return tryCatchError(res, err);
-  }
-};
-
-exports.createCaseCategoryGroup = async (req, res, next) => {
-  try {
-    const imageIcon = await uploadCaseCategoryGroupImages(req.file);
-    req.body.imageIcon = imageIcon.url;
-    const newGroup = await CaseCategoryGroup.create(req.body);
-    const data = {
-      group: newGroup,
-    };
-    return successWithData(
-      res,
-      201,
-      "Case Group Created Succesfully",
-      data,
-    );
-  } catch (err) {
-    return tryCatchError(res, err);
-  }
-};
-
-exports.createCaseCategory = async (req, res, next) => {
-  try {
-    const newCategory = await CaseCategory.create({
-      ...req.body,
-      categoryGroupID: req.params.id,
-    });
-    const data = {
-      category: newCategory,
-    };
-    return successWithData(
-      res,
-      200,
-      "Case Category Created Succesfully",
       data,
     );
   } catch (err) {
@@ -395,6 +336,61 @@ exports.verifyCase = async (req, res, next) => {
       req.params.id,
       { verificationStatus: req.body.verificationStatus },
       { new: true },
+    );
+    return successWithData(
+      res,
+      200,
+      "Case verified successfully",
+      updatedCase,
+    );
+  } catch (err) {
+    return tryCatchError(res, err);
+  }
+};
+
+exports.publishCase = async (req, res, next) => {
+  try {
+    const existingCase = await Case.findById(req.params.id);
+    if (!existingCase)
+      return normalError(res, 404, "Case does not exist");
+
+    const publishedCase = await Case.findByIdAndUpdate(
+      existingCase._id,
+      {
+        publishStatus: req.body.publishStatus,
+        publishedBy: req.user,
+      },
+      { new: true },
+    );
+    return successWithData(
+      res,
+      200,
+      "Case published successfully",
+      publishedCase,
+    );
+  } catch (err) {
+    return tryCatchError(res, err);
+  }
+};
+
+exports.resolveCase = async (req, res, next) => {
+  try {
+    const existingCase = await Case.findById(req.params.id);
+    if (!existingCase)
+      return normalError(res, 404, "Case does not exist");
+
+    const resolvedCase = await Case.findByIdAndUpdate(
+      existingCase._id,
+      {
+        resolutionStatus: req.body.resolutionStatus,
+      },
+      { new: true },
+    );
+    return successWithData(
+      res,
+      200,
+      "Case resolved successfully",
+      resolvedCase,
     );
   } catch (err) {
     return tryCatchError(res, err);
