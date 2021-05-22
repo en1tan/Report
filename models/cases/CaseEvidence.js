@@ -1,43 +1,44 @@
 const mongoose = require("mongoose");
-const { customAlphabet } = require("nanoid");
-const nanoid = customAlphabet(
-  "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-  10
-);
+const { genEvidenceID } = require("../../utils/genID");
 
 const Schema = mongoose.Schema;
 
-const caseEvidenceSchema = new Schema({
-  
-  // ID of the file
-  fileID: {
-    type: String,
-    default: () => nanoid(),
-  },
+const caseEvidenceSchema = new Schema(
+  {
+    // ID of the file
+    fileID: {
+      type: String,
+      default: genEvidenceID,
+    },
 
-  // ID of case in question
-  caseID: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Case",
-  },
+    // ID of case in question
+    caseID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Case",
+    },
 
-  // file name
-  fileName: {
-    type: String,
-  },
+    // file name
+    fileName: {
+      type: String,
+    },
 
-  // Link path to the file
-  URL: {
-    type: String,
-  },
+    // Link path to the file
+    URL: {
+      type: String,
+    },
 
-  // Timestamp when the evidence was added on the platform
-  timestamp: {
-    type: Date,
-    default: Date.now(),
+    // Timestamp when the evidence was added on the platform
+    timestamp: {
+      type: Date,
+      default: Date.now(),
+    },
   },
-});
+  { timestamps: true },
+);
 
-const CaseEvidence = mongoose.model("CaseEvidence", caseEvidenceSchema);
+const CaseEvidence = mongoose.model(
+  "CaseEvidence",
+  caseEvidenceSchema,
+);
 
 module.exports = CaseEvidence;
