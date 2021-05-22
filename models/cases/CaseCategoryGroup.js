@@ -1,9 +1,5 @@
 const mongoose = require("mongoose");
-const { customAlphabet } = require("nanoid");
-const nanoid = customAlphabet(
-  "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-  10,
-);
+const { genCategoryGroupID } = require("../../utils/genID");
 
 const Schema = mongoose.Schema;
 
@@ -12,7 +8,7 @@ const caseCategoryGroupSchema = new Schema(
     // Unique Identifier of the Group on the Platform
     categoryGroupID: {
       type: String,
-      default: () => nanoid(),
+      default: genCategoryGroupID,
     },
 
     // Human Rights Group Title

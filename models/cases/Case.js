@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { customAlphabet } = require("nanoid");
+const { genCaseID } = require("../../utils/genID");
 const nanoid = customAlphabet(
   "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
   10,
@@ -12,7 +13,7 @@ const caseSchema = new Schema(
     // Unique identifier of the case on the Sorosoke platform
     caseID: {
       type: String,
-      default: () => nanoid(),
+      default: genCaseID,
     },
 
     // Unique ID of the User reporting the case
@@ -117,27 +118,27 @@ const caseSchema = new Schema(
       default: "unResolved",
     },
 
-  // If the case has been resolved and closed or unresolved and open. by default for Quick report the value will be "onlyReport"
-  resolutionStatus: {
-    type: String,
-    enum: ["resolved", "unResolved","onlyReport"],
-    default: "unResolved",
-  },
+    // If the case has been resolved and closed or unresolved and open. by default for Quick report the value will be "onlyReport"
+    resolutionStatus: {
+      type: String,
+      enum: ["resolved", "unResolved", "onlyReport"],
+      default: "unResolved",
+    },
 
-  // If the case has been verified, by default for Quick report the value will be "onlyReport"
-  verificationStatus: {
-    type: String,
-    enum: ["verified", "unVerified", "onlyReport"],
-    default: "unVerified",
-  },
+    // If the case has been verified, by default for Quick report the value will be "onlyReport"
+    verificationStatus: {
+      type: String,
+      enum: ["verified", "unVerified", "onlyReport"],
+      default: "unVerified",
+    },
 
-  // Which of the sorosoke platforms was used in reporting the case
-  platformOfReport: {
-    type: String,
-    enum: ["mobile", "web", "sms"],
-    default:"web"
-  },
-   // Case tags. Can be used to search later
+    // Which of the sorosoke platforms was used in reporting the case
+    platformOfReport: {
+      type: String,
+      enum: ["mobile", "web", "sms"],
+      default: "web",
+    },
+    // Case tags. Can be used to search later
     tags: {
       type: String,
     },

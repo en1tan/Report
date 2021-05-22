@@ -1,9 +1,5 @@
 const mongoose = require("mongoose");
-const { customAlphabet } = require("nanoid");
-const nanoid = customAlphabet(
-  "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-  10,
-);
+const { genCategoryID } = require("../../utils/genID");
 
 const Schema = mongoose.Schema;
 
@@ -12,7 +8,7 @@ const caseCategorySchema = new Schema(
     // ID of the categories of Violations
     categoryID: {
       type: String,
-      default: () => nanoid(),
+      default: genCategoryID,
     },
 
     // The Human right Violation Classification Group that this category belongs to

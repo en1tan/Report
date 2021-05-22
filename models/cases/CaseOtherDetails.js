@@ -2,42 +2,47 @@ const mongoose = require("mongoose");
 const { customAlphabet } = require("nanoid");
 const nanoid = customAlphabet(
   "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-  10
+  10,
 );
 
 const Schema = mongoose.Schema;
 
-const caseOtherDetailsSchema = new Schema({
-  
-  // ID of Case
-  caseID: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Case",
-  },
+const caseOtherDetailsSchema = new Schema(
+  {
+    // ID of Case
+    caseID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Case",
+    },
 
-  // Who sent the reply
-  from: {
-    type: String,
-    enum: ["admin", "user"]
-  },
+    // Who sent the reply
+    from: {
+      type: String,
+      enum: ["admin", "user"],
+    },
 
-  // ID of the person sending reply
-  userID: {
-      type: mongoose.Schema.Types.ObjectId
-  },
+    // ID of the person sending reply
+    userID: {
+      type: mongoose.Schema.Types.ObjectId,
+    },
 
-  // Message content
-  message: {
-    type: String,
-  },
+    // Message content
+    message: {
+      type: String,
+    },
 
-  // Date and Time the message was sent
-  timestamp: {
-    type: Date,
-    default: Date.now(),
+    // Date and Time the message was sent
+    timestamp: {
+      type: Date,
+      default: Date.now(),
+    },
   },
-});
+  { timestamps: true },
+);
 
-const CaseOtherDetails = mongoose.model("CaseOtherDetails", caseOtherDetailsSchema);
+const CaseOtherDetails = mongoose.model(
+  "CaseOtherDetails",
+  caseOtherDetailsSchema,
+);
 
 module.exports = CaseOtherDetails;
