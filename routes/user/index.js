@@ -17,6 +17,12 @@ router.post("/partner/signup", partnerAuthController.signup);
 router.post("/partner/login", partnerAuthController.signin);
 
 router.get("/profile", auth(), authController.profile);
+router.patch("/account", auth(), authController.editAccount);
+router.patch(
+  "/partner/account",
+  auth(),
+  partnerAuthController.editAccount,
+);
 
 router.use("/partner", auth(), partnerRoutes);
 
