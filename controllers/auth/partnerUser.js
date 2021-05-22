@@ -65,3 +65,23 @@ exports.signin = async (req, res, next) => {
     return tryCatchError(res, err);
   }
 };
+
+exports.editAccount = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return validationError(res, "Authentication error");
+    const updatedUser = await User.findByIdAndUpdate(
+      user._id,
+      req.body,
+      { new: true },
+    );
+    return successWithData(
+      res,
+      200,
+      "User updated successfully",
+      updatedUser,
+    );
+  } catch (err) {
+    return tryCatchError(res, err);
+  }
+};

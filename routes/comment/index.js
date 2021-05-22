@@ -1,9 +1,14 @@
-const express = require('express');
-const authorize = require("../../middleware/authorization");
-const commentController = require('../../controllers/comment');
+const express = require("express");
+const auth = require("../../middleware/authenticate");
+const commentController = require("../../controllers/comment");
 
 const router = express.Router();
 
-router.post('/create/:caseId', authorize, commentController.createComment);
+router.post(
+  "/create/:caseId",
+  auth(),
+  commentController.createComment
+);
 
 module.exports = router;
+
