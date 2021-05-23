@@ -118,12 +118,6 @@ const caseVictimSchema = new Schema(
 
     // Reporter (user) relationship with the victim
     relationshipWithVictim: String,
-
-    // Timestamp when the victim was added on the platform
-    timestamp: {
-      type: Date,
-      default: Date.now(),
-    },
   },
   { timestamps: true },
 );

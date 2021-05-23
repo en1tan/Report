@@ -21,12 +21,6 @@ const caseTaggedCategoriesSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "CaseCategory",
     },
-
-    // Date and Time of the Tag
-    timestamp: {
-      type: Date,
-      default: Date.now(),
-    },
   },
   { timestamps: true },
 );

@@ -13,11 +13,7 @@ router.get(
 router.get("/personal", caseController.getPersonalCases);
 router.post("/create", caseController.createCase);
 router.get("/followed", caseController.getFollowedCases);
-router.get(
-  "/:id",
-  authorize(["super-admin", "admin", "staff", "verifier"]),
-  caseController.getCase,
-);
+router.get("/:id", caseController.getCase);
 
 router.post(
   "/create/:caseID/caseVictim",
@@ -58,7 +54,7 @@ router.patch(
 
 router.patch(
   "/:id/assign",
-  authorize("admin"),
+  authorize(["super-admin", "admin"]),
   caseController.assignPartnerToCase,
 );
 

@@ -225,6 +225,151 @@ paths:
                   data:
                     $ref: "#/components/schemas/PartnerUser"
 
+  /case/create:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Create a case report"
+      tags: ["Case"]
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Case"
+      responses:
+        "201":
+          description: "Case reported successfully"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/Case"
+  /case:
+    get:
+      security:
+        - bearerAuth: []
+      summary: "Get all cases"
+      tags: ["Case"]
+      parameters:
+        - description: "Filter by Resolution Status"
+          in: query
+          name: resolutionStatus
+        - description: "Filter by Verification Status"
+          in: query
+          name: verificationStatus
+        - description: "Filter by Platform of Report"
+          in: query
+          name: platformOfReport
+        - description: "Filter by Published status"
+          in: query
+          name: publishStatus
+        - description: "Filter by Report Type"
+          in: query
+          name: reportType
+        - description: "Filter by Case Type Status"
+          in: query
+          name: caseTypeStatus
+        - description: "Page"
+          in: query
+          name: page
+          example: 1
+        - description: "Limit"
+          in: query
+          name: limit
+          example: 20
+      responses:
+        "200":
+          description: "All cases fetched"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Case"
+  /case/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      summary: "Get a case"
+      tags: ["Case"]
+      parameters:
+        - description: "Case id"
+          in: path
+          name: id
+      responses:
+        "200":
+          description: "Case fetched"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/Case"
+  /case/{id}/assign:
+    patch:
+      security:
+        - bearerAuth: []
+      summary: "Assign a case to a partner"
+      tags: ["Case"]
+      parameters:
+        - description: "Case id"
+          in: path
+          name: id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartnerUser"
+      responses:
+        "200":
+          description: "Case assigned"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/Case"
+
+  /case/personal:
+    get:
+      security:
+        - bearerAuth: []
+      summary: "Fetch all personal cases"
+      tags: ["Case"]
+      responses:
+        "200":
+          description: "Case fetched"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/Case"
+
 components:
   securitySchemes:
     bearerAuth:
@@ -387,14 +532,18 @@ components:
       properties:
         _id:
           type: string
+          readOnly: true
         caseID:
           type: string
+          readOnly: true
         publicUserID:
           $ref: "#/components/schemas/PublicUser"
+          readOnly: true
         categoryID:
-          type: string
+          $ref: "#/components/schemas/CaseCategory"
         assignedPartnerUserId:
           $ref: "#/components/schemas/PartnerUser"
+          readOnly: true
         caseTitle:
           type: string
         addressOfIncident:
@@ -577,55 +726,341 @@ components:
       additionalProperties: false
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
+        _id:
+          type: string
+          format: uuid
+        progressID:
+          type: string
+        caseID:
+          $ref: "#/components/schemas/Case"
+        publicUserID:
+          $ref: "#/components/schemas/PublicUser"
+        partnerUserID:
+          $ref: "#/components/schemas/PartnerUser"
+        title:
+          type: string
+        message:
+          type: string
+        privacyStatus:
+          type: string
+          enum: ["public", "private"]
+          default: "private"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
     CaseProgressDoc:
       additionalProperties: false
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
+        _id:
+          type: string
+          format: uuid
+        docID:
+          type: string
+        caseProgressID:
+          $ref: "#/components/schemas/CaseProgress"
+        docTitle:
+          type: string
+        URL:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
     CaseSuspect:
       additionalProperties: false
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
+        _id:
+          type: string
+          format: uuid
+        caseSuspectID:
+          type: string
+        caseID:
+          $ref: "#/components/schemas/Case"
+        firstNameOfSuspect:
+          type: string
+        lastNameOfSuspect:
+          type: string
+        middleNameOfSuspect:
+          type: string
+        emailOfSuspect:
+          type: string
+        phoneNumberOfSuspect:
+          type: string
+        suspectAgeGroup:
+          type: string
+        genderOfSuspect:
+          type: string
+          enum: ["Male", "Female"]
+        guiltStatus:
+          type: string
+          enum: ["Guilty", "Not-guilty", "Accomplice"]
+          default: "Not-guilty"
+        residentialAddressOfSuspect:
+          type: string
+        lgaOfSuspect:
+          type: string
+        stateOfSuspect:
+          type: string
+        countryOfSuspect:
+          type: string
+        suspectOrganizationType:
+          type: string
+          enum:
+            [
+              "Government",
+              "NGO",
+              "Private",
+              "Self Employed",
+              "Others",
+              "Unknown",
+            ]
+        suspectOrganizationName:
+          type: string
+        otherDetailsOfSuspect:
+          type: string
+        addedBy:
+          type: string
+          format: uuid
+        disabilityStatus:
+          type: string
+        addressLandmark:
+          type: string
+        religion:
+          type: string
+        relationshipWithVictim:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
     CaseTaggedCategories:
       additionalProperties: false
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
+        _id:
+          type: string
+          format: uuid
+        caseTagID:
+          type: string
+          format: uuid
+        caseID:
+          $ref: "#/components/schemas/Case"
+        caseCategoryID:
+          $ref: "#/components/schemas/CaseCategory"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
     CaseVictim:
       additionalProperties: false
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
+        _id:
+          type: string
+          format: uuid
+        caseVictimID:
+          type: string
+        caseID:
+          $ref: "#/components/schemas/Case"
+        firstNameOfVictim:
+          type: string
+        lastNameOfVictim:
+          type: string
+        middleNameOfVictim:
+          type: string
+        emailOfVictim:
+          type: string
+        phoneNumberOfVictim:
+          type: string
+        victimAgegroup:
+          type: string
+        genderOfVictim:
+          type: string
+          enum: ["Male", "Female"]
+        residentialAddressOfVictim:
+          type: string
+        addressLandmark:
+          type: string
+        lgaOfVictim:
+          type: string
+        stateOfVictim:
+          type: string
+        countryOfVictim:
+          type: string
+        victimOccupation:
+          type: string
+        victimOrganizationType:
+          type: string
+          enum:
+            [
+              "Government",
+              "NGO",
+              "Private",
+              "Self Employed",
+              "Others",
+              "Unknown",
+            ]
+        victimOrganizationID:
+          $ref: "#/components/schemas/Organization"
+        victimOrganizationName:
+          type: string
+        otherDetailsOfVictim:
+          type: string
+        addedBy:
+          type: string
+        disabilityStatus:
+          type: string
+        religion:
+          type: string
+        relationshipWithVictim:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
     CaseWitness:
       additionalProperties: false
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
+        _id:
+          type: string
+          format: uuid
+        caseWitnessID:
+          type: string
+        caseID:
+          $ref: "#/components/schemas/Case"
+        firstNameOfWitness:
+          type: string
+        lastNameOfWitness:
+          type: string
+        middleNameOfWitness:
+          type: string
+        emailOfWitness:
+          type: string
+          uniqueItems: true
+        phoneNumberOfWitness:
+          type: string
+        witnessAgegroup:
+          type: string
+        genderOfWitness:
+          type: string
+          enum: ["Male", "Female"]
+        residentialAddressOfWitness:
+          type: string
+        addressLandmark:
+          type: string
+        lgaOfWitness:
+          type: string
+        stateOfWitness:
+          type: string
+        countryOfWitness:
+          type: string
+        witnessOccupation:
+          type: string
+        witnessOrganizationType:
+          type: string
+          enum:
+            [
+              "Government",
+              "NGO",
+              "Private",
+              "Self Employed",
+              "Others",
+              "Unknown",
+            ]
+        witnessOrganizationID:
+          $ref: "#/components/schemas/Organization"
+        witnessOrganizationName:
+          type: string
+        otherDetailsOfWitness:
+          type: string
+        addedBy:
+          type: string
+        disabilityStatus:
+          type: string
+        religion:
+          type: string
+        relationshipWithVictim:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
     FollowCase:
       additionalProperties: false
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
+        _id:
+          type: string
+          format: uuid
+        followCaseID:
+          type: string
+          format: uuid
+        caseID:
+          $ref: "#/components/schemas/Case"
+        publicUserId:
+          $ref: "#/components/schemas/PublicUser"
+        followStatus:
+          type: string
+          enum: ["following", "notFollowing"]
+          default: "notFollowing"
     Organization:
       additionalProperties: false
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
+        _id:
+          type: string
+          format: uuid
+        orgID:
+          type: string
+          format: uuid
+        orgName:
+          type: string
+        orgType:
+          type: string
+          enum: ["Government", "NGO", "Private", "Others"]
+        description:
+          type: string
+        email1:
+          type: string
+        email2:
+          type: string
+        email3:
+          type: string
+        address:
+          type: string
+        addressLandmark:
+          type: string
+        phone1:
+          type: string
+        phone2:
+          type: string
+        phone3:
+          type: string
+        lga:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        cacRegNo:
+          type: string
+        hqOrBranch:
+          type: string
+        addedBy:
+          type: string

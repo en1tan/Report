@@ -1,15 +1,17 @@
 const mongoose = require("mongoose");
 const { customAlphabet } = require("nanoid");
-const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 10);
+const nanoid = customAlphabet(
+  "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  10,
+);
 
 const Schema = mongoose.Schema;
 
 const organizationSchema = new Schema({
-
   // Unique Identification code for the organization on the platform
   orgID: {
     type: String,
-    default: () => nanoid()
+    default: () => nanoid(),
   },
 
   // Full Name of the organization
@@ -21,12 +23,12 @@ const organizationSchema = new Schema({
   // Type of Organization
   orgType: {
     type: String,
-    enum: ["Government", "NGO", "Private", "Others"]
+    enum: ["Government", "NGO", "Private", "Others"],
   },
 
   // What the organization do; portfolio
   description: {
-    type: String
+    type: String,
   },
 
   // Organization contact email 1
@@ -90,32 +92,23 @@ const organizationSchema = new Schema({
     type: String,
   },
 
-    // CAC Registration Certificate No.
-    cacRegNo: {
-      type: String,
-    },
-
-  // This specifies whether this record is HQ or Branch of the organization
-  hqorbranch: {
+  // CAC Registration Certificate No.
+  cacRegNo: {
     type: String,
   },
 
-  // ID of the official that added the organization to the platform 
-addedBy: String,
-
-  // Date and Time the Organization was added on the platform
-  timestamp: {
-    type: Date,
-    default: Date.now()
+  // This specifies whether this record is HQ or Branch of the organization
+  hqOrBranch: {
+    type: String,
   },
 
-  // Date and time the record was updated last
-  dateUpdated: {
-    type: Date,
-    default: Date.now()
-  },
+  // ID of the official that added the organization to the platform
+  addedBy: String,
 });
 
-const Organization = mongoose.model("Organization", organizationSchema);
+const Organization = mongoose.model(
+  "Organization",
+  organizationSchema,
+);
 
 module.exports = Organization;

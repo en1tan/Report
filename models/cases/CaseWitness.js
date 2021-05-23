@@ -119,12 +119,6 @@ const caseWitnessSchema = new Schema(
 
     // Witness relationship with the victim
     relationshipWithVictim: String,
-
-    // Timestamp when the witness was added on the platform
-    timestamp: {
-      type: Date,
-      default: Date.now(),
-    },
   },
   { timestamps: true },
 );

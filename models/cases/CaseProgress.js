@@ -48,12 +48,6 @@ const caseProgressSchema = new Schema(
       enum: ["public", "private"],
       default: "private",
     },
-
-    // Date the progress report was added
-    timestamp: {
-      type: Date,
-      default: Date.now(),
-    },
   },
   { timestamps: true },
 );
