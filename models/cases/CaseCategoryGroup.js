@@ -25,12 +25,6 @@ const caseCategoryGroupSchema = new Schema(
     imageIcon: {
       type: String,
     },
-
-    // Date and Time the group was added on the platform
-    timestamp: {
-      type: Date,
-      default: Date.now(),
-    },
   },
   { timestamps: true },
 );

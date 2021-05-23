@@ -1,0 +1,631 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: SorosokeAPI Server
+  description: "API Server for SorosokeAPI"
+servers:
+  - url: http://localhost:5000/api/v1
+    description: "Local Server"
+  - url: https://#
+    description: "Production Server"
+paths:
+  /user/signup:
+    post:
+      summary: "Register new user"
+      tags: ["User"]
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PublicUser"
+      responses:
+        "201":
+          description: "User registered"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      user:
+                        $ref: "#/components/schemas/PublicUser"
+  /user/login:
+    post:
+      summary: "Login user"
+      tags: ["User"]
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        "201":
+          description: "User authorized"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      user:
+                        $ref: "#/components/schemas/PublicUser"
+  /user/profile:
+    get:
+      security:
+        - bearerAuth: []
+      summary: "User profile"
+      tags: ["User"]
+      description: ""
+      responses:
+        "200":
+          description: "User details"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/PublicUser"
+  /user/account:
+    patch:
+      security:
+        - bearerAuth: []
+      summary: "Update user details"
+      tags: ["User"]
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PublicUser"
+      responses:
+        "200":
+          description: "Updated user details"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/PublicUser"
+
+  /user/partner/signup:
+    post:
+      summary: "Add partner account"
+      tags: ["Partner User"]
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartnerUser"
+      responses:
+        "201":
+          description: "Partner user added"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      user:
+                        $ref: "#/components/schemas/PartnerUser"
+  /user/partner/login:
+    post:
+      summary: "Login partner user"
+      tags: ["Partner User"]
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        "200":
+          description: "User authorized"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      user:
+                        $ref: "#/components/schemas/PartnerUser"
+  /user/partner/profile:
+    get:
+      security:
+        - bearerAuth: []
+      summary: "Get partner profile"
+      tags: ["Partner User"]
+      description: ""
+      responses:
+        "200":
+          description: "Partner user details"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/PartnerUser"
+  /user/partner/account:
+    patch:
+      security:
+        - bearerAuth: []
+      summary: "Update partner user details"
+      tags: ["Partner User"]
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartnerUser"
+      responses:
+        "200":
+          description: "Updated partner user details"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/PartnerUser"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    PublicUser:
+      additionalProperties: false
+      type: object
+      required:
+        [
+          firstName,
+          lastName,
+          userName,
+          email,
+          phoneNumber,
+          password,
+          address,
+        ]
+      properties:
+        _id:
+          type: string
+          readOnly: true
+        userID:
+          type: string
+          readOnly: true
+        firstName:
+          type: string
+        lastName:
+          type: string
+        middleName:
+          type: string
+        userName:
+          type: string
+        email:
+          type: string
+          format: email
+        phoneNumber:
+          type: string
+        userAgegroup:
+          type: string
+        gender:
+          type: string
+          enum: ["Male", "Female"]
+        userType:
+          type: string
+          enum: ["user", "admin"]
+          default: user
+          readOnly: true
+        address:
+          type: string
+        addressLandmark:
+          type: string
+        lga:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        avatar:
+          type: string
+        password:
+          type: string
+          format: password
+          writeOnly: true
+        onlineStatus:
+          type: string
+          enum: ["online", "offline"]
+          readOnly: true
+          default: offline
+        active:
+          type: boolean
+          default: true
+          readOnly: true
+        disabilityStatus:
+          type: string
+        religion:
+          type: string
+    PartnerUser:
+      additionalProperties: false
+      type: object
+      required:
+        [
+          firstName,
+          lastName,
+          userName,
+          email,
+          phoneNumber,
+          password,
+          address,
+          stateOfAssignment,
+          userType,
+        ]
+      properties:
+        _id:
+          type: string
+          readOnly: true
+        userID:
+          type: string
+          readOnly: true
+        partnerID:
+          type: string
+        branchID:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        middleName:
+          type: string
+        userName:
+          type: string
+        email:
+          type: string
+          format: email
+        phoneNumber:
+          type: string
+        dob:
+          type: string
+          format: date-time
+        gender:
+          type: string
+          enum: ["Male", "Female"]
+        userType:
+          type: string
+          enum: ["super-admin", "admin", "staff", "verifier"]
+          default: staff
+        address:
+          type: string
+        lga:
+          type: string
+        stateOfAssignment:
+          type: string
+        country:
+          type: string
+        avatar:
+          type: string
+        password:
+          type: string
+          format: password
+          writeOnly: true
+        onlineStatus:
+          type: string
+          enum: ["online", "offline"]
+          readOnly: true
+          default: offline
+        active:
+          type: boolean
+          default: true
+          readOnly: true
+        disabilityStatus:
+          type: string
+        religion:
+          type: string
+    Case:
+      additionalProperties: false
+      type: object
+      required: [caseTitle, dateOfIncident]
+      properties:
+        _id:
+          type: string
+        caseID:
+          type: string
+        publicUserID:
+          $ref: "#/components/schemas/PublicUser"
+        categoryID:
+          type: string
+        assignedPartnerUserId:
+          $ref: "#/components/schemas/PartnerUser"
+        caseTitle:
+          type: string
+        addressOfIncident:
+          type: string
+        addressLandmark:
+          type: string
+        dateOfIncident:
+          type: string
+          format: date-time
+        hourOfIncident:
+          type: string
+        country:
+          type: string
+        state:
+          type: string
+        lga:
+          type: string
+        descriptionOfIncident:
+          type: string
+        areYouTheVictim:
+          type: string
+          enum: ["Yes", "No"]
+          default: "No"
+        reportType:
+          type: string
+          enum: ["Standard", "QuickReport"]
+        casePleas:
+          type: string
+        caseTypeStatus:
+          type: string
+          enum: ["Incidence", "Case", "QuickReport"]
+          default: "Incidence"
+        caseSummary:
+          type: string
+        publishStatus:
+          type: string
+          enum: ["published", "unPublished"]
+          default: "unPublished"
+        publishedBy:
+          $ref: "#/components/schemas/PartnerUser"
+        resolutionStatus:
+          type: string
+          enum: ["resolved", "unResolved", "onlyReport"]
+          default: "unResolved"
+        verificationStatus:
+          type: string
+          enum: ["verified", "unVerified", "onlyReport"]
+          default: "unVerified"
+        platformOfReport:
+          type: string
+          enum: ["mobile", "web", "sms"]
+          default: "web"
+        tags:
+          type: string
+        followedBy:
+          type: array
+          items:
+            $ref: "#/components/schemas/PartnerUser"
+    CaseCategory:
+      additionalProperties: false
+      type: object
+      required: [categoryName]
+      properties:
+        _id:
+          type: string
+        categoryID:
+          type: string
+        categoryGroupID:
+          $ref: "#/components/schemas/CaseCategoryGroup"
+        categoryName:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CaseCategoryGroup:
+      additionalProperties: false
+      type: object
+      properties:
+        _id:
+          type: string
+        categoryGroupID:
+          type: string
+          format: uuid
+        groupName:
+          type: string
+        description:
+          type: string
+        imageIcon:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CaseComment:
+      additionalProperties: false
+      type: object
+      properties:
+        _id:
+          type: string
+          format: uuid
+        caseID:
+          $ref: "#/components/schemas/Case"
+        publicUserID:
+          $ref: "#/components/schemas/PublicUser"
+        comment:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CaseEvidence:
+      additionalProperties: false
+      type: object
+      properties:
+        _id:
+          type: string
+          format: uuid
+        caseID:
+          $ref: "#/components/schemas/Case"
+        fileName:
+          type: string
+        URL:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CaseOtherDetails:
+      additionalProperties: false
+      type: object
+      properties:
+        _id:
+          type: string
+          format: uuid
+        from:
+          type: string
+          enum: ["super-admin", "admin", "staff", "verifier", "user"]
+        userID:
+          type: string
+          format: uuid
+        message:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CaseOtherDetailsDoc:
+      additionalProperties: false
+      type: object
+      properties:
+        _id:
+          type: string
+          format: uuid
+        docID:
+          type: string
+        docTitle:
+          type: string
+        URL:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CaseProgress:
+      additionalProperties: false
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+    CaseProgressDoc:
+      additionalProperties: false
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+    CaseSuspect:
+      additionalProperties: false
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+    CaseTaggedCategories:
+      additionalProperties: false
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+    CaseVictim:
+      additionalProperties: false
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+    CaseWitness:
+      additionalProperties: false
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+    FollowCase:
+      additionalProperties: false
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+    Organization:
+      additionalProperties: false
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const { customAlphabet } = require("nanoid");
+const { string } = require("joi");
 const nanoid = customAlphabet(
   "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
   10,
@@ -101,6 +102,10 @@ const partnerUserSchema = new Schema(
       type: String,
     },
 
+    country: {
+      type: String,
+    },
+
     // Link to Profile Picture
     avatar: String,
 
@@ -122,17 +127,6 @@ const partnerUserSchema = new Schema(
     active: {
       type: Boolean,
       default: true,
-    },
-
-    // Date and Time the User was created by their Admin
-    dateCreated: {
-      type: Date,
-      default: Date.now(),
-    },
-
-    // Date and Time the Record was Last Updated
-    dateUpdated: {
-      type: Date,
     },
   },
   { timestamps: true },

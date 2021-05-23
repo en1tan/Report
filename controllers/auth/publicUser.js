@@ -65,7 +65,7 @@ exports.signin = async (req, res, next) => {
 };
 
 exports.profile = async (req, res, next) => {
-  res.send(req.user);
+  return successWithData(res, 200, "User details", req.user);
 };
 
 exports.editAccount = async (req, res, next) => {

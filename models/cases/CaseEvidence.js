@@ -26,12 +26,6 @@ const caseEvidenceSchema = new Schema(
     URL: {
       type: String,
     },
-
-    // Timestamp when the evidence was added on the platform
-    timestamp: {
-      type: Date,
-      default: Date.now(),
-    },
   },
   { timestamps: true },
 );
