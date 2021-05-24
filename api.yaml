@@ -321,6 +321,36 @@ paths:
                     type: string
                   data:
                     $ref: "#/components/schemas/Case"
+  /case/{id}/verify:
+    patch:
+      security:
+        - bearerAuth: []
+      summary: "Verify a case"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                verificationStatus:
+                  type: string
+      responses:
+        "200":
+          description: "Case verified"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/Case"
   /case/{id}/assign:
     patch:
       security:
@@ -339,6 +369,66 @@ paths:
       responses:
         "200":
           description: "Case assigned"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/Case"
+  /case/{id}/publish:
+    patch:
+      security:
+        - bearerAuth: []
+      summary: "Publish case"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                publishStatus:
+                  type: string
+      responses:
+        "200":
+          description: "Case published"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/Case"
+  /case/{id}/resolve:
+    patch:
+      security:
+        - bearerAuth: []
+      summary: "Resolve case"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                resolutionCase:
+                  type: string
+      responses:
+        "200":
+          description: "Case resolved"
           content:
             application/json:
               schema:
@@ -369,6 +459,516 @@ paths:
                     type: string
                   data:
                     $ref: "#/components/schemas/Case"
+  /case/{id}follow:
+    patch:
+      security:
+        - bearerAuth: []
+      summary: "Follow/Unfollow Case case"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                followStatus:
+                  type: string
+      responses:
+        "200":
+          description: "Case Followed/Unfollowed"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+  /case/followed:
+    get:
+      security:
+        - bearerAuth: []
+      summary: "Get all followed cases"
+      tags: ["Case"]
+      parameters:
+        - description: "Page"
+          in: query
+          name: page
+        - description: "Limit"
+          in: query
+          name: limit
+      responses:
+        "200":
+          description: "Cases fetched"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Case"
+  /case/create/{caseID}/caseVictim:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Add case victim"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: caseID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseVictim"
+      responses:
+        "201":
+          description: "Victim added successfully"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      suspect:
+                        $ref: "#/components/schemas/CaseVictim"
+  /case/create/{caseID}/caseSuspect:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Add case suspect"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: caseID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseSuspect"
+      responses:
+        "201":
+          description: "Suspect added successfully"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      suspect:
+                        $ref: "#/components/schemas/CaseSuspect"
+  /case/create/{caseID}/caseWitness:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Add case witness"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: caseID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseWitness"
+      responses:
+        "201":
+          description: "Witness added successfully"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      suspect:
+                        $ref: "#/components/schemas/CaseWitness"
+  /case/create/{caseID}/otherDetails:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Add case other details"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: caseID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseOtherDetails"
+      responses:
+        "201":
+          description: "Other details added successfully"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      suspect:
+                        $ref: "#/components/schemas/CaseOtherDetails"
+  /case/create/{caseID}/caseProgress:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Add case progress"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: caseID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseProgress"
+      responses:
+        "201":
+          description: "Case progress added successfully"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      suspect:
+                        $ref: "#/components/schemas/CaseProgress"
+  /case/create/{id}/evidence:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Add case evidence"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: id
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                URL:
+                  type: string
+      responses:
+        "201":
+          description: "Case evidence added successfully"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+  /case/edit/{id}/evidence:
+    patch:
+      security:
+        - bearerAuth: []
+      summary: "Edit case evidence"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseEvidence"
+      responses:
+        "200":
+          description: "Case evidence edited successfully"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      case:
+                        $ref: "#/components/schemas/Case"
+
+  /case/category/groups:
+    get:
+      security:
+        - bearerAuth: []
+      summary: "Get all category groups"
+      tags: ["Category Group"]
+      responses:
+        "200":
+          description: "Category groups fetched"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/CaseCategoryGroup"
+  /case/category/group/create:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Add case category group"
+      tags: ["Category Group"]
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                groupName:
+                  type: string
+                description:
+                  type: string
+      responses:
+        "201":
+          description: "Category groups created"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      group:
+                        $ref: "#/components/schemas/CaseCategoryGroup"
+  /case/category/group/{id}/update:
+    patch:
+      security:
+        - bearerAuth: []
+      parameters:
+        - description: "Group ID"
+          in: path
+          name: id
+      tags: ["Category Group"]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseCategoryGroup"
+      responses:
+        "200":
+          description: "Group edited"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/CaseCategoryGroup"
+  /case/category/group/{id}:
+    delete:
+      security:
+        - bearerAuth: []
+      tags: ["Category Group"]
+      parameters:
+        - description: "Group ID"
+          in: path
+          name: id
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+
+  /case/category/categories:
+    get:
+      security:
+        - bearerAuth: []
+      summary: "Get all categories"
+      tags: ["Category"]
+      responses:
+        "200":
+          description: "Category groups fetched"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/CaseCategory"
+  /case/category/{id}/create:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Add case category"
+      tags: ["Category"]
+      parameters:
+        - description: "Group ID"
+          in: path
+          name: id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseCategory"
+      responses:
+        "201":
+          description: "Category created"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      group:
+                        $ref: "#/components/schemas/CaseCategory"
+  /case/category/{id}/update:
+    patch:
+      security:
+        - bearerAuth: []
+      parameters:
+        - description: "Category ID"
+          in: path
+          name: id
+      tags: ["Category"]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseCategory"
+      responses:
+        "200":
+          description: "Carwgory edited"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/CaseCategory"
+  /case/category/{id}:
+    delete:
+      security:
+        - bearerAuth: []
+      tags: ["Category"]
+      parameters:
+        - description: "Category ID"
+          in: path
+          name: id
+      responses:
+        "200":
+          description: "deleted category"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+  /comment/create/{caseId}:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Comment on a case"
+      tags: ["Misc"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: caseId
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseComment"
+      responses:
+        "201":
+          description: "Comment added"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      comment:
+                        $ref: "#/components/schemas/CaseComment"
 
 components:
   securitySchemes:
@@ -449,6 +1049,14 @@ components:
           type: string
         religion:
           type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
     PartnerUser:
       additionalProperties: false
       type: object
@@ -602,6 +1210,14 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/PartnerUser"
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
     CaseCategory:
       additionalProperties: false
       type: object
@@ -620,9 +1236,11 @@ components:
         createdAt:
           type: string
           format: date-time
+          readOnly: true
         updatedAt:
           type: string
           format: date-time
+          readOnly: true
     CaseCategoryGroup:
       additionalProperties: false
       type: object
@@ -632,18 +1250,22 @@ components:
         categoryGroupID:
           type: string
           format: uuid
+          readOnly: true
         groupName:
           type: string
         description:
           type: string
         imageIcon:
           type: string
+          format: binary
         createdAt:
           type: string
           format: date-time
+          readOnly: true
         updatedAt:
           type: string
           format: date-time
+          readOnly: true
     CaseComment:
       additionalProperties: false
       type: object
@@ -660,9 +1282,11 @@ components:
         createdAt:
           type: string
           format: date-time
+          readOnly: true
         updatedAt:
           type: string
           format: date-time
+          readOnly: true
     CaseEvidence:
       additionalProperties: false
       type: object
@@ -679,9 +1303,11 @@ components:
         createdAt:
           type: string
           format: date-time
+          readOnly: true
         updatedAt:
           type: string
           format: date-time
+          readOnly: true
     CaseOtherDetails:
       additionalProperties: false
       type: object
@@ -700,9 +1326,11 @@ components:
         createdAt:
           type: string
           format: date-time
+          readOnly: true
         updatedAt:
           type: string
           format: date-time
+          readOnly: true
     CaseOtherDetailsDoc:
       additionalProperties: false
       type: object
@@ -719,9 +1347,11 @@ components:
         createdAt:
           type: string
           format: date-time
+          readOnly: true
         updatedAt:
           type: string
           format: date-time
+          readOnly: true
     CaseProgress:
       additionalProperties: false
       type: object
@@ -748,9 +1378,11 @@ components:
         createdAt:
           type: string
           format: date-time
+          readOnly: true
         updatedAt:
           type: string
           format: date-time
+          readOnly: true
     CaseProgressDoc:
       additionalProperties: false
       type: object
@@ -769,9 +1401,11 @@ components:
         createdAt:
           type: string
           format: date-time
+          readOnly: true
         updatedAt:
           type: string
           format: date-time
+          readOnly: true
     CaseSuspect:
       additionalProperties: false
       type: object
@@ -839,9 +1473,11 @@ components:
         createdAt:
           type: string
           format: date-time
+          readOnly: true
         updatedAt:
           type: string
           format: date-time
+          readOnly: true
     CaseTaggedCategories:
       additionalProperties: false
       type: object
@@ -859,9 +1495,11 @@ components:
         createdAt:
           type: string
           format: date-time
+          readOnly: true
         updatedAt:
           type: string
           format: date-time
+          readOnly: true
     CaseVictim:
       additionalProperties: false
       type: object
@@ -928,9 +1566,11 @@ components:
         createdAt:
           type: string
           format: date-time
+          readOnly: true
         updatedAt:
           type: string
           format: date-time
+          readOnly: true
     CaseWitness:
       additionalProperties: false
       type: object
@@ -998,9 +1638,11 @@ components:
         createdAt:
           type: string
           format: date-time
+          readOnly: true
         updatedAt:
           type: string
           format: date-time
+          readOnly: true
     FollowCase:
       additionalProperties: false
       type: object

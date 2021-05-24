@@ -41,20 +41,21 @@ router.post(
   caseController.createCaseProgress,
 );
 
-router.patch(
-  "/:id/evidence",
+router.post(
+  "/create/:id/evidence",
+  authorize(["admin", "staff"]),
   arrayUpload,
   caseController.saveEvidence,
 );
 router.patch(
-  "/:id/case",
+  "edit/:id/evidence",
   authorize(["admin", "staff"]),
   caseController.editEvidence,
 );
 
 router.patch(
   "/:id/assign",
-  authorize(["super-admin", "admin"]),
+  authorize(["admin"]),
   caseController.assignPartnerToCase,
 );
 
