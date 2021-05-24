@@ -1,4 +1,4 @@
-# SOROSOE API
+# SOROSOKE API
 
 ### Steps
 > Install dependencies `npm install`
