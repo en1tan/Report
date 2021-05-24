@@ -260,29 +260,45 @@ paths:
         - description: "Filter by Resolution Status"
           in: query
           name: resolutionStatus
+          schema:
+            type: string
         - description: "Filter by Verification Status"
           in: query
           name: verificationStatus
+          schema:
+            type: string
         - description: "Filter by Platform of Report"
           in: query
           name: platformOfReport
+          schema:
+            type: string
         - description: "Filter by Published status"
           in: query
           name: publishStatus
+          schema:
+            type: string
         - description: "Filter by Report Type"
           in: query
           name: reportType
+          schema:
+            type: string
         - description: "Filter by Case Type Status"
           in: query
           name: caseTypeStatus
+          schema:
+            type: string
         - description: "Page"
           in: query
           name: page
           example: 1
+          schema:
+            type: integer
         - description: "Limit"
           in: query
           name: limit
           example: 20
+          schema:
+            type: integer
       responses:
         "200":
           description: "All cases fetched"
@@ -308,6 +324,10 @@ paths:
         - description: "Case id"
           in: path
           name: id
+          required: true
+          schema:
+            type: string
+
       responses:
         "200":
           description: "Case fetched"
@@ -331,6 +351,9 @@ paths:
         - description: "Case ID"
           in: path
           name: id
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -361,6 +384,9 @@ paths:
         - description: "Case id"
           in: path
           name: id
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -389,6 +415,9 @@ paths:
         - description: "Case ID"
           in: path
           name: id
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -419,6 +448,9 @@ paths:
         - description: "Case ID"
           in: path
           name: id
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -469,6 +501,9 @@ paths:
         - description: "Case ID"
           in: path
           name: id
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -497,9 +532,13 @@ paths:
         - description: "Page"
           in: query
           name: page
+          schema:
+            type: integer
         - description: "Limit"
           in: query
           name: limit
+          schema:
+            type: integer
       responses:
         "200":
           description: "Cases fetched"
@@ -525,6 +564,9 @@ paths:
         - description: "Case ID"
           in: path
           name: caseID
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -556,6 +598,9 @@ paths:
         - description: "Case ID"
           in: path
           name: caseID
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -587,6 +632,9 @@ paths:
         - description: "Case ID"
           in: path
           name: caseID
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -618,6 +666,9 @@ paths:
         - description: "Case ID"
           in: path
           name: caseID
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -649,6 +700,9 @@ paths:
         - description: "Case ID"
           in: path
           name: caseID
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -680,6 +734,9 @@ paths:
         - description: "Case ID"
           in: path
           name: id
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           multipart/form-data:
@@ -714,6 +771,9 @@ paths:
         - description: "Case ID"
           in: path
           name: id
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -800,6 +860,9 @@ paths:
         - description: "Group ID"
           in: path
           name: id
+          required: true
+          schema:
+            type: string
       tags: ["Category Group"]
       requestBody:
         content:
@@ -828,8 +891,12 @@ paths:
         - description: "Group ID"
           in: path
           name: id
+          required: true
+          schema:
+            type: string
       responses:
         "200":
+          description: "Group deleted"
           content:
             application/json:
               schema:
@@ -870,6 +937,9 @@ paths:
         - description: "Group ID"
           in: path
           name: id
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -899,6 +969,9 @@ paths:
         - description: "Category ID"
           in: path
           name: id
+          required: true
+          schema:
+            type: string
       tags: ["Category"]
       requestBody:
         content:
@@ -927,6 +1000,9 @@ paths:
         - description: "Category ID"
           in: path
           name: id
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: "deleted category"
@@ -948,6 +1024,9 @@ paths:
         - description: "Case ID"
           in: path
           name: caseId
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -969,6 +1048,161 @@ paths:
                     properties:
                       comment:
                         $ref: "#/components/schemas/CaseComment"
+  /contact/create:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Request contact details"
+      tags: ["Misc"]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Contact"
+      responses:
+        "201":
+          description: "Contact details requested"
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/Contact"
+  /organization/create:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Create organization details"
+      tags: ["Super Admin"]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Organization"
+      responses:
+        "201":
+          description: "Organization created"
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/Organization"
+
+  /progress/create/{caseID}:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Add case progress"
+      tags: ["Case Progress", "Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: caseId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseProgress"
+      responses:
+        "201":
+          description: "Case Progress added"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      progress:
+                        $ref: "#/components/schemas/CaseProgress"
+  /progress/upload/{progressId}:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Upload progress document"
+      tags: ["Case", "Case Progress"]
+      parameters:
+        - description: "Progress ID"
+          name: progressId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/CaseProgressDoc"
+      responses:
+        "201":
+          description: "Upload successful"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CaseProgressDoc"
+  /details/create/{caseID}:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Add case other details"
+      tags: ["Case Other Details", "Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: caseId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseOtherDetails"
+      responses:
+        "201":
+          description: "Case Other details added"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      progress:
+                        $ref: "#/components/schemas/CaseOtherDetails"
+  /progress/upload/{otherDetailsId}:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Upload other details document"
+      tags: ["Case", "Case Other Details"]
+      parameters:
+        - description: "Progress ID"
+          name: otherDetailsId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/CaseOtherDetailsDoc"
+      responses:
+        "201":
+          description: "Upload successful"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CaseOtherDetailsDoc"
 
 components:
   securitySchemes:
@@ -1315,6 +1549,7 @@ components:
         _id:
           type: string
           format: uuid
+          readOnly: true
         from:
           type: string
           enum: ["super-admin", "admin", "staff", "verifier", "user"]
@@ -1338,12 +1573,15 @@ components:
         _id:
           type: string
           format: uuid
+          readOnly: true
         docID:
           type: string
+          readOnly: true
         docTitle:
           type: string
         URL:
           type: string
+          format: binary
         createdAt:
           type: string
           format: date-time
@@ -1359,8 +1597,10 @@ components:
         _id:
           type: string
           format: uuid
+          readOnly: true
         progressID:
           type: string
+          readOnly: true
         caseID:
           $ref: "#/components/schemas/Case"
         publicUserID:
@@ -1390,14 +1630,17 @@ components:
         _id:
           type: string
           format: uuid
+          readOnly: true
         docID:
           type: string
+          readOnly: true
         caseProgressID:
           $ref: "#/components/schemas/CaseProgress"
         docTitle:
           type: string
         URL:
           type: string
+          format: binary
         createdAt:
           type: string
           format: date-time
@@ -1668,9 +1911,11 @@ components:
         _id:
           type: string
           format: uuid
+          readOnly: true
         orgID:
           type: string
           format: uuid
+          readOnly: true
         orgName:
           type: string
         orgType:
@@ -1706,3 +1951,43 @@ components:
           type: string
         addedBy:
           type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+    Contact:
+      type: object
+      required: ["email", "subject", "message"]
+      properties:
+        ticketID:
+          type: string
+          format: uuid
+          readOnly: true
+        senderName:
+          type: string
+        userID:
+          readOnly: true
+          $ref: "#/components/schemas/PublicUser"
+        phoneNumber:
+          type: string
+        email:
+          type: string
+          format: email
+        subject:
+          type: string
+        message:
+          type: string
+        status:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true

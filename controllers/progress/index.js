@@ -1,42 +1,51 @@
-const Progress = require("../../models/Progress");
+const CaseProgress = require("../../models/cases/CaseProgress");
+const CaseProgressDoc = require("../../models/cases/CaseProgressDoc");
 
-const ApiFeatures = require("../../utils/apiFeatures");
 const {
-  validationError,
   tryCatchError,
   normalError,
 } = require("../../utils/errorHandlers");
-const {
-  successWithData,
-  successNoData,
-} = require("../../utils/successHandler");
+const { successWithData } = require("../../utils/successHandler");
+const { uploadDocs } = require("../case/cloudUpload");
 
 exports.createProgress = async (req, res, next) => {
   try {
-    const newProgress = await Progress.create({
-      caseId: req.params.caseId,
-      reports: [{ text: req.body.report }],
-    });
+    const progressData = Object.assign(
+      { caseID: req.params.caseId },
+      req.body,
+    );
+    const newProgress = await CaseProgress.create(progressData);
     const data = {
       progress: newProgress,
     };
-    return successWithData(res, 200, "Progress Created Succesfully", data);
+    return successWithData(
+      res,
+      200,
+      "Progress Created Succesfully",
+      data,
+    );
   } catch (err) {
     return tryCatchError(res, err);
   }
 };
 
-exports.addProgress = async (req, res, next) => {
+exports.uploadProgressDoc = async (req, res, next) => {
   try {
-    const progress = await Progress.findOneAndUpdate(
-      { _id: req.params.id, caseId: req.params.caseId },
-      { $push: { reports: req.body } },
-      { new: true }
+    const progressImage = await uploadDocs(req.file);
+    req.body.URL = progressImage.url;
+    const progress = await CaseProgress.findById(
+      req.params.progressId,
     );
-    const data = {
-      progress
-    };
-    return successWithData(res, 201, "Progress Updated Succesfully", data);
+    if (!progress) return normalError(res, 404, "Progress not found");
+    progress.progressDocs.push(req.body);
+    await progress.save();
+    const progressDoc = await CaseProgressDoc.create(req.body);
+    return successWithData(
+      res,
+      200,
+      "Progress Documents uploaded Succesfully",
+      progressDoc,
+    );
   } catch (err) {
     return tryCatchError(res, err);
   }

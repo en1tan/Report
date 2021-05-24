@@ -25,6 +25,12 @@ const caseOtherDetailsSchema = new Schema(
     message: {
       type: String,
     },
+    otherDetailsDocs: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CaseOtherDetailsDoc",
+      },
+    ],
   },
   { timestamps: true },
 );
