@@ -126,12 +126,6 @@ const caseSuspectSchema = new Schema(
 
     // suspect relationship with the victim
     relationshipWithVictim: String,
-
-    // Timestamp when the suspect was added on the platform
-    timestamp: {
-      type: Date,
-      default: Date.now(),
-    },
   },
   { timestamps: true },
 );

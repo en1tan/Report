@@ -26,12 +26,6 @@ const caseCategorySchema = new Schema(
     description: {
       type: String,
     },
-
-    // Date and time the category was added to the platform
-    timestamp: {
-      type: Date,
-      default: Date.now(),
-    },
   },
   { timestamps: true },
 );

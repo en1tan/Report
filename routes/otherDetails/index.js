@@ -1,5 +1,5 @@
 const express = require("express");
-const progressController = require("../../controllers/progress");
+const otherDetailsController = require("../../controllers/otherDetails");
 const auth = require("../../middleware/authenticate");
 const authorize = require("../../middleware/authorization");
 
@@ -9,13 +9,13 @@ router.post(
   "/create/:caseId",
   auth(),
   authorize(["admin", "staff"]),
-  progressController.createProgress,
+  otherDetailsController.createOtherDetails,
 );
 router.post(
-  "/upload/:progressId",
+  "/upload/:otherDetailsId",
   auth(),
   authorize(["admin", "staff"]),
-  progressController.uploadProgressDoc,
+  otherDetailsController.uploadOtherDetailsDoc,
 );
 
 module.exports = router;

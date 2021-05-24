@@ -13,10 +13,23 @@ router.post(
 );
 router.post("/login", authController.signin);
 
-router.post("/partner/signup", partnerAuthController.signup);
-router.post("/partner/login", partnerAuthController.signin);
+router.post(
+  "/partner/signup",
+  validator("partnerSignup", "body"),
+  partnerAuthController.signup,
+);
+router.post(
+  "/partner/login",
+  validator("login", "body"),
+  partnerAuthController.signin,
+);
 
 router.get("/profile", auth(), authController.profile);
+router.get(
+  "/partner/profile",
+  auth(),
+  partnerAuthController.partnerProfile,
+);
 router.patch("/account", auth(), authController.editAccount);
 router.patch(
   "/partner/account",

@@ -13,11 +13,7 @@ router.get(
 router.get("/personal", caseController.getPersonalCases);
 router.post("/create", caseController.createCase);
 router.get("/followed", caseController.getFollowedCases);
-router.get(
-  "/:id",
-  authorize(["super-admin", "admin", "staff", "verifier"]),
-  caseController.getCase,
-);
+router.get("/:id", caseController.getCase);
 
 router.post(
   "/create/:caseID/caseVictim",
@@ -45,20 +41,21 @@ router.post(
   caseController.createCaseProgress,
 );
 
-router.patch(
-  "/:id/evidence",
+router.post(
+  "/create/:id/evidence",
+  authorize(["admin", "staff"]),
   arrayUpload,
   caseController.saveEvidence,
 );
 router.patch(
-  "/:id/case",
+  "edit/:id/evidence",
   authorize(["admin", "staff"]),
   caseController.editEvidence,
 );
 
 router.patch(
   "/:id/assign",
-  authorize("admin"),
+  authorize(["admin"]),
   caseController.assignPartnerToCase,
 );
 

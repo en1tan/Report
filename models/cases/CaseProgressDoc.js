@@ -27,12 +27,6 @@ const caseProgressDocSchema = new Schema(
     URL: {
       type: String,
     },
-
-    // Date and Time the file was added
-    timestamp: {
-      type: Date,
-      default: Date.now(),
-    },
   },
   { timestamps: true },
 );

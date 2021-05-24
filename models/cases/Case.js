@@ -149,12 +149,6 @@ const caseSchema = new Schema(
         ref: "PublicUser",
       },
     ],
-
-    // Date and time the incident was reported on the sorosoke platform
-    timestamp: {
-      type: Date,
-      default: Date.now(),
-    },
   },
   { timestamps: true },
 );

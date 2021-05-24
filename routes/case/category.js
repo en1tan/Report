@@ -5,14 +5,10 @@ const { singleUpload } = require("../../middleware/imageUpload");
 
 const router = express.Router();
 
-router.get(
-  "/groups",
-  authorize(["super-admin", "admin"]),
-  caseController.getAllCategoryGroup,
-);
+router.get("/groups", caseController.getAllCategoryGroup);
 router.post(
   "/group/create",
-  authorize("admin"),
+  authorize(["super-admin", "admin"]),
   singleUpload,
   caseController.createCaseCategoryGroup,
 );

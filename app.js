@@ -2,6 +2,11 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 
+const yamljs = require("yamljs");
+
+const swaggerUI = require("swagger-ui-express"),
+  swaggerDoc = yamljs.load("./api.yaml");
+
 const app = express();
 
 const routes = require("./routes");
@@ -18,8 +23,17 @@ if (process.env.NODE_ENV === "development") {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => res.send("Hello"));
-
 app.use("/api/v1/", routes);
+
+app.use(
+  "/docs",
+  (req, res, next) => {
+    swaggerDoc.host = req.get("host");
+    req.swaggerDoc = swaggerDoc;
+    next();
+  },
+  swaggerUI.serve,
+  swaggerUI.setup(swaggerDoc),
+);
 
 module.exports = app;

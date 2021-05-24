@@ -48,12 +48,12 @@ const caseProgressSchema = new Schema(
       enum: ["public", "private"],
       default: "private",
     },
-
-    // Date the progress report was added
-    timestamp: {
-      type: Date,
-      default: Date.now(),
-    },
+    progressDocs: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CaseProgressDoc",
+      },
+    ],
   },
   { timestamps: true },
 );

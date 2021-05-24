@@ -17,17 +17,21 @@ const {
 } = require("../../utils/successHandler");
 
 const _ = require("lodash");
-const { findByIdAndUpdate } = require("../../models/cases/Case");
 
 exports.followCase = async (req, res, next) => {
   try {
     const existingCase = await Case.findById(req.params.id);
     if (!existingCase)
       return normalError(res, 404, "Case not found", null);
-
-    existingCase.followedBy.push(req.user);
-    await existingCase.save();
-    return successNoData(res, 200, "Case followed successfully");
+    if (req.body.followStatus === "follow") {
+      existingCase.followedBy.push(req.user);
+      await existingCase.save();
+      return successNoData(res, 200, "Case followed successfully");
+    } else {
+      existingCase.followedBy.pop(req.user);
+      await existingCase.save();
+      return successNoData(res, 200, "Case unfollowed successfully");
+    }
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -178,10 +182,8 @@ exports.createCase = async (req, res, next) => {
 
 exports.createCaseVictim = async (req, res, next) => {
   try {
-    const newVictim = await CaseVictim.create({
-      ...req.body,
-      caseID: req.params.caseID,
-    });
+    req.body.caseID = req.params.caseID;
+    const newVictim = await CaseVictim.create(req.body);
     const data = {
       victim: newVictim,
     };

@@ -21,14 +21,8 @@ const commentSchema = new Schema(
       type: String,
       required: true,
     },
-
-    // Timestamp when the comment was added on the platform
-    timestamp: {
-      type: Date,
-      default: Date.now(),
-    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const CaseComment = mongoose.model("CaseComment", commentSchema);

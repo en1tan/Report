@@ -1,0 +1,1993 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: SorosokeAPI Server
+  description: "API Server for SorosokeAPI"
+servers:
+  - url: http://localhost:5000/api/v1
+    description: "Local Server"
+  - url: https://#
+    description: "Production Server"
+paths:
+  /user/signup:
+    post:
+      summary: "Register new user"
+      tags: ["User"]
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PublicUser"
+      responses:
+        "201":
+          description: "User registered"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      user:
+                        $ref: "#/components/schemas/PublicUser"
+  /user/login:
+    post:
+      summary: "Login user"
+      tags: ["User"]
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        "201":
+          description: "User authorized"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      user:
+                        $ref: "#/components/schemas/PublicUser"
+  /user/profile:
+    get:
+      security:
+        - bearerAuth: []
+      summary: "User profile"
+      tags: ["User"]
+      description: ""
+      responses:
+        "200":
+          description: "User details"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/PublicUser"
+  /user/account:
+    patch:
+      security:
+        - bearerAuth: []
+      summary: "Update user details"
+      tags: ["User"]
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PublicUser"
+      responses:
+        "200":
+          description: "Updated user details"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/PublicUser"
+
+  /user/partner/signup:
+    post:
+      summary: "Add partner account"
+      tags: ["Partner User"]
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartnerUser"
+      responses:
+        "201":
+          description: "Partner user added"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      user:
+                        $ref: "#/components/schemas/PartnerUser"
+  /user/partner/login:
+    post:
+      summary: "Login partner user"
+      tags: ["Partner User"]
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        "200":
+          description: "User authorized"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      user:
+                        $ref: "#/components/schemas/PartnerUser"
+  /user/partner/profile:
+    get:
+      security:
+        - bearerAuth: []
+      summary: "Get partner profile"
+      tags: ["Partner User"]
+      description: ""
+      responses:
+        "200":
+          description: "Partner user details"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/PartnerUser"
+  /user/partner/account:
+    patch:
+      security:
+        - bearerAuth: []
+      summary: "Update partner user details"
+      tags: ["Partner User"]
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartnerUser"
+      responses:
+        "200":
+          description: "Updated partner user details"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/PartnerUser"
+
+  /case/create:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Create a case report"
+      tags: ["Case"]
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Case"
+      responses:
+        "201":
+          description: "Case reported successfully"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/Case"
+  /case:
+    get:
+      security:
+        - bearerAuth: []
+      summary: "Get all cases"
+      tags: ["Case"]
+      parameters:
+        - description: "Filter by Resolution Status"
+          in: query
+          name: resolutionStatus
+          schema:
+            type: string
+        - description: "Filter by Verification Status"
+          in: query
+          name: verificationStatus
+          schema:
+            type: string
+        - description: "Filter by Platform of Report"
+          in: query
+          name: platformOfReport
+          schema:
+            type: string
+        - description: "Filter by Published status"
+          in: query
+          name: publishStatus
+          schema:
+            type: string
+        - description: "Filter by Report Type"
+          in: query
+          name: reportType
+          schema:
+            type: string
+        - description: "Filter by Case Type Status"
+          in: query
+          name: caseTypeStatus
+          schema:
+            type: string
+        - description: "Page"
+          in: query
+          name: page
+          example: 1
+          schema:
+            type: integer
+        - description: "Limit"
+          in: query
+          name: limit
+          example: 20
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "All cases fetched"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Case"
+  /case/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      summary: "Get a case"
+      tags: ["Case"]
+      parameters:
+        - description: "Case id"
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: "Case fetched"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/Case"
+  /case/{id}/verify:
+    patch:
+      security:
+        - bearerAuth: []
+      summary: "Verify a case"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                verificationStatus:
+                  type: string
+      responses:
+        "200":
+          description: "Case verified"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/Case"
+  /case/{id}/assign:
+    patch:
+      security:
+        - bearerAuth: []
+      summary: "Assign a case to a partner"
+      tags: ["Case"]
+      parameters:
+        - description: "Case id"
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartnerUser"
+      responses:
+        "200":
+          description: "Case assigned"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/Case"
+  /case/{id}/publish:
+    patch:
+      security:
+        - bearerAuth: []
+      summary: "Publish case"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                publishStatus:
+                  type: string
+      responses:
+        "200":
+          description: "Case published"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/Case"
+  /case/{id}/resolve:
+    patch:
+      security:
+        - bearerAuth: []
+      summary: "Resolve case"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                resolutionCase:
+                  type: string
+      responses:
+        "200":
+          description: "Case resolved"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/Case"
+
+  /case/personal:
+    get:
+      security:
+        - bearerAuth: []
+      summary: "Fetch all personal cases"
+      tags: ["Case"]
+      responses:
+        "200":
+          description: "Case fetched"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/Case"
+  /case/{id}follow:
+    patch:
+      security:
+        - bearerAuth: []
+      summary: "Follow/Unfollow Case case"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                followStatus:
+                  type: string
+      responses:
+        "200":
+          description: "Case Followed/Unfollowed"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+  /case/followed:
+    get:
+      security:
+        - bearerAuth: []
+      summary: "Get all followed cases"
+      tags: ["Case"]
+      parameters:
+        - description: "Page"
+          in: query
+          name: page
+          schema:
+            type: integer
+        - description: "Limit"
+          in: query
+          name: limit
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "Cases fetched"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Case"
+  /case/create/{caseID}/caseVictim:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Add case victim"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: caseID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseVictim"
+      responses:
+        "201":
+          description: "Victim added successfully"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      suspect:
+                        $ref: "#/components/schemas/CaseVictim"
+  /case/create/{caseID}/caseSuspect:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Add case suspect"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: caseID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseSuspect"
+      responses:
+        "201":
+          description: "Suspect added successfully"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      suspect:
+                        $ref: "#/components/schemas/CaseSuspect"
+  /case/create/{caseID}/caseWitness:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Add case witness"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: caseID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseWitness"
+      responses:
+        "201":
+          description: "Witness added successfully"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      suspect:
+                        $ref: "#/components/schemas/CaseWitness"
+  /case/create/{caseID}/otherDetails:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Add case other details"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: caseID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseOtherDetails"
+      responses:
+        "201":
+          description: "Other details added successfully"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      suspect:
+                        $ref: "#/components/schemas/CaseOtherDetails"
+  /case/create/{caseID}/caseProgress:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Add case progress"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: caseID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseProgress"
+      responses:
+        "201":
+          description: "Case progress added successfully"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      suspect:
+                        $ref: "#/components/schemas/CaseProgress"
+  /case/create/{id}/evidence:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Add case evidence"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                URL:
+                  type: string
+      responses:
+        "201":
+          description: "Case evidence added successfully"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+  /case/edit/{id}/evidence:
+    patch:
+      security:
+        - bearerAuth: []
+      summary: "Edit case evidence"
+      tags: ["Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseEvidence"
+      responses:
+        "200":
+          description: "Case evidence edited successfully"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      case:
+                        $ref: "#/components/schemas/Case"
+
+  /case/category/groups:
+    get:
+      security:
+        - bearerAuth: []
+      summary: "Get all category groups"
+      tags: ["Category Group"]
+      responses:
+        "200":
+          description: "Category groups fetched"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/CaseCategoryGroup"
+  /case/category/group/create:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Add case category group"
+      tags: ["Category Group"]
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                groupName:
+                  type: string
+                description:
+                  type: string
+      responses:
+        "201":
+          description: "Category groups created"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      group:
+                        $ref: "#/components/schemas/CaseCategoryGroup"
+  /case/category/group/{id}/update:
+    patch:
+      security:
+        - bearerAuth: []
+      parameters:
+        - description: "Group ID"
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      tags: ["Category Group"]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseCategoryGroup"
+      responses:
+        "200":
+          description: "Group edited"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/CaseCategoryGroup"
+  /case/category/group/{id}:
+    delete:
+      security:
+        - bearerAuth: []
+      tags: ["Category Group"]
+      parameters:
+        - description: "Group ID"
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Group deleted"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+
+  /case/category/categories:
+    get:
+      security:
+        - bearerAuth: []
+      summary: "Get all categories"
+      tags: ["Category"]
+      responses:
+        "200":
+          description: "Category groups fetched"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/CaseCategory"
+  /case/category/{id}/create:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Add case category"
+      tags: ["Category"]
+      parameters:
+        - description: "Group ID"
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseCategory"
+      responses:
+        "201":
+          description: "Category created"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      group:
+                        $ref: "#/components/schemas/CaseCategory"
+  /case/category/{id}/update:
+    patch:
+      security:
+        - bearerAuth: []
+      parameters:
+        - description: "Category ID"
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      tags: ["Category"]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseCategory"
+      responses:
+        "200":
+          description: "Carwgory edited"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/CaseCategory"
+  /case/category/{id}:
+    delete:
+      security:
+        - bearerAuth: []
+      tags: ["Category"]
+      parameters:
+        - description: "Category ID"
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "deleted category"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+  /comment/create/{caseId}:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Comment on a case"
+      tags: ["Misc"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: caseId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseComment"
+      responses:
+        "201":
+          description: "Comment added"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      comment:
+                        $ref: "#/components/schemas/CaseComment"
+  /contact/create:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Request contact details"
+      tags: ["Misc"]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Contact"
+      responses:
+        "201":
+          description: "Contact details requested"
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/Contact"
+  /organization/create:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Create organization details"
+      tags: ["Super Admin"]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Organization"
+      responses:
+        "201":
+          description: "Organization created"
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/Organization"
+
+  /progress/create/{caseID}:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Add case progress"
+      tags: ["Case Progress", "Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: caseId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseProgress"
+      responses:
+        "201":
+          description: "Case Progress added"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      progress:
+                        $ref: "#/components/schemas/CaseProgress"
+  /progress/upload/{progressId}:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Upload progress document"
+      tags: ["Case", "Case Progress"]
+      parameters:
+        - description: "Progress ID"
+          name: progressId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/CaseProgressDoc"
+      responses:
+        "201":
+          description: "Upload successful"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CaseProgressDoc"
+  /details/create/{caseID}:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Add case other details"
+      tags: ["Case Other Details", "Case"]
+      parameters:
+        - description: "Case ID"
+          in: path
+          name: caseId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseOtherDetails"
+      responses:
+        "201":
+          description: "Case Other details added"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      progress:
+                        $ref: "#/components/schemas/CaseOtherDetails"
+  /progress/upload/{otherDetailsId}:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Upload other details document"
+      tags: ["Case", "Case Other Details"]
+      parameters:
+        - description: "Progress ID"
+          name: otherDetailsId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/CaseOtherDetailsDoc"
+      responses:
+        "201":
+          description: "Upload successful"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CaseOtherDetailsDoc"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    PublicUser:
+      additionalProperties: false
+      type: object
+      required:
+        [
+          firstName,
+          lastName,
+          userName,
+          email,
+          phoneNumber,
+          password,
+          address,
+        ]
+      properties:
+        _id:
+          type: string
+          readOnly: true
+        userID:
+          type: string
+          readOnly: true
+        firstName:
+          type: string
+        lastName:
+          type: string
+        middleName:
+          type: string
+        userName:
+          type: string
+        email:
+          type: string
+          format: email
+        phoneNumber:
+          type: string
+        userAgegroup:
+          type: string
+        gender:
+          type: string
+          enum: ["Male", "Female"]
+        userType:
+          type: string
+          enum: ["user", "admin"]
+          default: user
+          readOnly: true
+        address:
+          type: string
+        addressLandmark:
+          type: string
+        lga:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        avatar:
+          type: string
+        password:
+          type: string
+          format: password
+          writeOnly: true
+        onlineStatus:
+          type: string
+          enum: ["online", "offline"]
+          readOnly: true
+          default: offline
+        active:
+          type: boolean
+          default: true
+          readOnly: true
+        disabilityStatus:
+          type: string
+        religion:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+    PartnerUser:
+      additionalProperties: false
+      type: object
+      required:
+        [
+          firstName,
+          lastName,
+          userName,
+          email,
+          phoneNumber,
+          password,
+          address,
+          stateOfAssignment,
+          userType,
+        ]
+      properties:
+        _id:
+          type: string
+          readOnly: true
+        userID:
+          type: string
+          readOnly: true
+        partnerID:
+          type: string
+        branchID:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        middleName:
+          type: string
+        userName:
+          type: string
+        email:
+          type: string
+          format: email
+        phoneNumber:
+          type: string
+        dob:
+          type: string
+          format: date-time
+        gender:
+          type: string
+          enum: ["Male", "Female"]
+        userType:
+          type: string
+          enum: ["super-admin", "admin", "staff", "verifier"]
+          default: staff
+        address:
+          type: string
+        lga:
+          type: string
+        stateOfAssignment:
+          type: string
+        country:
+          type: string
+        avatar:
+          type: string
+        password:
+          type: string
+          format: password
+          writeOnly: true
+        onlineStatus:
+          type: string
+          enum: ["online", "offline"]
+          readOnly: true
+          default: offline
+        active:
+          type: boolean
+          default: true
+          readOnly: true
+        disabilityStatus:
+          type: string
+        religion:
+          type: string
+    Case:
+      additionalProperties: false
+      type: object
+      required: [caseTitle, dateOfIncident]
+      properties:
+        _id:
+          type: string
+          readOnly: true
+        caseID:
+          type: string
+          readOnly: true
+        publicUserID:
+          $ref: "#/components/schemas/PublicUser"
+          readOnly: true
+        categoryID:
+          $ref: "#/components/schemas/CaseCategory"
+        assignedPartnerUserId:
+          $ref: "#/components/schemas/PartnerUser"
+          readOnly: true
+        caseTitle:
+          type: string
+        addressOfIncident:
+          type: string
+        addressLandmark:
+          type: string
+        dateOfIncident:
+          type: string
+          format: date-time
+        hourOfIncident:
+          type: string
+        country:
+          type: string
+        state:
+          type: string
+        lga:
+          type: string
+        descriptionOfIncident:
+          type: string
+        areYouTheVictim:
+          type: string
+          enum: ["Yes", "No"]
+          default: "No"
+        reportType:
+          type: string
+          enum: ["Standard", "QuickReport"]
+        casePleas:
+          type: string
+        caseTypeStatus:
+          type: string
+          enum: ["Incidence", "Case", "QuickReport"]
+          default: "Incidence"
+        caseSummary:
+          type: string
+        publishStatus:
+          type: string
+          enum: ["published", "unPublished"]
+          default: "unPublished"
+        publishedBy:
+          $ref: "#/components/schemas/PartnerUser"
+        resolutionStatus:
+          type: string
+          enum: ["resolved", "unResolved", "onlyReport"]
+          default: "unResolved"
+        verificationStatus:
+          type: string
+          enum: ["verified", "unVerified", "onlyReport"]
+          default: "unVerified"
+        platformOfReport:
+          type: string
+          enum: ["mobile", "web", "sms"]
+          default: "web"
+        tags:
+          type: string
+        followedBy:
+          type: array
+          items:
+            $ref: "#/components/schemas/PartnerUser"
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+    CaseCategory:
+      additionalProperties: false
+      type: object
+      required: [categoryName]
+      properties:
+        _id:
+          type: string
+        categoryID:
+          type: string
+        categoryGroupID:
+          $ref: "#/components/schemas/CaseCategoryGroup"
+        categoryName:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+    CaseCategoryGroup:
+      additionalProperties: false
+      type: object
+      properties:
+        _id:
+          type: string
+        categoryGroupID:
+          type: string
+          format: uuid
+          readOnly: true
+        groupName:
+          type: string
+        description:
+          type: string
+        imageIcon:
+          type: string
+          format: binary
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+    CaseComment:
+      additionalProperties: false
+      type: object
+      properties:
+        _id:
+          type: string
+          format: uuid
+        caseID:
+          $ref: "#/components/schemas/Case"
+        publicUserID:
+          $ref: "#/components/schemas/PublicUser"
+        comment:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+    CaseEvidence:
+      additionalProperties: false
+      type: object
+      properties:
+        _id:
+          type: string
+          format: uuid
+        caseID:
+          $ref: "#/components/schemas/Case"
+        fileName:
+          type: string
+        URL:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+    CaseOtherDetails:
+      additionalProperties: false
+      type: object
+      properties:
+        _id:
+          type: string
+          format: uuid
+          readOnly: true
+        from:
+          type: string
+          enum: ["super-admin", "admin", "staff", "verifier", "user"]
+        userID:
+          type: string
+          format: uuid
+        message:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+    CaseOtherDetailsDoc:
+      additionalProperties: false
+      type: object
+      properties:
+        _id:
+          type: string
+          format: uuid
+          readOnly: true
+        docID:
+          type: string
+          readOnly: true
+        docTitle:
+          type: string
+        URL:
+          type: string
+          format: binary
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+    CaseProgress:
+      additionalProperties: false
+      type: object
+      properties:
+        _id:
+          type: string
+          format: uuid
+          readOnly: true
+        progressID:
+          type: string
+          readOnly: true
+        caseID:
+          $ref: "#/components/schemas/Case"
+        publicUserID:
+          $ref: "#/components/schemas/PublicUser"
+        partnerUserID:
+          $ref: "#/components/schemas/PartnerUser"
+        title:
+          type: string
+        message:
+          type: string
+        privacyStatus:
+          type: string
+          enum: ["public", "private"]
+          default: "private"
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+    CaseProgressDoc:
+      additionalProperties: false
+      type: object
+      properties:
+        _id:
+          type: string
+          format: uuid
+          readOnly: true
+        docID:
+          type: string
+          readOnly: true
+        caseProgressID:
+          $ref: "#/components/schemas/CaseProgress"
+        docTitle:
+          type: string
+        URL:
+          type: string
+          format: binary
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+    CaseSuspect:
+      additionalProperties: false
+      type: object
+      properties:
+        _id:
+          type: string
+          format: uuid
+        caseSuspectID:
+          type: string
+        caseID:
+          $ref: "#/components/schemas/Case"
+        firstNameOfSuspect:
+          type: string
+        lastNameOfSuspect:
+          type: string
+        middleNameOfSuspect:
+          type: string
+        emailOfSuspect:
+          type: string
+        phoneNumberOfSuspect:
+          type: string
+        suspectAgeGroup:
+          type: string
+        genderOfSuspect:
+          type: string
+          enum: ["Male", "Female"]
+        guiltStatus:
+          type: string
+          enum: ["Guilty", "Not-guilty", "Accomplice"]
+          default: "Not-guilty"
+        residentialAddressOfSuspect:
+          type: string
+        lgaOfSuspect:
+          type: string
+        stateOfSuspect:
+          type: string
+        countryOfSuspect:
+          type: string
+        suspectOrganizationType:
+          type: string
+          enum:
+            [
+              "Government",
+              "NGO",
+              "Private",
+              "Self Employed",
+              "Others",
+              "Unknown",
+            ]
+        suspectOrganizationName:
+          type: string
+        otherDetailsOfSuspect:
+          type: string
+        addedBy:
+          type: string
+          format: uuid
+        disabilityStatus:
+          type: string
+        addressLandmark:
+          type: string
+        religion:
+          type: string
+        relationshipWithVictim:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+    CaseTaggedCategories:
+      additionalProperties: false
+      type: object
+      properties:
+        _id:
+          type: string
+          format: uuid
+        caseTagID:
+          type: string
+          format: uuid
+        caseID:
+          $ref: "#/components/schemas/Case"
+        caseCategoryID:
+          $ref: "#/components/schemas/CaseCategory"
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+    CaseVictim:
+      additionalProperties: false
+      type: object
+      properties:
+        _id:
+          type: string
+          format: uuid
+        caseVictimID:
+          type: string
+        caseID:
+          $ref: "#/components/schemas/Case"
+        firstNameOfVictim:
+          type: string
+        lastNameOfVictim:
+          type: string
+        middleNameOfVictim:
+          type: string
+        emailOfVictim:
+          type: string
+        phoneNumberOfVictim:
+          type: string
+        victimAgegroup:
+          type: string
+        genderOfVictim:
+          type: string
+          enum: ["Male", "Female"]
+        residentialAddressOfVictim:
+          type: string
+        addressLandmark:
+          type: string
+        lgaOfVictim:
+          type: string
+        stateOfVictim:
+          type: string
+        countryOfVictim:
+          type: string
+        victimOccupation:
+          type: string
+        victimOrganizationType:
+          type: string
+          enum:
+            [
+              "Government",
+              "NGO",
+              "Private",
+              "Self Employed",
+              "Others",
+              "Unknown",
+            ]
+        victimOrganizationID:
+          $ref: "#/components/schemas/Organization"
+        victimOrganizationName:
+          type: string
+        otherDetailsOfVictim:
+          type: string
+        addedBy:
+          type: string
+        disabilityStatus:
+          type: string
+        religion:
+          type: string
+        relationshipWithVictim:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+    CaseWitness:
+      additionalProperties: false
+      type: object
+      properties:
+        _id:
+          type: string
+          format: uuid
+        caseWitnessID:
+          type: string
+        caseID:
+          $ref: "#/components/schemas/Case"
+        firstNameOfWitness:
+          type: string
+        lastNameOfWitness:
+          type: string
+        middleNameOfWitness:
+          type: string
+        emailOfWitness:
+          type: string
+          uniqueItems: true
+        phoneNumberOfWitness:
+          type: string
+        witnessAgegroup:
+          type: string
+        genderOfWitness:
+          type: string
+          enum: ["Male", "Female"]
+        residentialAddressOfWitness:
+          type: string
+        addressLandmark:
+          type: string
+        lgaOfWitness:
+          type: string
+        stateOfWitness:
+          type: string
+        countryOfWitness:
+          type: string
+        witnessOccupation:
+          type: string
+        witnessOrganizationType:
+          type: string
+          enum:
+            [
+              "Government",
+              "NGO",
+              "Private",
+              "Self Employed",
+              "Others",
+              "Unknown",
+            ]
+        witnessOrganizationID:
+          $ref: "#/components/schemas/Organization"
+        witnessOrganizationName:
+          type: string
+        otherDetailsOfWitness:
+          type: string
+        addedBy:
+          type: string
+        disabilityStatus:
+          type: string
+        religion:
+          type: string
+        relationshipWithVictim:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+    FollowCase:
+      additionalProperties: false
+      type: object
+      properties:
+        _id:
+          type: string
+          format: uuid
+        followCaseID:
+          type: string
+          format: uuid
+        caseID:
+          $ref: "#/components/schemas/Case"
+        publicUserId:
+          $ref: "#/components/schemas/PublicUser"
+        followStatus:
+          type: string
+          enum: ["following", "notFollowing"]
+          default: "notFollowing"
+    Organization:
+      additionalProperties: false
+      type: object
+      properties:
+        _id:
+          type: string
+          format: uuid
+          readOnly: true
+        orgID:
+          type: string
+          format: uuid
+          readOnly: true
+        orgName:
+          type: string
+        orgType:
+          type: string
+          enum: ["Government", "NGO", "Private", "Others"]
+        description:
+          type: string
+        email1:
+          type: string
+        email2:
+          type: string
+        email3:
+          type: string
+        address:
+          type: string
+        addressLandmark:
+          type: string
+        phone1:
+          type: string
+        phone2:
+          type: string
+        phone3:
+          type: string
+        lga:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        cacRegNo:
+          type: string
+        hqOrBranch:
+          type: string
+        addedBy:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+    Contact:
+      type: object
+      required: ["email", "subject", "message"]
+      properties:
+        ticketID:
+          type: string
+          format: uuid
+          readOnly: true
+        senderName:
+          type: string
+        userID:
+          readOnly: true
+          $ref: "#/components/schemas/PublicUser"
+        phoneNumber:
+          type: string
+        email:
+          type: string
+          format: email
+        subject:
+          type: string
+        message:
+          type: string
+        status:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true

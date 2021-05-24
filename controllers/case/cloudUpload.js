@@ -31,3 +31,15 @@ exports.uploadCaseCategoryGroupImages = async (file) => {
     return err;
   }
 };
+
+exports.uploadDocs = async (file) => {
+  try {
+    const { path } = file;
+    const filePath = await uploader(path, file.filename);
+    fs.unlinkSync(path);
+
+    return filePath;
+  } catch (err) {
+    return err;
+  }
+};

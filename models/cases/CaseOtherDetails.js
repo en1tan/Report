@@ -1,9 +1,4 @@
 const mongoose = require("mongoose");
-const { customAlphabet } = require("nanoid");
-const nanoid = customAlphabet(
-  "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-  10,
-);
 
 const Schema = mongoose.Schema;
 
@@ -18,7 +13,7 @@ const caseOtherDetailsSchema = new Schema(
     // Who sent the reply
     from: {
       type: String,
-      enum: ["admin", "user"],
+      enum: ["super-admin", "admin", "staff", "verifier", "user"],
     },
 
     // ID of the person sending reply
@@ -30,12 +25,12 @@ const caseOtherDetailsSchema = new Schema(
     message: {
       type: String,
     },
-
-    // Date and Time the message was sent
-    timestamp: {
-      type: Date,
-      default: Date.now(),
-    },
+    otherDetailsDocs: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CaseOtherDetailsDoc",
+      },
+    ],
   },
   { timestamps: true },
 );

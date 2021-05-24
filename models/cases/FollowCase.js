@@ -3,12 +3,11 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const followCaseSchema = new Schema({
-  
   // Unique Identifier of the follow
   followCaseID: {
-  type: String,
-  default: () => nanoid()
-},
+    type: String,
+    default: () => nanoid(),
+  },
 
   // ID of the case the user is following
   caseID: {
@@ -27,12 +26,6 @@ const followCaseSchema = new Schema({
     type: String,
     enum: ["following", "notFollowing"],
     default: "notFollowing",
-  },
-
-  // Date and Time the User first followed a case
-  timestamp: {
-    type: Date,
-    default: Date.now(),
   },
 });
 
