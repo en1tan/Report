@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
-const { customAlphabet } = require("nanoid");
-const { genProgressDocID } = require("../../utils/genID");
-const nanoid = customAlphabet("0123456789", 10);
+const { genIDs } = require("../../utils/genID");
 
 const Schema = mongoose.Schema;
 
@@ -10,7 +8,6 @@ const caseProgressSchema = new Schema(
     // Unique Identifier of the case progress
     progressID: {
       type: String,
-      default: genProgressDocID,
     },
 
     // ID of the Case
@@ -57,6 +54,11 @@ const caseProgressSchema = new Schema(
   },
   { timestamps: true },
 );
+
+caseProgressSchema.pre("save", function (next) {
+  this.progressID = genIDs("SPGD");
+  next();
+});
 
 const CaseProgress = mongoose.model(
   "CaseProgress",

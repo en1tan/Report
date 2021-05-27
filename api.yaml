@@ -2,26 +2,37 @@ openapi: 3.0.0
 info:
   version: 1.0.0
   title: SorosokeAPI Server
-  description: "API Server for SorosokeAPI"
+  description: API Server for SorosokeAPI
 servers:
+  - url: https://sorosoke-api-server.onrender.com/
+    description: Production Server
   - url: http://localhost:5000/api/v1
-    description: "Local Server"
-  - url: https://#
-    description: "Production Server"
+    description: Local Server
 paths:
   /user/signup:
     post:
-      summary: "Register new user"
-      tags: ["User"]
+      summary: Register new user
+      tags: [User]
       description: ""
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/PublicUser"
+            example:
+              firstName: Soroke
+              lastName: User
+              userName: sorosoke
+              email: user@sorosoke.com
+              phoneNumber: 08012345678
+              gender: Female
+              address: 1, Sorosoke Av.
+              password: sorosokeWere@1
+              confirmPassword: sorosokeWere@1
+              userAgeGroup: 20-90
       responses:
-        "201":
-          description: "User registered"
+        201:
+          description: ""
           content:
             application/json:
               schema:
@@ -37,10 +48,33 @@ paths:
                         type: string
                       user:
                         $ref: "#/components/schemas/PublicUser"
+                    example:
+                      message: User succesfully created
+                      status: success
+                      data:
+                        token: >-
+                          eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYjAwOGZhOWM5NDYyNTgxMTFjNzI3MSIsImlhdCI6MTYyMjE0OTM3MCwiZXhwIjoxNjIyMjM1NzcwfQ.-VwyYghlk7k68rqKdPzqCBjGNiG2VSsOAAag_DwsoZY
+                        user:
+                          onlineStatus: offline
+                          active: true
+                          _id: 60b008fa9c946258111c7271
+                          firstName: Soroke
+                          lastName: User
+                          userName: sorosoke
+                          email: user1@sorosoke.com
+                          phoneNumber: 08012345678
+                          gender: Female
+                          address: 1, Sorosoke Av.
+                          userAgeGroup: 20-90
+                          userID: 9044502255
+                          createdAt: "2021-05-27T21:02:50.182Z"
+                          updatedAt: "2021-05-27T21:02:50.182Z"
+                          __v: 0
+
   /user/login:
     post:
-      summary: "Login user"
-      tags: ["User"]
+      summary: Login user
+      tags: [User]
       description: ""
       requestBody:
         content:
@@ -53,9 +87,13 @@ paths:
                 password:
                   type: string
                   format: password
+              example:
+                email: user@sorosoke.com
+                password: sorosokeWere@1
+
       responses:
-        "201":
-          description: "User authorized"
+        201:
+          description: ""
           content:
             application/json:
               schema:
@@ -71,16 +109,38 @@ paths:
                         type: string
                       user:
                         $ref: "#/components/schemas/PublicUser"
+                example:
+                  message: User Authorized
+                  status: success
+                  data:
+                    token: >-
+                      eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYjAwOGZhOWM5NDYyNTgxMTFjNzI3MSIsImlhdCI6MTYyMjE1MDk5NSwiZXhwIjoxNjIyMjM3Mzk1fQ.d488_F5G7Bc--nbcBKnk7AcCHb0iesYxXhaMN8gZ6ZY
+                    user:
+                      onlineStatus: online
+                      active: true
+                      _id: 60b008fa9c946258111c7271
+                      firstName: Soroke
+                      lastName: User
+                      userName: sorosoke
+                      email: user1@sorosoke.com
+                      phoneNumber: 08012345678
+                      gender: Female
+                      address: "1, Sorosoke Av."
+                      userAgeGroup: 20-90
+                      userID: "9044502255"
+                      createdAt: "2021-05-27T21:02:50.182Z"
+                      updatedAt: "2021-05-27T21:29:27.976Z"
+                      __v: 0
   /user/profile:
     get:
       security:
         - bearerAuth: []
-      summary: "User profile"
-      tags: ["User"]
+      summary: User profile
+      tags: [User]
       description: ""
       responses:
-        "200":
-          description: "User details"
+        200:
+          description: User details
           content:
             application/json:
               schema:
@@ -91,12 +151,34 @@ paths:
                     type: string
                   data:
                     $ref: "#/components/schemas/PublicUser"
+                example:
+                  message: User details
+                  status: success
+                  data:
+                    token: >-
+                      eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYjAwOGZhOWM5NDYyNTgxMTFjNzI3MSIsImlhdCI6MTYyMjE1MDk5NSwiZXhwIjoxNjIyMjM3Mzk1fQ.d488_F5G7Bc--nbcBKnk7AcCHb0iesYxXhaMN8gZ6ZY
+                    user:
+                      onlineStatus: online
+                      active: true
+                      _id: 60b008fa9c946258111c7271
+                      firstName: Soroke
+                      lastName: User
+                      userName: sorosoke
+                      email: user1@sorosoke.com
+                      phoneNumber: 08012345678
+                      gender: Female
+                      address: "1, Sorosoke Av."
+                      userAgeGroup: 20-90
+                      userID: "9044502255"
+                      createdAt: "2021-05-27T21:02:50.182Z"
+                      updatedAt: "2021-05-27T21:29:27.976Z"
+                      __v: 0
   /user/account:
     patch:
       security:
         - bearerAuth: []
       summary: "Update user details"
-      tags: ["User"]
+      tags: [User]
       description: ""
       requestBody:
         content:
@@ -116,11 +198,22 @@ paths:
                     type: string
                   data:
                     $ref: "#/components/schemas/PublicUser"
+                example:
+                  firstName: Soroke
+                  lastName: User
+                  userName: sorosoke
+                  email: user@sorosoke.com
+                  phoneNumber: 08012345678
+                  gender: Female
+                  address: 1, Sorosoke Av.
+                  password: sorosokeWere@1
+                  confirmPassword: sorosokeWere@1
+                  userAgeGroup: 20-90
 
   /user/partner/signup:
     post:
-      summary: "Add partner account"
-      tags: ["Partner User"]
+      summary: Add partner account
+      tags: [Partner User]
       description: ""
       requestBody:
         content:
@@ -129,7 +222,7 @@ paths:
               $ref: "#/components/schemas/PartnerUser"
       responses:
         "201":
-          description: "Partner user added"
+          description: Partner user added
           content:
             application/json:
               schema:
@@ -822,6 +915,7 @@ paths:
       security:
         - bearerAuth: []
       summary: "Add case category group"
+      description: "userTypes: ['super-admin','admin']"
       tags: ["Category Group"]
       requestBody:
         content:
@@ -838,7 +932,7 @@ paths:
                   type: string
       responses:
         "201":
-          description: "Category groups created"
+          description: ""
           content:
             application/json:
               schema:
@@ -852,6 +946,18 @@ paths:
                     properties:
                       group:
                         $ref: "#/components/schemas/CaseCategoryGroup"
+                example:
+                  status: "success"
+                  message: "Case Group Created Successfully"
+                  data:
+                    group:
+                      _id: 60affb6a3dc1114794a4cb64
+                      groupName: "Human Rights"
+                      description: "Human Rights"
+                      createdAt: "2021-05-27T20:04:58.743Z"
+                      updatedAt: "2021-05-27T20:04:58.743Z"
+                      categoryGroupID: "SGRP72360"
+                      _v: 0
   /case/category/group/{id}/update:
     patch:
       security:
@@ -871,7 +977,7 @@ paths:
               $ref: "#/components/schemas/CaseCategoryGroup"
       responses:
         "200":
-          description: "Group edited"
+          description: ""
           content:
             application/json:
               schema:
@@ -882,6 +988,17 @@ paths:
                     type: string
                   data:
                     $ref: "#/components/schemas/CaseCategoryGroup"
+                example:
+                  status: "success"
+                  message: "Case Group updated successfully"
+                  data:
+                    group:
+                      _id: 60affb6a3dc1114794a4cb64
+                      groupName: "Human Rights"
+                      description: "Human Rights"
+                      createdAt: "2021-05-27T20:04:58.743Z"
+                      updatedAt: "2021-05-27T20:04:58.743Z"
+                      categoryGroupID: "SGRP72360"
   /case/category/group/{id}:
     delete:
       security:
@@ -1244,16 +1361,11 @@ components:
           format: email
         phoneNumber:
           type: string
-        userAgegroup:
+        userAgeGroup:
           type: string
         gender:
           type: string
           enum: ["Male", "Female"]
-        userType:
-          type: string
-          enum: ["user", "admin"]
-          default: user
-          readOnly: true
         address:
           type: string
         addressLandmark:

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { genCategoryGroupID } = require("../../utils/genID");
+const { genIDs } = require("../../utils/genID");
 
 const Schema = mongoose.Schema;
 
@@ -8,7 +8,6 @@ const caseCategoryGroupSchema = new Schema(
     // Unique Identifier of the Group on the Platform
     categoryGroupID: {
       type: String,
-      default: genCategoryGroupID,
     },
 
     // Human Rights Group Title
@@ -28,6 +27,11 @@ const caseCategoryGroupSchema = new Schema(
   },
   { timestamps: true },
 );
+
+caseCategoryGroupSchema.pre("save", function (next) {
+  this.categoryGroupID = genIDs("SGRP");
+  next();
+});
 
 const CaseCategoryGroup = mongoose.model(
   "CaseCategoryGroup",
