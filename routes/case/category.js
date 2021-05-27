@@ -27,8 +27,8 @@ router.get("/categories", caseController.getAllCategories);
 
 router.post(
   "/group/:id/create",
-  authorize("admin"),
   caseController.createCaseCategory,
+  authorize(["super-admin", "admin"]),
 );
 
 router.patch(
