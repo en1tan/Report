@@ -927,7 +927,7 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/CaseCategory"
-  /case/category/{id}/create:
+  /case/category/group/{id}/create:
     post:
       security:
         - bearerAuth: []
