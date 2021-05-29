@@ -52,13 +52,13 @@ exports.signin = async (req, res, next) => {
     ) {
       return authorizationError(
         res,
-        "email or password is incorrrect",
+        "email or password is incorrrect"
       );
     }
     await User.findByIdAndUpdate(
       user._id,
       { onlineStatus: "online" },
-      { new: true },
+      { new: true }
     );
     const data = _.omit(user.toObject(), "password");
     createSendToken(data, 200, res, "User Authorized");
@@ -68,6 +68,7 @@ exports.signin = async (req, res, next) => {
 };
 
 exports.profile = async (req, res, next) => {
+  if (!req.user) return authorizationError(res, "user unauthorized");
   const data = _.omit(req.user.toObject(), "password");
   return successWithData(res, 200, "User details", data);
 };
@@ -79,13 +80,13 @@ exports.editAccount = async (req, res, next) => {
     const updatedUser = await User.findByIdAndUpdate(
       user._id,
       req.body,
-      { new: true },
+      { new: true }
     );
     return successWithData(
       res,
       200,
       "User updated successfully",
-      updatedUser,
+      updatedUser
     );
   } catch (err) {
     return tryCatchError(res, err);
