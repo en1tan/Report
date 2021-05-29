@@ -1,8 +1,6 @@
 const jwt = require("jsonwebtoken");
 
 const User = require("../../models/partners/PartnerUser");
-const signupValidation = require("../../validations/signup");
-const loginValidation = require("../../validations/login");
 const {
   validationError,
   tryCatchError,
@@ -26,12 +24,9 @@ const createSendToken = (user, statusCode, res, message) => {
 };
 
 exports.signup = async (req, res, next) => {
-  const { errors, isValid } = signupValidation(req.body);
-  if (!isValid) {
-    return normalError(res, 404, "Incomplete Fields", errors);
-  }
   try {
     const user = await User.findOne({ email: req.body.email });
+    console.log(user);
     if (user) {
       errors.email = "Email already exists";
       return normalError(res, 400, "Unable to create user", errors);
@@ -46,10 +41,6 @@ exports.signup = async (req, res, next) => {
 };
 
 exports.signin = async (req, res, next) => {
-  const { errors, isValid } = loginValidation(req.body);
-  if (!isValid) {
-    return normalError(res, 404, "Incomplete Fields", errors);
-  }
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email }).select("+password");
@@ -63,7 +54,7 @@ exports.signin = async (req, res, next) => {
     await User.findByIdAndUpdate(
       user._id,
       { onlineStatus: "online" },
-      { new: true },
+      { new: true }
     );
 
     createSendToken(user, 200, res, "User Authorized");
@@ -83,13 +74,13 @@ exports.editAccount = async (req, res, next) => {
     const updatedUser = await User.findByIdAndUpdate(
       user._id,
       req.body,
-      { new: true },
+      { new: true }
     );
     return successWithData(
       res,
       200,
       "User updated successfully",
-      updatedUser,
+      updatedUser
     );
   } catch (err) {
     return tryCatchError(res, err);

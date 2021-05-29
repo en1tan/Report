@@ -24,7 +24,7 @@ paths:
               lastName: User
               userName: sorosoke
               email: user@sorosoke.com
-              phoneNumber: 08012345678
+              phoneNumber: "08012345678"
               gender: Female
               address: 1, Sorosoke Av.
               password: sorosokeWere@1
@@ -62,7 +62,7 @@ paths:
                           lastName: User
                           userName: sorosoke
                           email: user1@sorosoke.com
-                          phoneNumber: 08012345678
+                          phoneNumber: "08012345678"
                           gender: Female
                           address: 1, Sorosoke Av.
                           userAgeGroup: 20-90
@@ -123,7 +123,7 @@ paths:
                       lastName: User
                       userName: sorosoke
                       email: user1@sorosoke.com
-                      phoneNumber: 08012345678
+                      phoneNumber: "08012345678"
                       gender: Female
                       address: "1, Sorosoke Av."
                       userAgeGroup: 20-90
@@ -165,7 +165,7 @@ paths:
                       lastName: User
                       userName: sorosoke
                       email: user1@sorosoke.com
-                      phoneNumber: 08012345678
+                      phoneNumber: "08012345678"
                       gender: Female
                       address: "1, Sorosoke Av."
                       userAgeGroup: 20-90
@@ -185,6 +185,9 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PublicUser"
+            example:
+              phoneNumber: "08112345678"
+              address: 5, Soroke St.
       responses:
         "200":
           description: "Updated user details"
@@ -203,14 +206,158 @@ paths:
                   lastName: User
                   userName: sorosoke
                   email: user@sorosoke.com
-                  phoneNumber: 08012345678
+                  phoneNumber: "08012345678"
                   gender: Female
                   address: 1, Sorosoke Av.
                   password: sorosokeWere@1
                   confirmPassword: sorosokeWere@1
                   userAgeGroup: 20-90
 
-  /user/partner/signup:
+  /partner/{id}/users:
+    post:
+      summary: Get all partner users
+      description: Returns all users of a partner organization
+      tags: ["Partner Organization"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - description: The partner organization id
+          in: path
+          name: id
+          schema:
+            type: string
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    staffs:
+                      type: array
+                      items:
+                        $ref: "#/components/schemas/PartnerUser"
+                    total:
+                      type: integer
+                    page:
+                      type: integer
+              example:
+                status: success
+                message: all partner users
+                data:
+                  staffs:
+                    _id: 60b190ea4cf0765bb8369faa
+                    partnerID: 60b01f6b669e34779cd05ab5
+                    firstName: Verifier
+                    lastName: Sorosoke
+                    userName: verifier
+                    gender: "Male"
+                    email: verifier@sorosoke.com
+                    phoneNumber: "07032165498"
+                    userType: verifier
+                    address: "12, Verifier Ar."
+                    stateOfAssignment: "Abuja"
+                    password: verifierWere@2
+                    onlineStatus: online
+                    active: true
+                    userID: yXp5efQVTF
+                    createdAt: "2021-05-29T00:55:06.510Z"
+                    updatedAt: "2021-05-29T00:55:06.510Z"
+                    __v: 0
+                  total: 1
+                  page: 1
+
+  /partner/user/{id}/update:
+    patch:
+      security:
+        - bearerAuth: []
+      summary: Update partner user details
+      tags: ["Partner Organization"]
+      description: "userTypes:['admin']"
+      parameters:
+        - description: partner user id
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartnerUser"
+            example:
+              userType: verifier
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/PartnerUser"
+              example:
+                status: success
+                message: partner user updated succesfully
+                data:
+                  _id: 60b190ea4cf0765bb8369faa
+                  partnerID: 60b01f6b669e34779cd05ab5
+                  firstName: Verifier
+                  lastName: Sorosoke
+                  userName: verifier
+                  gender: "Male"
+                  email: verifier@sorosoke.com
+                  phoneNumber: "07032165498"
+                  userType: verifier
+                  address: "12, Verifier Ar."
+                  stateOfAssignment: "Abuja"
+                  password: verifierWere@2
+                  onlineStatus: online
+                  active: true
+                  userID: yXp5efQVTF
+                  createdAt: "2021-05-29T00:55:06.510Z"
+                  updatedAt: "2021-05-29T00:55:06.510Z"
+                  __v: 0
+  /partner/user/{id}:
+    delete:
+      security:
+        - bearerAuth: []
+      summary: delete partner user
+      description: "userTypes: [super-admin,admin]"
+      tags: ["Partner Organization", "Super Admin"]
+      parameters:
+        - description: partner user id
+          in: path
+          required: true
+          name: id
+          schema:
+            type: string
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+              example:
+                status: success
+                message: partner user deleted succesfully
+  /partner/signup:
     post:
       summary: Add partner account
       tags: [Partner User]
@@ -220,6 +367,19 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PartnerUser"
+            example:
+              partnerID: 60b01f6b669e34779cd05ab5
+              firstName: Verifier
+              lastName: Sorosoke
+              userName: verifier
+              gender: "Male"
+              email: verifier@sorosoke.com
+              phoneNumber: "07032165498"
+              userType: verifier
+              address: "12, Verifier Ar."
+              stateOfAssignment: "Abuja"
+              password: verifierWere@2
+              confirmPassword: verifierWere@2
       responses:
         "201":
           description: Partner user added
@@ -238,7 +398,31 @@ paths:
                         type: string
                       user:
                         $ref: "#/components/schemas/PartnerUser"
-  /user/partner/login:
+              example:
+                status: success
+                message: user succesfully created
+                data:
+                  token: "eyJhbGciOiJIUzI1NiIsInR5cCI..."
+                  user:
+                    _id: 60b190ea4cf0765bb8369faa
+                    partnerID: 60b01f6b669e34779cd05ab5
+                    firstName: Verifier
+                    lastName: Sorosoke
+                    userName: verifier
+                    gender: "Male"
+                    email: verifier@sorosoke.com
+                    phoneNumber: "07032165498"
+                    userType: verifier
+                    address: "12, Verifier Ar."
+                    stateOfAssignment: "Abuja"
+                    password: verifierWere@2
+                    onlineStatus: offline
+                    active: true
+                    userID: yXp5efQVTF
+                    createdAt: "2021-05-29T00:55:06.510Z"
+                    updatedAt: "2021-05-29T00:55:06.510Z"
+                    __v: 0
+  /partner/login:
     post:
       summary: "Login partner user"
       tags: ["Partner User"]
@@ -254,6 +438,9 @@ paths:
                 password:
                   type: string
                   format: password
+            example:
+              email: verifier@sorosoke.com
+              password: verifierWere@2
       responses:
         "200":
           description: "User authorized"
@@ -272,7 +459,32 @@ paths:
                         type: string
                       user:
                         $ref: "#/components/schemas/PartnerUser"
-  /user/partner/profile:
+              example:
+                status: success
+                message: user authorized
+                data:
+                  token: "eyJhbGciOiJIUzI1NiIsInR5cCI..."
+                  user:
+                    _id: 60b190ea4cf0765bb8369faa
+                    partnerID: 60b01f6b669e34779cd05ab5
+                    firstName: Verifier
+                    lastName: Sorosoke
+                    userName: verifier
+                    gender: "Male"
+                    email: verifier@sorosoke.com
+                    phoneNumber: "07032165498"
+                    userType: verifier
+                    address: "12, Verifier Ar."
+                    stateOfAssignment: "Abuja"
+                    password: verifierWere@2
+                    onlineStatus: online
+                    active: true
+                    userID: yXp5efQVTF
+                    createdAt: "2021-05-29T00:55:06.510Z"
+                    updatedAt: "2021-05-29T00:55:06.510Z"
+                    __v: 0
+
+  /partner/profile:
     get:
       security:
         - bearerAuth: []
@@ -292,7 +504,29 @@ paths:
                     type: string
                   data:
                     $ref: "#/components/schemas/PartnerUser"
-  /user/partner/account:
+              example:
+                status: success
+                message: user details
+                data:
+                  _id: 60b190ea4cf0765bb8369faa
+                  partnerID: 60b01f6b669e34779cd05ab5
+                  firstName: Verifier
+                  lastName: Sorosoke
+                  userName: verifier
+                  gender: "Male"
+                  email: verifier@sorosoke.com
+                  phoneNumber: "07032165498"
+                  userType: verifier
+                  address: "12, Verifier Ar."
+                  stateOfAssignment: "Abuja"
+                  password: verifierWere@2
+                  onlineStatus: online
+                  active: true
+                  userID: yXp5efQVTF
+                  createdAt: "2021-05-29T00:55:06.510Z"
+                  updatedAt: "2021-05-29T00:55:06.510Z"
+                  __v: 0
+  /partner/account:
     patch:
       security:
         - bearerAuth: []
@@ -304,8 +538,10 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PartnerUser"
+            example:
+              phoneNumber: "09064558523"
       responses:
-        "200":
+        200:
           description: "Updated partner user details"
           content:
             application/json:
@@ -317,7 +553,28 @@ paths:
                     type: string
                   data:
                     $ref: "#/components/schemas/PartnerUser"
-
+              example:
+                status: success
+                message: user details
+                data:
+                  _id: 60b190ea4cf0765bb8369faa
+                  partnerID: 60b01f6b669e34779cd05ab5
+                  firstName: Verifier
+                  lastName: Sorosoke
+                  userName: verifier
+                  gender: "Male"
+                  email: verifier@sorosoke.com
+                  phoneNumber: "07032165498"
+                  userType: verifier
+                  address: "12, Verifier Ar."
+                  stateOfAssignment: "Abuja"
+                  password: verifierWere@2
+                  onlineStatus: online
+                  active: true
+                  userID: yXp5efQVTF
+                  createdAt: "2021-05-29T00:55:06.510Z"
+                  updatedAt: "2021-05-29T00:55:06.510Z"
+                  __v: 0
   /case/create:
     post:
       security:
@@ -1183,25 +1440,95 @@ paths:
             "*/*":
               schema:
                 $ref: "#/components/schemas/Contact"
-  /organization/create:
+  /partner/create:
     post:
       security:
         - bearerAuth: []
-      summary: "Create organization details"
+      summary: "create partner details"
       tags: ["Super Admin"]
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Organization"
+              $ref: "#/components/schemas/Partner"
+            example:
+              organizationName: Sorosoke
+              organizationType: NGO
+              email: admin@sorosoke.com
+              address: "1, Sorosoke Av."
+              addressLandmark: Abuja
+              phoneNumber: "07032165498"
+              state: Abuja
+              regNumber: 9MDWI89DKVNW90REVN
       responses:
-        "201":
-          description: "Organization created"
+        201:
+          description: ""
           content:
-            "*/*":
+            "application/json":
               schema:
-                $ref: "#/components/schemas/Organization"
-
+                $ref: "#/components/schemas/Partner"
+              example:
+                message: Partner organization created
+                status: success
+                data:
+                  organization:
+                    _id: 60b01f6b669e34779cd05ab5
+                    organizationName: Sorosoke
+                    organizationType: NGO
+                    email: admin@sorosoke.com
+                    address: "1, Sorosoke Av."
+                    phoneNumber: "07032165498"
+                    state: Abuja
+                    regNumber: 9MDWI89DKVNW90REVN
+                    partnerID: xFirObp4P6
+                    createdAt: "2021-05-28T23:44:59.568Z"
+                    updatedAt: "2021-05-28T23:44:59.568Z"
+                    __v: 0
+  /partner/{id}/branch/create:
+    post:
+      security:
+        - bearerAuth: []
+      summary: create a branch of an organization
+      description: "userTypes: [super-admin,admin]"
+      tags: [Partner Organization]
+      parameters:
+        - description: partner organization id
+          in: path
+          required: true
+          name: id
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartnerBranch"
+            example:
+              branchName: Buff Up Branch
+              address: "2, Sorosoke Branch"
+      responses:
+        201:
+          description: ""
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                $ref: "#/components/schemas/PartnerBranch"
+              example:
+                status: success
+                message: branch created succesfully
+                data:
+                  _id: 60b18a394da9bb59766731f6
+                  branchName: Buff Up Branch
+                  partnerID: 60b1807b2525d74ce37cbd85
+                  branchID: uGBVrYxOVH
+                  createdAt: "2021-05-29T00:26:33.445Z"
+                  updatedAt: "2021-05-29T00:26:33.445Z"
+                  __v: 0
   /progress/create/{caseID}:
     post:
       security:
@@ -1403,6 +1730,44 @@ components:
           type: string
           format: date-time
           readOnly: true
+    Partner:
+      additionalProperties: false
+      type: object
+      required:
+        [organizationName, email, phoneNumber, address, regNumber]
+      properties:
+        _id:
+          type: string
+        organizationName:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        address:
+          type: string
+        lga:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        organizationType:
+          type: string
+          enum: ["Government", "NGO", "Private", "Others"]
+        regNumber:
+          type: string
+        descriptionOfOrg:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+
     PartnerUser:
       additionalProperties: false
       type: object
@@ -1593,9 +1958,9 @@ components:
       properties:
         _id:
           type: string
+          readOnly: true
         categoryGroupID:
           type: string
-          format: uuid
           readOnly: true
         groupName:
           type: string
@@ -2019,6 +2384,7 @@ components:
     Organization:
       additionalProperties: false
       type: object
+      required: [orgName, emails, address, addressLandmark, phones]
       properties:
         _id:
           type: string
@@ -2035,22 +2401,19 @@ components:
           enum: ["Government", "NGO", "Private", "Others"]
         description:
           type: string
-        email1:
-          type: string
-        email2:
-          type: string
-        email3:
-          type: string
+        emails:
+          type: array
+          items:
+            type: string
+            format: email;
         address:
           type: string
         addressLandmark:
           type: string
-        phone1:
-          type: string
-        phone2:
-          type: string
-        phone3:
-          type: string
+        phones:
+          type: array
+          items:
+            type: string
         lga:
           type: string
         state:
@@ -2059,9 +2422,39 @@ components:
           type: string
         cacRegNo:
           type: string
-        hqOrBranch:
+        orgStatus:
           type: string
         addedBy:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+    PartnerBranch:
+      type: object
+      required: ["branchName", "address"]
+      properties:
+        _id:
+          type: string
+          readOnly: true
+        partnerID:
+          $ref: "#/components/schemas/Organization"
+          readOnly: true
+        branchName:
+          type: string
+        address:
+          type: string
+        ward:
+          type: string
+        lga:
+          type: string
+        state:
+          type: string
+        country:
           type: string
         createdAt:
           type: string

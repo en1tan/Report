@@ -51,7 +51,9 @@ const publicUserSchema = new Schema(
     },
 
     // Age group of victim- 0-5, 6-11, 12-17, 18 - above
-    userAgeGroup: String,
+    userAgeGroup: {
+      type: String,
+    },
 
     // Gender of the user
     gender: {
@@ -67,7 +69,9 @@ const publicUserSchema = new Schema(
     },
 
     // Areas Close to the address to help locate it faster
-    addressLandmark: String,
+    addressLandmark: {
+      type: String,
+    },
 
     // LGA of the User's residence
     lga: {
@@ -85,13 +89,15 @@ const publicUserSchema = new Schema(
     },
 
     // Profile picture link
-    avatar: String,
+    avatar: {
+      type: String,
+    },
 
     // Encrypted password of the User
     password: {
       type: String,
       required: [true, "Please provide a Password"],
-      minlength: 4,
+      minlength: 8,
     },
 
     // Indicator to tell Whether the user is currently using the platform or not

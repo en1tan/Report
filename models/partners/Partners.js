@@ -1,83 +1,81 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const { customAlphabet } = require("nanoid");
-const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 10);
+const nanoid = customAlphabet(
+  "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  10,
+);
 
 const Schema = mongoose.Schema;
 
-const partnerSchema = new Schema({
- 
- // Unique identifier of Sorosoke partner Organization
-  partnerID: {
-    type: String,
-    default: () => nanoid()
-  },
+const partnerSchema = new Schema(
+  {
+    // Unique identifier of Sorosoke partner Organization
+    partnerID: {
+      type: String,
+      default: () => nanoid(),
+    },
 
-  // Full Name of Partner Organization
-  organisationName: {
-    type: String,
-    required: [true, "Organisation Name is required"],
-  },
+    // Full Name of Partner Organization
+    organizationName: {
+      type: String,
+      required: [true, "Organisation Name is required"],
+    },
 
-  // Organization Contact Email Address
-  email: {
-    type: String,
-    unique: true,
-    required: [true, "Contact Email is required"],
-    lowercase: true,
-  },
+    // Organization Contact Email Address
+    email: {
+      type: String,
+      unique: true,
+      required: [true, "Contact Email is required"],
+      lowercase: true,
+    },
 
-  // Organization contact Phone Number 
-  phoneNumber: {
-    type: String,
-    required: [true, "Please provide the phone number"],
-  },
+    // Organization contact Phone Number
+    phoneNumber: {
+      type: String,
+      required: [true, "Please provide the phone number"],
+    },
 
-  // Organization's Office Address
-  address: {
-    type: String,
-    required: true,
-  },
+    // Organization's Office Address
+    address: {
+      type: String,
+      required: true,
+    },
 
-  // LGA of the Organization's Office
-  lga: {
-    type: String
-  },
+    // LGA of the Organization's Office
+    lga: {
+      type: String,
+    },
 
-  // State of the Organization's Office
-  state: {
-    type: String
-  },
+    // State of the Organization's Office
+    state: {
+      type: String,
+    },
 
-  // Country of the Organization's Office
-  country: {
-    type: String
-  },
+    // Country of the Organization's Office
+    country: {
+      type: String,
+    },
 
-  // Type of Organization
-  organizationType: {
-    type: String,
-    enum: ["Government", "NGO", "Private", "Others"]
-  },
+    // Type of Organization
+    organizationType: {
+      type: String,
+      enum: ["Government", "NGO", "Private", "Others"],
+    },
 
-  // CAC Registration Number
-  regNumber: {
-    type: String,
-    required: [true, "Please provide the registration number"],
-  },
+    // CAC Registration Number
+    regNumber: {
+      type: String,
+      required: [true, "Please provide the registration number"],
+    },
 
-  // About the Organization
-  descriptionOfOrg: {
-    type: String,
+    // About the Organization
+    descriptionOfOrg: {
+      type: String,
+    },
   },
-
-  // Date and Time the Partner was added on the Platform
-  timestamp: {
-    type: Date,
-    default: Date.now(),
-  },
-});
-
+  { timestamps: true },
+);
 
 const Partner = mongoose.model("Partner", partnerSchema);
 

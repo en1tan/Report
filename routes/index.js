@@ -10,12 +10,14 @@ const contact = require("./contact");
 const comment = require("./comment");
 const details = require("./otherDetails");
 const error = require("../controllers/errors");
+const partner = require("./partner");
 
 const appicationError = require("../utils/applicationError");
 
 const router = express.Router();
 
 router.use("/user", user);
+router.use("/partner", partner);
 router.use("/case", auth(), cases);
 router.use("/organization", organization);
 router.use("/progress", progress);

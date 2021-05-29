@@ -23,27 +23,23 @@ const validators = {
     password: Joi.string().min(8).required().strict(),
   }),
   partnerSignup: Joi.object({
-    partnerID: Joi.string(),
-    branchID: Joi.string(),
+    partnerID: Joi.string().optional(),
+    branchID: Joi.string().optional(),
     firstName: Joi.string().min(2).max(30).required(),
-    middleName: Joi.string().min(2).max(30).optional(),
     lastName: Joi.string().min(2).max(30).required(),
     userName: Joi.string().min(3).max(20).required(),
     email: Joi.string().email().lowercase().required(),
     phoneNumber: Joi.string().required(),
-    dob: Joi.string().isoDate().required(),
     gender: Joi.string().valid("Male", "Female"),
     address: Joi.string().required(),
+    stateOfAssignment: Joi.string().optional(),
     password: Joi.string().min(8).required().strict(),
     confirmPassword: Joi.string()
       .min(8)
       .valid(Joi.ref("password"))
       .required()
       .strict(),
-    lga: Joi.string(),
-    stateOfAssignment: Joi.string(),
-    country: Joi.string(),
-    avatar: Joi.string(),
+    lga: Joi.string().optional(),
     userType: Joi.string()
       .valid("super-admin", "admin", "verifier", "staff")
       .required(),
