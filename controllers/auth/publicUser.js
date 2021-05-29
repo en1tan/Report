@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const _ = require("lodash");
 
 const User = require("../../models/PublicUser");
 const {
@@ -34,7 +35,8 @@ exports.signup = async (req, res, next) => {
     const newUser = await User.create({
       ...req.body,
     });
-    createSendToken(newUser, 201, res, "User succesfully created");
+    const data = _.omit(newUser.toObject(), "password");
+    createSendToken(data, 201, res, "User succesfully created");
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -58,14 +60,16 @@ exports.signin = async (req, res, next) => {
       { onlineStatus: "online" },
       { new: true },
     );
-    createSendToken(user, 200, res, "User Authorized");
+    const data = _.omit(user.toObject(), "password");
+    createSendToken(data, 200, res, "User Authorized");
   } catch (err) {
     return tryCatchError(res, err);
   }
 };
 
 exports.profile = async (req, res, next) => {
-  return successWithData(res, 200, "User details", req.user);
+  const data = _.omit(req.user.toObject(), "password");
+  return successWithData(res, 200, "User details", data);
 };
 
 exports.editAccount = async (req, res, next) => {

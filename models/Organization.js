@@ -31,23 +31,12 @@ const organizationSchema = new Schema({
     type: String,
   },
 
-  // Organization contact email 1
-  email1: {
-    type: String,
-    required: true,
-  },
-
-  // Organization contact email 2
-  email2: {
-    type: String,
-    required: true,
-  },
-
-  // Organization contact email 3
-  email3: {
-    type: String,
-    required: true,
-  },
+  emails: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
 
   // Organization's Office Address
   address: {
@@ -61,21 +50,12 @@ const organizationSchema = new Schema({
     required: true,
   },
 
-  // Organization contact phone 1
-  phone1: {
-    type: String,
-    required: true,
-  },
-
-  // Organization contact phone 2
-  phone2: {
-    type: String,
-  },
-
-  // Organization contact phone 3
-  phone3: {
-    type: String,
-  },
+  phones: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
 
   // LGA of the Organization's Office
   lga: {
@@ -98,8 +78,9 @@ const organizationSchema = new Schema({
   },
 
   // This specifies whether this record is HQ or Branch of the organization
-  hqOrBranch: {
+  orgStatus: {
     type: String,
+    enum: ["HQ", "Branch"],
   },
 
   // ID of the official that added the organization to the platform

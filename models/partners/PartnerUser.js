@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const { customAlphabet } = require("nanoid");
-const { string } = require("joi");
 const nanoid = customAlphabet(
   "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-  10,
+  10
 );
 
 const Schema = mongoose.Schema;
@@ -44,7 +43,6 @@ const partnerUserSchema = new Schema(
     // Middle Name of the User
     middleName: {
       type: String,
-      required: [true, "Middle Name is required"],
     },
 
     // Unique username of the user and also used to login
@@ -70,7 +68,6 @@ const partnerUserSchema = new Schema(
     // Date of birth of the staff
     dob: {
       type: Date,
-      required: [true, "Please provide the Date of Birth"],
     },
 
     // Gender of the Staff
@@ -129,7 +126,7 @@ const partnerUserSchema = new Schema(
       default: true,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 partnerUserSchema.pre("save", async function (next) {
@@ -140,7 +137,7 @@ partnerUserSchema.pre("save", async function (next) {
 
 partnerUserSchema.methods.correctPassword = async function (
   incomingPassword,
-  userPassword,
+  userPassword
 ) {
   return await bcrypt.compare(incomingPassword, userPassword);
 };
