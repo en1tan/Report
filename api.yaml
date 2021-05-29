@@ -4,7 +4,7 @@ info:
   title: SorosokeAPI Server
   description: API Server for SorosokeAPI
 servers:
-  - url: https://sorosoke-api-server.onrender.com/
+  - url: https://sorosoke-api-server.onrender.com/api/v1
     description: Production Server
   - url: http://localhost:5000/api/v1
     description: Local Server
