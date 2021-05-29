@@ -59,7 +59,7 @@ exports.getFollowedCases = async (req, res, next) => {
       res,
       200,
       "Case Fetched Succesfully",
-      data,
+      data
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -76,13 +76,13 @@ exports.assignPartnerToCase = async (req, res, next) => {
       {
         assignedPartnerUserId: req.body.partnerId,
       },
-      { new: true },
+      { new: true }
     );
     return successWithData(
       res,
       200,
       "Partner assigned successfully",
-      updatedCase,
+      updatedCase
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -107,6 +107,7 @@ exports.getAllCase = async (req, res, next) => {
   try {
     const cases = await Case.find(filter)
       .sort("-createdAt")
+      .select("-followedBy -areYouTheVictim  -publicUserID")
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .exec();
@@ -120,8 +121,8 @@ exports.getAllCase = async (req, res, next) => {
     return successWithData(
       res,
       200,
-      "Case Fetched Succesfully",
-      data,
+      "Cases Fetched Succesfully",
+      data
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -132,7 +133,10 @@ exports.getCase = async (req, res, next) => {
   try {
     const fetchedCase = await Case.findOne({
       _id: req.params.id,
-    }).orFail();
+    })
+      .select("-followedBy")
+      .exec();
+    if (!fetchedCase) return normalError(res, 404, "Case not found");
     let witness;
     let victim;
     let suspect;
@@ -153,7 +157,7 @@ exports.getCase = async (req, res, next) => {
       res,
       200,
       "Case Fetched Succesfully",
-      data,
+      data
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -173,7 +177,7 @@ exports.createCase = async (req, res, next) => {
       res,
       200,
       "Case Created Succesfully",
-      data,
+      data
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -191,7 +195,7 @@ exports.createCaseVictim = async (req, res, next) => {
       res,
       200,
       "Victim Created Succesfully",
-      data,
+      data
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -211,7 +215,7 @@ exports.createCaseSuspect = async (req, res, next) => {
       res,
       200,
       "Suspect Created Succesfully",
-      data,
+      data
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -231,7 +235,7 @@ exports.createCaseWitness = async (req, res, next) => {
       res,
       200,
       "Witness Created Succesfully",
-      data,
+      data
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -252,7 +256,7 @@ exports.createCaseOtherDetails = async (req, res, next) => {
       res,
       200,
       "More Details Updated Succesfully",
-      data,
+      data
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -272,7 +276,7 @@ exports.createCaseProgress = async (req, res, next) => {
       res,
       200,
       "Progress Saved Succesfully",
-      data,
+      data
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -305,7 +309,7 @@ exports.editEvidence = async (req, res, next) => {
     const editedCase = await Case.findOneAndUpdate(
       { _id: req.params.id },
       { ...req.body },
-      { new: true },
+      { new: true }
     );
     const data = {
       case: editedCase,
@@ -318,9 +322,9 @@ exports.editEvidence = async (req, res, next) => {
 
 exports.getPersonalCases = async (req, res, next) => {
   try {
-    const cases = await Case.find({ publicUserID: req.user.id }).sort(
-      "-created",
-    );
+    const cases = await Case.find({ publicUserID: req.user.id })
+      .sort("-created")
+      .select("-followedBy");
     return successWithData(res, 200, "Fetched cases", {
       data: { cases },
     });
@@ -331,19 +335,21 @@ exports.getPersonalCases = async (req, res, next) => {
 
 exports.verifyCase = async (req, res, next) => {
   try {
-    const existinCase = await Case.findById(req.params.id);
-    if (!existinCase)
+    const existingCase = await Case.findById(req.params.id).select(
+      "-followedBy -areYouTheVictim"
+    );
+    if (!existingCase)
       return normalError(res, 404, "Case does not exist");
     const updatedCase = await Case.findByIdAndUpdate(
       req.params.id,
       { verificationStatus: req.body.verificationStatus },
-      { new: true },
+      { new: true }
     );
     return successWithData(
       res,
       200,
       "Case verified successfully",
-      updatedCase,
+      updatedCase
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -362,13 +368,13 @@ exports.publishCase = async (req, res, next) => {
         publishStatus: req.body.publishStatus,
         publishedBy: req.user,
       },
-      { new: true },
+      { new: true }
     );
     return successWithData(
       res,
       200,
       "Case published successfully",
-      publishedCase,
+      publishedCase
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -386,13 +392,13 @@ exports.resolveCase = async (req, res, next) => {
       {
         resolutionStatus: req.body.resolutionStatus,
       },
-      { new: true },
+      { new: true }
     );
     return successWithData(
       res,
       200,
       "Case resolved successfully",
-      resolvedCase,
+      resolvedCase
     );
   } catch (err) {
     return tryCatchError(res, err);

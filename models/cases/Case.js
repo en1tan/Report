@@ -1,10 +1,5 @@
 const mongoose = require("mongoose");
-const { customAlphabet } = require("nanoid");
-const { genCaseID } = require("../../utils/genID");
-const nanoid = customAlphabet(
-  "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-  10,
-);
+const { genIDs } = require("../../utils/genID");
 
 const Schema = mongoose.Schema;
 
@@ -13,13 +8,13 @@ const caseSchema = new Schema(
     // Unique identifier of the case on the Sorosoke platform
     caseID: {
       type: String,
-      default: genCaseID,
     },
 
     // Unique ID of the User reporting the case
     publicUserID: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "PublicUser",
+      required: true,
     },
 
     // Category ID ofthe case
@@ -150,8 +145,13 @@ const caseSchema = new Schema(
       },
     ],
   },
-  { timestamps: true },
+  { timestamps: true }
 );
+
+caseSchema.pre("save", function (next) {
+  this.caseID = genIDs("SCSE");
+  next();
+});
 
 const Case = mongoose.model("Case", caseSchema);
 

@@ -587,6 +587,14 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Case"
+            example:
+              categoryID: 60b2b051f4ff133eeaaaca1a
+              addressOfIncident: Gatara
+              dateOfIncident: "2021-05-29T21:21:57.922Z"
+              state: Abuja
+              areYouTheVictim: "Yes"
+              reportType: Standard
+              caseTypeStatus: Incidence
       responses:
         "201":
           description: "Case reported successfully"
@@ -600,10 +608,34 @@ paths:
                     type: string
                   data:
                     $ref: "#/components/schemas/Case"
+              example:
+                message: Case Created Succesfully
+                status: success
+                data:
+                  case:
+                    _id: 60b2b1c551929b3f8b7a7e83
+                    caseTitle: NotYetAssigned
+                    dateOfIncident: "2021-05-29T21:21:57.922Z"
+                    areYouTheVictim: "Yes"
+                    caseTypeStatus: Incidence
+                    publishStatus: unPublished
+                    resolutionStatus: unResolved
+                    verificationStatus: unVerified
+                    platformOfReport: web
+                    followedBy: []
+                    categoryID: 60b2b051f4ff133eeaaaca1a
+                    addressOfIncident: Gatara
+                    state: Abuja
+                    reportType: Standard
+                    publicUserID: 60b0050a1416ba54d2af818b
+                    createdAt: "2021-05-29T21:27:33.145Z"
+                    updatedAt: "2021-05-29T21:27:33.145Z"
+                    caseID: SCSE44766
+                    __v: 0
   /case:
     get:
       security:
-        - bearerAuth: []
+        - partnerBearerAuth: []
       summary: "Get all cases"
       tags: ["Case"]
       parameters:
@@ -661,13 +693,44 @@ paths:
                   message:
                     type: string
                   data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Case"
+                    type: object
+                    properties:
+                      cases:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Case"
+                      total:
+                        type: integer
+                      page:
+                        type: integer
+              example:
+                message: Cases Fetched Succesfully
+                status: success
+                data:
+                  cases:
+                    - _id: 60b2b1c551929b3f8b7a7e83
+                      caseID: SCSE44766
+                      caseTitle: NotYetAssigned
+                      dateOfIncident: "2021-05-29T21:21:57.922Z"
+                      caseTypeStatus: Incidence
+                      publishStatus: unPublished
+                      resolutionStatus: unResolved
+                      verificationStatus: unVerified
+                      platformOfReport: web
+                      categoryID: 60b2b051f4ff133eeaaaca1a
+                      addressOfIncident: Gatara
+                      state: Abuja
+                      reportType: Standard
+                      publicUserID: 60b0050a1416ba54d2af818b
+                      createdAt: "202a1-05-29T21:27:33.145Z"
+                      updatedAt: "2021-05-29T21:27:33.145Z"
+                      __v: 0
+                  total: 1
+                  page: 1
   /case/{id}:
     get:
       security:
-        - bearerAuth: []
+        - partnerBearerAuth: []
       summary: "Get a case"
       tags: ["Case"]
       parameters:
@@ -677,7 +740,6 @@ paths:
           required: true
           schema:
             type: string
-
       responses:
         "200":
           description: "Case fetched"
@@ -691,6 +753,25 @@ paths:
                     type: string
                   data:
                     $ref: "#/components/schemas/Case"
+              example:
+                _id: 60b2b1c551929b3f8b7a7e83
+                caseID: SCSE44766
+                caseTitle: NotYetAssigned
+                dateOfIncident: "2021-05-29T21:21:57.922Z"
+                areYouTheVictim: "Yes"
+                caseTypeStatus: Incidence
+                publishStatus: unPublished
+                resolutionStatus: unResolved
+                verificationStatus: unVerified
+                platformOfReport: web
+                categoryID: 60b2b051f4ff133eeaaaca1a
+                addressOfIncident: Gatara
+                state: Abuja
+                reportType: Standard
+                publicUserID: 60b0050a1416ba54d2af818b
+                createdAt: "2021-05-29T21:27:33.145Z"
+                updatedAt: "2021-05-29T21:27:33.145Z"
+                __v: 0
   /case/{id}/verify:
     patch:
       security:
@@ -711,6 +792,8 @@ paths:
               properties:
                 verificationStatus:
                   type: string
+            example:
+              verificationStatus: verified
       responses:
         "200":
           description: "Case verified"
@@ -724,6 +807,25 @@ paths:
                     type: string
                   data:
                     $ref: "#/components/schemas/Case"
+              example:
+                _id: 60b2b1c551929b3f8b7a7e83
+                caseTitle: NotYetAssigned
+                dateOfIncident: "2021-05-29T21:21:57.922Z"
+                caseTypeStatus: Incidence
+                publishStatus: unPublished
+                resolutionStatus: unResolved
+                verificationStatus: verified
+                platformOfReport: web
+                categoryID: 60b2b051f4ff133eeaaaca1a
+                addressOfIncident: Gatara
+                state: Abuja
+                reportType: Standard
+                publicUserID: 60b0050a1416ba54d2af818b
+                createdAt: "2021-05-29T21:27:33.145Z"
+                updatedAt: "2021-05-29T21:27:33.145Z"
+                caseID: SCSE44766
+                __v: 0
+
   /case/{id}/assign:
     patch:
       security:
@@ -1654,6 +1756,10 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+    partnerBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     PublicUser:
       additionalProperties: false
@@ -1897,20 +2003,24 @@ components:
           default: "Incidence"
         caseSummary:
           type: string
+          readOnly: true
         publishStatus:
           type: string
           enum: ["published", "unPublished"]
           default: "unPublished"
+          readOnly: true
         publishedBy:
           $ref: "#/components/schemas/PartnerUser"
         resolutionStatus:
           type: string
           enum: ["resolved", "unResolved", "onlyReport"]
           default: "unResolved"
+          readOnly: true
         verificationStatus:
           type: string
           enum: ["verified", "unVerified", "onlyReport"]
           default: "unVerified"
+          readOnly: true
         platformOfReport:
           type: string
           enum: ["mobile", "web", "sms"]
@@ -1918,6 +2028,7 @@ components:
         tags:
           type: string
         followedBy:
+          readOnly: true
           type: array
           items:
             $ref: "#/components/schemas/PartnerUser"

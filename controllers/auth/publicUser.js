@@ -27,7 +27,9 @@ const createSendToken = (user, statusCode, res, message) => {
 exports.signup = async (req, res, next) => {
   let errors = {};
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ email: req.body.email }).select(
+      "-password"
+    );
     if (user) {
       errors.email = "Email already exists";
       return normalError(res, 400, "Unable to create user", errors);
@@ -35,7 +37,6 @@ exports.signup = async (req, res, next) => {
     const newUser = await User.create({
       ...req.body,
     });
-    const data = _.omit(newUser.toObject(), "password");
     createSendToken(data, 201, res, "User succesfully created");
   } catch (err) {
     return tryCatchError(res, err);

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { genCategoryID } = require("../../utils/genID");
+const { genIDs } = require("../../utils/genID");
 
 const Schema = mongoose.Schema;
 
@@ -8,7 +8,6 @@ const caseCategorySchema = new Schema(
     // ID of the categories of Violations
     categoryID: {
       type: String,
-      default: genCategoryID,
     },
 
     // The Human right Violation Classification Group that this category belongs to
@@ -27,12 +26,17 @@ const caseCategorySchema = new Schema(
       type: String,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
+
+caseCategorySchema.pre("save", function (next) {
+  this.categoryID = genIDs("SCAT");
+  next();
+});
 
 const CaseCategory = mongoose.model(
   "CaseCategory",
-  caseCategorySchema,
+  caseCategorySchema
 );
 
 module.exports = CaseCategory;
