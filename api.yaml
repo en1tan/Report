@@ -899,6 +899,8 @@ paths:
               properties:
                 publishStatus:
                   type: string
+            example:
+              publishStatus: published
       responses:
         "200":
           description: "Case published"
@@ -912,6 +914,26 @@ paths:
                     type: string
                   data:
                     $ref: "#/components/schemas/Case"
+              example:
+                _id: 60b2b1c551929b3f8b7a7e83
+                caseTitle: NotYetAssigned
+                dateOfIncident: "2021-05-29T21:21:57.922Z"
+                caseTypeStatus: Incidence
+                publishStatus: published
+                resolutionStatus: unResolved
+                verificationStatus: verified
+                platformOfReport: web
+                categoryID: 60b2b051f4ff133eeaaaca1a
+                publishedBy: 60b180282525d74ce37cbd84
+                addressOfIncident: Gatara
+                state: Abuja
+                reportType: Standard
+                publicUserID: 60b0050a1416ba54d2af818b
+                createdAt: "2021-05-29T21:27:33.145Z"
+                updatedAt: "2021-05-29T21:27:33.145Z"
+                caseID: SCSE44766
+                __v: 0
+
   /case/{id}/resolve:
     patch:
       security:
