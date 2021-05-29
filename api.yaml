@@ -845,7 +845,7 @@ paths:
             schema:
               $ref: "#/components/schemas/PartnerUser"
             example:
-              assignedPartnerUserId:
+              assignedPartnerUserId: 60b180282525d74ce37cbd84
       responses:
         "200":
           description: "Case assigned"
@@ -859,6 +859,26 @@ paths:
                     type: string
                   data:
                     $ref: "#/components/schemas/Case"
+              example:
+                _id: 60b2b1c551929b3f8b7a7e83
+                caseTitle: NotYetAssigned
+                dateOfIncident: "2021-05-29T21:21:57.922Z"
+                caseTypeStatus: Incidence
+                publishStatus: unPublished
+                resolutionStatus: unResolved
+                verificationStatus: verified
+                platformOfReport: web
+                categoryID: 60b2b051f4ff133eeaaaca1a
+                addressOfIncident: Gatara
+                state: Abuja
+                reportType: Standard
+                publicUserID: 60b0050a1416ba54d2af818b
+                assignedPartnerUserId: 60b180282525d74ce37cbd84
+                createdAt: "2021-05-29T21:27:33.145Z"
+                updatedAt: "2021-05-29T21:27:33.145Z"
+                caseID: SCSE44766
+                __v: 0
+
   /case/{id}/publish:
     patch:
       security:
