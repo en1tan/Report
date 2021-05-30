@@ -9,8 +9,8 @@ const {
 } = require("../../utils/errorHandlers");
 const { successWithData } = require("../../utils/successHandler");
 
-const signToken = (id, userType) => {
-  return jwt.sign({ id, userType }, process.env.JWT_SECRET, {
+const signToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
@@ -37,7 +37,12 @@ exports.signup = async (req, res, next) => {
     const newUser = await User.create({
       ...req.body,
     });
-    createSendToken(data, 201, res, "User succesfully created");
+    return successWithData(
+      res,
+      201,
+      "User succesfully created",
+      newUser
+    );
   } catch (err) {
     return tryCatchError(res, err);
   }

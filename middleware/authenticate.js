@@ -17,7 +17,7 @@ function authenticate() {
       const decoded = await jwt.verify(token, process.env.JWT_SECRET);
       if (decoded.exp < Date.now().valueOf() / 1000)
         return authorizationError(res, "invalid token");
-      if (decoded.userType === "public") {
+      if (!decoded.userType) {
         const user = await PublicUser.findById(decoded.id);
         req.user = user;
       } else {
