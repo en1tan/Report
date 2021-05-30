@@ -41,7 +41,7 @@ exports.getFollowedCases = async (req, res, next) => {
   try {
     let { page = 1, limit = 20 } = req.query;
     const cases = await Case.find({ followedBy: req.user._id })
-      .select("-followedBy -areYouTheVictim")
+      .select("-followedBy -areYouTheVictim caseID")
       .sort("-createdAt")
       .limit(limit * 1)
       .skip((page - 1) * limit)
@@ -156,7 +156,7 @@ exports.getCase = async (req, res, next) => {
     return successWithData(
       res,
       200,
-      "Case Fetched Succesfully",
+      "Cases Fetched Succesfully",
       data
     );
   } catch (err) {

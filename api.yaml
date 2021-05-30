@@ -952,8 +952,10 @@ paths:
           application/json:
             schema:
               properties:
-                resolutionCase:
+                resolutionStatus:
                   type: string
+            example:
+              resolutionStatus: resolved
       responses:
         "200":
           description: "Case resolved"
@@ -967,7 +969,25 @@ paths:
                     type: string
                   data:
                     $ref: "#/components/schemas/Case"
-
+              example:
+                _id: 60b2b1c551929b3f8b7a7e83
+                caseTitle: NotYetAssigned
+                dateOfIncident: "2021-05-29T21:21:57.922Z"
+                caseTypeStatus: Incidence
+                publishStatus: published
+                resolutionStatus: resolved
+                verificationStatus: verified
+                platformOfReport: web
+                categoryID: 60b2b051f4ff133eeaaaca1a
+                publishedBy: 60b180282525d74ce37cbd84
+                addressOfIncident: Gatara
+                state: Abuja
+                reportType: Standard
+                publicUserID: 60b0050a1416ba54d2af818b
+                createdAt: "2021-05-29T21:27:33.145Z"
+                updatedAt: "2021-05-29T21:27:33.145Z"
+                caseID: SCSE44766
+                __v: 0
   /case/personal:
     get:
       security:
@@ -987,7 +1007,26 @@ paths:
                     type: string
                   data:
                     $ref: "#/components/schemas/Case"
-  /case/{id}follow:
+              example:
+                _id: 60b2b1c551929b3f8b7a7e83
+                caseTitle: NotYetAssigned
+                dateOfIncident: "2021-05-29T21:21:57.922Z"
+                caseTypeStatus: Incidence
+                publishStatus: published
+                resolutionStatus: resolved
+                verificationStatus: verified
+                platformOfReport: web
+                categoryID: 60b2b051f4ff133eeaaaca1a
+                publishedBy: 60b180282525d74ce37cbd84
+                addressOfIncident: Gatara
+                state: Abuja
+                reportType: Standard
+                publicUserID: 60b0050a1416ba54d2af818b
+                createdAt: "2021-05-29T21:27:33.145Z"
+                updatedAt: "2021-05-29T21:27:33.145Z"
+                caseID: SCSE44766
+                __v: 0
+  /case/{id}/follow:
     patch:
       security:
         - bearerAuth: []
@@ -1007,6 +1046,8 @@ paths:
               properties:
                 followStatus:
                   type: string
+            example:
+              followStatus: follow
       responses:
         "200":
           description: "Case Followed/Unfollowed"
@@ -1018,6 +1059,9 @@ paths:
                     type: string
                   message:
                     type: string
+              example:
+                status: success
+                message: case followed successfully
   /case/followed:
     get:
       security:
@@ -1047,9 +1091,34 @@ paths:
                   message:
                     type: string
                   data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Case"
+                    type: object
+                    cases:
+                      type: array
+                      items:
+                        $ref: "#/components/schemas/Case"
+              example:
+                status: success
+                message: Cases Fetched Succesfully
+                data:
+                  cases:
+                    - _id: 60b2b1c551929b3f8b7a7e83
+                      caseTitle: NotYetAssigned
+                      dateOfIncident: "2021-05-29T21:21:57.922Z"
+                      caseTypeStatus: Incidence
+                      publishStatus: published
+                      resolutionStatus: resolved
+                      verificationStatus: verified
+                      platformOfReport: web
+                      categoryID: 60b2b051f4ff133eeaaaca1a
+                      publishedBy: 60b180282525d74ce37cbd84
+                      addressOfIncident: Gatara
+                      state: Abuja
+                      reportType: Standard
+                      publicUserID: 60b0050a1416ba54d2af818b
+                      createdAt: "2021-05-29T21:27:33.145Z"
+                      updatedAt: "2021-05-29T21:27:33.145Z"
+                total: 1
+                page: 1
   /case/create/{caseID}/caseVictim:
     post:
       security:
