@@ -99,11 +99,13 @@ exports.getAllCase = async (req, res, next) => {
     "reportType",
     "caseTypeStatus",
   ]);
-  filter.state = req.user.stateOfAssignment;
-  if (req.user.userType === "staff")
-    filter.assignedPartnerUserId = req.user._id;
-  if (req.user.userType === "verifier")
-    filter.verificationStatus = "unVerified";
+  if (req.user.userType) {
+    filter.state = req.user.stateOfAssignment;
+    if (req.user.userType === "staff")
+      filter.assignedPartnerUserId = req.user._id;
+    if (req.user.userType === "verifier")
+      filter.verificationStatus = "unVerified";
+  }
   try {
     const cases = await Case.find(filter)
       .sort("-createdAt")
@@ -399,6 +401,42 @@ exports.resolveCase = async (req, res, next) => {
       200,
       "Case resolved successfully",
       resolvedCase
+    );
+  } catch (err) {
+    return tryCatchError(res, err);
+  }
+};
+
+exports.getPublicCases = async (req, res, next) => {
+  let { page = 1, limit = 20 } = req.query;
+  const filter = _.pick(req.query, [
+    "resolutionStatus",
+    "reportType",
+    "caseTypeStatus",
+  ]);
+  filter.verificationStatus = "verified";
+  filter.publishStatus = "published";
+  try {
+    const cases = await Case.find(filter)
+      .sort("-createdAt")
+      .select(
+        "-followedBy  -areYouTheVictim  -publicUserID -caseID -verificationStatus -publishStatus"
+      )
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .exec();
+
+    const count = await Case.countDocuments(filter).exec();
+    const data = {
+      cases,
+      total: Math.ceil(count / limit),
+      page: parseInt(page),
+    };
+    return successWithData(
+      res,
+      200,
+      "Cases Fetched Succesfully",
+      data
     );
   } catch (err) {
     return tryCatchError(res, err);

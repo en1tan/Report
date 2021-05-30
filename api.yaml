@@ -619,10 +619,7 @@ paths:
                     areYouTheVictim: "Yes"
                     caseTypeStatus: Incidence
                     publishStatus: unPublished
-                    resolutionStatus: unResolved
-                    verificationStatus: unVerified
                     platformOfReport: web
-                    followedBy: []
                     categoryID: 60b2b051f4ff133eeaaaca1a
                     addressOfIncident: Gatara
                     state: Abuja
@@ -630,8 +627,82 @@ paths:
                     publicUserID: 60b0050a1416ba54d2af818b
                     createdAt: "2021-05-29T21:27:33.145Z"
                     updatedAt: "2021-05-29T21:27:33.145Z"
-                    caseID: SCSE44766
                     __v: 0
+
+  /public/cases:
+    get:
+      summary: "Get all cases"
+      tags: ["Public"]
+      parameters:
+        - description: "Filter by Resolution Status"
+          in: query
+          name: resolutionStatus
+          schema:
+            type: string
+        - description: "Filter by Report Type"
+          in: query
+          name: reportType
+          schema:
+            type: string
+        - description: "Filter by Case Type Status"
+          in: query
+          name: caseTypeStatus
+          schema:
+            type: string
+        - description: "Page"
+          in: query
+          name: page
+          example: 1
+          schema:
+            type: integer
+        - description: "Limit"
+          in: query
+          name: limit
+          example: 20
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "All cases fetched"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      cases:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Case"
+                      total:
+                        type: integer
+                      page:
+                        type: integer
+              example:
+                message: Cases Fetched Succesfully
+                status: success
+                data:
+                  cases:
+                    - _id: 60b2b1c551929b3f8b7a7e83
+                      caseTitle: NotYetAssigned
+                      dateOfIncident: "2021-05-29T21:21:57.922Z"
+                      caseTypeStatus: Incidence
+                      resolutionStatus: unResolved
+                      categoryID: 60b2b051f4ff133eeaaaca1a
+                      addressOfIncident: Gatara
+                      state: Abuja
+                      reportType: Standard
+                      createdAt: "202a1-05-29T21:27:33.145Z"
+                      updatedAt: "2021-05-29T21:27:33.145Z"
+                      __v: 0
+                  total: 1
+                  page: 1
+
   /case:
     get:
       security:

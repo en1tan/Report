@@ -8,7 +8,7 @@ const router = express.Router();
 router.get(
   "/",
   authorize(["super-admin", "admin", "staff", "verifier"]),
-  caseController.getAllCase,
+  caseController.getAllCase
 );
 router.get("/personal", caseController.getPersonalCases);
 router.post("/create", caseController.createCase);
@@ -18,62 +18,62 @@ router.get("/:id", caseController.getCase);
 router.post(
   "/create/:caseID/caseVictim",
   authorize(["public", "admin", "staff"]),
-  caseController.createCaseVictim,
+  caseController.createCaseVictim
 );
 router.post(
   "/create/:caseID/caseSuspect",
   authorize(["public", "admin", "staff"]),
-  caseController.createCaseSuspect,
+  caseController.createCaseSuspect
 );
 router.post(
   "/create/:caseID/caseWitness",
   authorize(["public", "admin", "staff"]),
-  caseController.createCaseWitness,
+  caseController.createCaseWitness
 );
 router.post(
   "/create/:caseID/otherDetails",
   authorize("admin"),
-  caseController.createCaseOtherDetails,
+  caseController.createCaseOtherDetails
 );
 router.post(
   "/create/:caseID/caseProgress",
   authorize(["public", "admin", "staff"]),
-  caseController.createCaseProgress,
+  caseController.createCaseProgress
 );
 
 router.post(
   "/create/:id/evidence",
   authorize(["admin", "staff"]),
   arrayUpload,
-  caseController.saveEvidence,
+  caseController.saveEvidence
 );
 router.patch(
   "edit/:id/evidence",
   authorize(["admin", "staff"]),
-  caseController.editEvidence,
+  caseController.editEvidence
 );
 
 router.patch(
   "/:id/assign",
   authorize(["admin"]),
-  caseController.assignPartnerToCase,
+  caseController.assignPartnerToCase
 );
 
 router.patch(
   "/:id/verify",
   authorize(["super-admin", "verifier"]),
-  caseController.verifyCase,
+  caseController.verifyCase
 );
 
 router.patch(
   "/:id/publish",
   authorize(["admin", "staff"]),
-  caseController.publishCase,
+  caseController.publishCase
 );
 router.patch(
   "/:id/resolve",
   authorize(["admin", "staff"]),
-  caseController.resolveCase,
+  caseController.resolveCase
 );
 router.patch("/:id/follow", caseController.followCase);
 

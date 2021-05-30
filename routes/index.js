@@ -11,11 +11,13 @@ const comment = require("./comment");
 const details = require("./otherDetails");
 const error = require("../controllers/errors");
 const partner = require("./partner");
+const public = require("./public");
 
 const appicationError = require("../utils/applicationError");
 
 const router = express.Router();
 
+router.use("/public", public);
 router.use("/user", user);
 router.use("/partner", partner);
 router.use("/case", auth(), cases);
