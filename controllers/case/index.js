@@ -188,6 +188,8 @@ exports.createCase = async (req, res, next) => {
 
 exports.createCaseVictim = async (req, res, next) => {
   try {
+    const existingCase = await Case.findById(req.params.caseID);
+    if (!existingCase) return normalError(res, 404, "case not found");
     req.body.caseID = req.params.caseID;
     const newVictim = await CaseVictim.create(req.body);
     const data = {

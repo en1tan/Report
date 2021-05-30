@@ -17,17 +17,14 @@ router.get("/:id", caseController.getCase);
 
 router.post(
   "/create/:caseID/caseVictim",
-  authorize(["public", "admin", "staff"]),
   caseController.createCaseVictim
 );
 router.post(
   "/create/:caseID/caseSuspect",
-  authorize(["public", "admin", "staff"]),
   caseController.createCaseSuspect
 );
 router.post(
   "/create/:caseID/caseWitness",
-  authorize(["public", "admin", "staff"]),
   caseController.createCaseWitness
 );
 router.post(
@@ -37,7 +34,7 @@ router.post(
 );
 router.post(
   "/create/:caseID/caseProgress",
-  authorize(["public", "admin", "staff"]),
+  authorize(["admin", "staff"]),
   caseController.createCaseProgress
 );
 
@@ -61,7 +58,7 @@ router.patch(
 
 router.patch(
   "/:id/verify",
-  authorize(["super-admin", "verifier"]),
+  authorize(["admin", "verifier"]),
   caseController.verifyCase
 );
 

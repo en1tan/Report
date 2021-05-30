@@ -21,6 +21,7 @@ paths:
               $ref: "#/components/schemas/PublicUser"
             example:
               firstName: Soroke
+              middleName: Adams
               lastName: User
               userName: sorosoke
               email: user@sorosoke.com
@@ -579,7 +580,7 @@ paths:
     post:
       security:
         - bearerAuth: []
-      summary: "Create a case report"
+      summary: Create a case report
       tags: ["Case"]
       description: ""
       requestBody:
@@ -588,14 +589,16 @@ paths:
             schema:
               $ref: "#/components/schemas/Case"
             example:
-              categoryID: 60b2b051f4ff133eeaaaca1a
-              addressOfIncident: Gatara
               dateOfIncident: "2021-05-29T21:21:57.922Z"
+              categoryID: 60b2b051f4ff133eeaaaca1a
               state: Abuja
-              areYouTheVictim: "Yes"
+              addressOfIncident: Gatara
+              areYouTheVictim: Yes
               reportType: Standard
+              country: Nigeria
+              descriptionOfIncident: A friend got swatted
       responses:
-        "201":
+        201:
           description: "Case reported successfully"
           content:
             application/json:
@@ -866,7 +869,7 @@ paths:
               verificationStatus: verified
               caseTypeStatus: Case
       responses:
-        "200":
+        200:
           description: "Case verified"
           content:
             application/json:
@@ -1203,11 +1206,20 @@ paths:
           required: true
           schema:
             type: string
+          example: 60b2b1c551929b3f8b7a7e83
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/CaseVictim"
+            example:
+              firstNameOfVictim: John
+              lastNameOfVictim: Doe
+              emailOfVictim: johndoe@vict.com
+              phoneNumberOfVictim: "08035468521"
+              genderOfVictim: Male
+              residentialAddressOfVictim: 12, Vitc Cl.
+              relationshipWithVictim: Friend
       responses:
         "201":
           description: "Victim added successfully"
@@ -1222,8 +1234,27 @@ paths:
                   data:
                     type: object
                     properties:
-                      suspect:
+                      victim:
                         $ref: "#/components/schemas/CaseVictim"
+              example:
+                status: success
+                message: Victim Created Succesfully
+                data:
+                  victim:
+                    _id: 60b417bced9c8c3106ecc3fa
+                    firstNameOfVictim: John
+                    lastNameOfVictim: Doe
+                    emailOfVictim: johndoe@vict.com
+                    phoneNumberOfVictim: "08035468521"
+                    genderOfVictim: Male
+                    residentialAddressOfVictim: "12, Vitc Cl."
+                    relationshipWithVictim: Friend
+                    caseID: 60b417a0ed9c8c3106ecc3f9
+                    createdAt: "2021-05-30T22:54:52.960Z"
+                    updatedAt: "2021-05-30T22:54:52.960Z"
+                    caseVictimID: SCEV56754
+                    __v: 0
+
   /case/create/{caseID}/caseSuspect:
     post:
       security:
@@ -1242,6 +1273,13 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/CaseSuspect"
+            example:
+              firstNameOfSuspect: Jonas
+              lastNameOfSuspect: Phils
+              emailOfSuspect: jonesphlias@email.com
+              phoneNumberOfSuspect: "08035468521"
+              genderOfSuspect: Female
+              residentialAddressOfSuspect: "91, Sus Ln."
       responses:
         "201":
           description: "Suspect added successfully"
@@ -1258,6 +1296,24 @@ paths:
                     properties:
                       suspect:
                         $ref: "#/components/schemas/CaseSuspect"
+              example:
+                status: success
+                message: Suspect Created Succesfully
+                data:
+                  suspect:
+                    guiltStatus: Not-guilty
+                    _id: 60b41db683f4b35cf57e2027
+                    firstNameOfSuspect: Jonas
+                    lastNameOfSuspect: Phils
+                    emailOfSuspect: jonesphlias@email.com
+                    phoneNumberOfSuspect: "08035468521"
+                    genderOfSuspect: Female
+                    residentialAddressOfSuspect: "91, Sus Ln."
+                    caseID: 60b417a0ed9c8c3106ecc3f9
+                    createdAt: "2021-05-30T23:20:22.559Z"
+                    updatedAt: "2021-05-30T23:20:22.559Z"
+                    caseSuspectID: SCES10220
+                    __v: 0
   /case/create/{caseID}/caseWitness:
     post:
       security:
@@ -1276,6 +1332,13 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/CaseWitness"
+            example:
+              firstNameOfWitness: Witney
+              lastNameOfWitness: Hostin
+              emailOfWitness: witty@whie.com
+              phoneNumberOfWitness: ;'07608547896'
+              genderOfWitness: Female
+              residentialAddressOfWitness: Witty Cr.
       responses:
         "201":
           description: "Witness added successfully"
@@ -1292,6 +1355,23 @@ paths:
                     properties:
                       suspect:
                         $ref: "#/components/schemas/CaseWitness"
+              example:
+                message: Witness Created Succesfully
+                status: success
+                data:
+                  witness:
+                    _id: 60b42200adf18d5fe4e22eae
+                    firstNameOfWitness: Witney
+                    lastNameOfWitness: Hostin
+                    emailOfWitness: witty@whie.com
+                    phoneNumberOfWitness: ;'07608547896'
+                    genderOfWitness: Female
+                    residentialAddressOfWitness: Witty Cr.
+                    caseID: 60b2b1c551929b3f8b7a7e83
+                    createdAt: "2021-05-30T23:38:40.155Z"
+                    updatedAt: "2021-05-30T23:38:40.155Z"
+                    caseWitnessID: SCEW46404
+                    __v: 0
   /case/create/{caseID}/otherDetails:
     post:
       security:
@@ -1489,18 +1569,18 @@ paths:
                     properties:
                       group:
                         $ref: "#/components/schemas/CaseCategoryGroup"
-                example:
-                  status: "success"
-                  message: "Case Group Created Successfully"
-                  data:
-                    group:
-                      _id: 60affb6a3dc1114794a4cb64
-                      groupName: "Human Rights"
-                      description: "Human Rights"
-                      createdAt: "2021-05-27T20:04:58.743Z"
-                      updatedAt: "2021-05-27T20:04:58.743Z"
-                      categoryGroupID: "SGRP72360"
-                      _v: 0
+              example:
+                status: "success"
+                message: "Case Group Created Successfully"
+                data:
+                  group:
+                    _id: 60affb6a3dc1114794a4cb64
+                    groupName: "Human Rights"
+                    description: "Human Rights"
+                    createdAt: "2021-05-27T20:04:58.743Z"
+                    updatedAt: "2021-05-27T20:04:58.743Z"
+                    categoryGroupID: "SGRP72360"
+                    _v: 0
   /case/category/group/{id}/update:
     patch:
       security:

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { genVictimID } = require("../../utils/genID");
+const { genIDs } = require("../../utils/genID");
 
 const Schema = mongoose.Schema;
 
@@ -8,7 +8,6 @@ const caseVictimSchema = new Schema(
     // Victim's ID
     caseVictimID: {
       type: String,
-      default: genVictimID,
     },
 
     // ID of the case the victim is linked to
@@ -119,8 +118,13 @@ const caseVictimSchema = new Schema(
     // Reporter (user) relationship with the victim
     relationshipWithVictim: String,
   },
-  { timestamps: true },
+  { timestamps: true }
 );
+
+caseVictimSchema.pre("save", function (next) {
+  this.caseVictimID = genIDs("SCEV");
+  next();
+});
 
 const CaseVictim = mongoose.model("CaseVictim", caseVictimSchema);
 
