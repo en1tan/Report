@@ -594,7 +594,6 @@ paths:
               state: Abuja
               areYouTheVictim: "Yes"
               reportType: Standard
-              caseTypeStatus: Incidence
       responses:
         "201":
           description: "Case reported successfully"
@@ -865,6 +864,7 @@ paths:
                   type: string
             example:
               verificationStatus: verified
+              caseTypeStatus: Case
       responses:
         "200":
           description: "Case verified"
@@ -1437,7 +1437,7 @@ paths:
       security:
         - bearerAuth: []
       summary: "Get all category groups"
-      tags: ["Category Group"]
+      tags: ["Public", "Category Group"]
       responses:
         "200":
           description: "Category groups fetched"
@@ -1544,6 +1544,7 @@ paths:
                       categoryGroupID: "SGRP72360"
   /case/category/group/{id}:
     delete:
+      summary: delete category group
       security:
         - bearerAuth: []
       tags: ["Category Group"]
@@ -1566,12 +1567,19 @@ paths:
                   message:
                     type: string
 
-  /case/category/categories:
+  /case/category/{groupID}/categories:
     get:
       security:
         - bearerAuth: []
       summary: "Get all categories"
-      tags: ["Category"]
+      tags: ["Public", "Category"]
+      parameters:
+        - description: group ID
+          in: path
+          required: true
+          name: groupID
+          schema:
+            type: string
       responses:
         "200":
           description: "Category groups fetched"

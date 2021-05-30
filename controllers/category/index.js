@@ -19,7 +19,7 @@ exports.getAllCategoryGroup = async (req, res, next) => {
       res,
       200,
       "Fetched all category groups",
-      groups,
+      groups
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -38,7 +38,7 @@ exports.createCaseCategoryGroup = async (req, res, next) => {
       res,
       201,
       "Case Group Created Succesfully",
-      data,
+      data
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -50,13 +50,13 @@ exports.editCaseCategoryGroup = async (req, res, next) => {
     const updatedCase = await CaseCategoryGroup.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true },
+      { new: true }
     ).orFail();
     return successWithData(
       res,
       200,
       "Case Group updated successfully",
-      updatedCase,
+      updatedCase
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -74,14 +74,14 @@ exports.deleteCaseCategoryGroup = async (req, res, next) => {
 
 exports.getAllCategories = async (req, res, next) => {
   try {
-    let filter = {};
-    if (req.query.groupId) filter.categoryGroupID = req.query.groupId;
-    const categories = await CaseCategory.find(filter);
+    const categories = await CaseCategory.find({
+      categoryGroupID: req.params.groupID,
+    });
     return successWithData(
       res,
       200,
       "Categories fetched",
-      categories,
+      categories
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -101,7 +101,7 @@ exports.createCaseCategory = async (req, res, next) => {
       res,
       200,
       "Case Category Created Succesfully",
-      data,
+      data
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -116,13 +116,13 @@ exports.editCaseCategory = async (req, res, next) => {
     const updatedCategory = await CaseCategory.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true },
+      { new: true }
     );
     return successWithData(
       res,
       200,
       "Category updated successfully.",
-      updatedCategory,
+      updatedCategory
     );
   } catch (err) {
     return tryCatchError(res, err);

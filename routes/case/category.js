@@ -10,36 +10,36 @@ router.post(
   "/group/create",
   authorize(["super-admin", "admin"]),
   singleUpload,
-  caseController.createCaseCategoryGroup,
+  caseController.createCaseCategoryGroup
 );
 router.patch(
   "/group/:id/update",
   authorize(["super-admin", "admin"]),
-  caseController.editCaseCategoryGroup,
+  caseController.editCaseCategoryGroup
 );
 router.delete(
   "/group/:id",
   authorize(["super-admin", "admin"]),
-  caseController.deleteCaseCategoryGroup,
+  caseController.deleteCaseCategoryGroup
 );
 
-router.get("/categories", caseController.getAllCategories);
+router.get("/:groupID/categories", caseController.getAllCategories);
 
 router.post(
   "/group/:id/create",
   caseController.createCaseCategory,
-  authorize(["super-admin", "admin"]),
+  authorize(["super-admin", "admin"])
 );
 
 router.patch(
   "/:id/update",
   authorize(["super-admin", "admin"]),
-  caseController.editCaseCategory,
+  caseController.editCaseCategory
 );
 
 router.delete(
   "/:id",
   authorize(["super-admin", "admin"]),
-  caseController.deleteCaseCategory,
+  caseController.deleteCaseCategory
 );
 module.exports = router;
