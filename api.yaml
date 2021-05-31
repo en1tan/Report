@@ -21,16 +21,23 @@ paths:
               $ref: "#/components/schemas/PublicUser"
             example:
               firstName: Soroke
-              middleName: Adams
+              middleName: ""
               lastName: User
               userName: sorosoke
               email: user@sorosoke.com
               phoneNumber: "08012345678"
               gender: Female
               address: 1, Sorosoke Av.
+              addressLandmark: ""
               password: sorosokeWere@1
               confirmPassword: sorosokeWere@1
               userAgeGroup: 20-90
+              lga: ""
+              state: ""
+              country: ""
+              avatar: ""
+              disabilityStatus: ""
+              religion: ""
       responses:
         201:
           description: ""
@@ -186,9 +193,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PublicUser"
-            example:
-              phoneNumber: "08112345678"
-              address: 5, Soroke St.
       responses:
         "200":
           description: "Updated user details"
@@ -215,7 +219,7 @@ paths:
                   userAgeGroup: 20-90
 
   /partner/{id}/users:
-    post:
+    get:
       summary: Get all partner users
       description: Returns all users of a partner organization
       tags: ["Partner Organization"]
@@ -227,6 +231,7 @@ paths:
           name: id
           schema:
             type: string
+          example: 60b01f6b669e34779cd05ab5
       responses:
         200:
           description: ""
@@ -288,6 +293,7 @@ paths:
           required: true
           schema:
             type: string
+          example: 60b190ea4cf0765bb8369faa
       requestBody:
         content:
           application/json:
@@ -295,6 +301,7 @@ paths:
               $ref: "#/components/schemas/PartnerUser"
             example:
               userType: verifier
+              stateOfAssignment: ""
       responses:
         200:
           description: ""
@@ -344,6 +351,7 @@ paths:
           name: id
           schema:
             type: string
+          example: 60b190ea4cf0765bb8369faa
       responses:
         200:
           description: ""
@@ -439,9 +447,27 @@ paths:
                 password:
                   type: string
                   format: password
-            example:
-              email: verifier@sorosoke.com
-              password: verifierWere@2
+            examples:
+              superadmin:
+                summary: superadmin login
+                value:
+                  email: superadmin@sorosoke.com
+                  password: superadminWere@2
+              admin:
+                summary: admin login
+                value:
+                  email: admin@sorosoke.com
+                  password: adminWere@2
+              staff:
+                summary: staff login
+                value:
+                  email: staff@sorosoke.com
+                  password: staffWere@2
+              verifier:
+                summary: verifier login
+                value:
+                  email: verifier@sorosoke.com
+                  password: verifierWere@2
       responses:
         "200":
           description: "User authorized"
@@ -541,6 +567,19 @@ paths:
               $ref: "#/components/schemas/PartnerUser"
             example:
               phoneNumber: "09064558523"
+              firstName: ""
+              lastName: ""
+              middleName: ""
+              dob: ""
+              gender: ""
+              address: ""
+              lga: ""
+              state: ""
+              country: ""
+              avatar: ""
+              password: ""
+              disabilityStatus: ""
+              religion: ""
       responses:
         200:
           description: "Updated partner user details"
@@ -597,6 +636,10 @@ paths:
               reportType: Standard
               country: Nigeria
               descriptionOfIncident: A friend got swatted
+              lga: ""
+              casePleas: ""
+              tags: ""
+              hourOfIncident: ""
       responses:
         201:
           description: "Case reported successfully"
@@ -641,16 +684,13 @@ paths:
           name: resolutionStatus
           schema:
             type: string
+            enum: [resolved, unresolved]
         - description: "Filter by Report Type"
           in: query
           name: reportType
           schema:
             type: string
-        - description: "Filter by Case Type Status"
-          in: query
-          name: caseTypeStatus
-          schema:
-            type: string
+            enum: [Standard, QuickReport]
         - description: "Page"
           in: query
           name: page
@@ -717,31 +757,37 @@ paths:
           name: resolutionStatus
           schema:
             type: string
+            enum: [unresolved, resolved, onlyReport]
         - description: "Filter by Verification Status"
           in: query
           name: verificationStatus
           schema:
             type: string
+            enum: [unVerified, verified]
         - description: "Filter by Platform of Report"
           in: query
           name: platformOfReport
           schema:
             type: string
+            enum: [web, mobile, sms]
         - description: "Filter by Published status"
           in: query
           name: publishStatus
           schema:
             type: string
+            enum: [unPublished, published]
         - description: "Filter by Report Type"
           in: query
           name: reportType
           schema:
             type: string
+            enum: [Standard, QuickReport]
         - description: "Filter by Case Type Status"
           in: query
           name: caseTypeStatus
           schema:
             type: string
+            enum: [Incidence, Case, QuickReport]
         - description: "Page"
           in: query
           name: page
@@ -813,6 +859,7 @@ paths:
           required: true
           schema:
             type: string
+          example: 60b2b1c551929b3f8b7a7e83
       responses:
         "200":
           description: "Case fetched"
@@ -827,24 +874,27 @@ paths:
                   data:
                     $ref: "#/components/schemas/Case"
               example:
-                _id: 60b2b1c551929b3f8b7a7e83
-                caseID: SCSE44766
-                caseTitle: NotYetAssigned
-                dateOfIncident: "2021-05-29T21:21:57.922Z"
-                areYouTheVictim: "Yes"
-                caseTypeStatus: Incidence
-                publishStatus: unPublished
-                resolutionStatus: unResolved
-                verificationStatus: unVerified
-                platformOfReport: web
-                categoryID: 60b2b051f4ff133eeaaaca1a
-                addressOfIncident: Gatara
-                state: Abuja
-                reportType: Standard
-                publicUserID: 60b0050a1416ba54d2af818b
-                createdAt: "2021-05-29T21:27:33.145Z"
-                updatedAt: "2021-05-29T21:27:33.145Z"
-                __v: 0
+                status: success
+                message: Case Fetched Succesfully
+                case:
+                  _id: 60b2b1c551929b3f8b7a7e83
+                  caseID: SCSE44766
+                  caseTitle: NotYetAssigned
+                  dateOfIncident: "2021-05-29T21:21:57.922Z"
+                  areYouTheVictim: "Yes"
+                  caseTypeStatus: Incidence
+                  publishStatus: unPublished
+                  resolutionStatus: unResolved
+                  verificationStatus: unVerified
+                  platformOfReport: web
+                  categoryID: 60b2b051f4ff133eeaaaca1a
+                  addressOfIncident: Gatara
+                  state: Abuja
+                  reportType: Standard
+                  publicUserID: 60b0050a1416ba54d2af818b
+                  createdAt: "2021-05-29T21:27:33.145Z"
+                  updatedAt: "2021-05-29T21:27:33.145Z"
+                  __v: 0
   /case/{id}/verify:
     patch:
       security:
@@ -858,6 +908,7 @@ paths:
           required: true
           schema:
             type: string
+          example: 60b2b1c551929b3f8b7a7e83
       requestBody:
         content:
           application/json:
@@ -882,24 +933,26 @@ paths:
                   data:
                     $ref: "#/components/schemas/Case"
               example:
-                _id: 60b2b1c551929b3f8b7a7e83
-                caseTitle: NotYetAssigned
-                dateOfIncident: "2021-05-29T21:21:57.922Z"
-                caseTypeStatus: Incidence
-                publishStatus: unPublished
-                resolutionStatus: unResolved
-                verificationStatus: verified
-                platformOfReport: web
-                categoryID: 60b2b051f4ff133eeaaaca1a
-                addressOfIncident: Gatara
-                state: Abuja
-                reportType: Standard
-                publicUserID: 60b0050a1416ba54d2af818b
-                createdAt: "2021-05-29T21:27:33.145Z"
-                updatedAt: "2021-05-29T21:27:33.145Z"
-                caseID: SCSE44766
-                __v: 0
-
+                status: success
+                message: Case verified
+                case:
+                  _id: 60b2b1c551929b3f8b7a7e83
+                  caseTitle: NotYetAssigned
+                  dateOfIncident: "2021-05-29T21:21:57.922Z"
+                  caseTypeStatus: Incidence
+                  publishStatus: unPublished
+                  resolutionStatus: unResolved
+                  verificationStatus: verified
+                  platformOfReport: web
+                  categoryID: 60b2b051f4ff133eeaaaca1a
+                  addressOfIncident: Gatara
+                  state: Abuja
+                  reportType: Standard
+                  publicUserID: 60b0050a1416ba54d2af818b
+                  createdAt: "2021-05-29T21:27:33.145Z"
+                  updatedAt: "2021-05-29T21:27:33.145Z"
+                  caseID: SCSE44766
+                  __v: 0
   /case/{id}/assign:
     patch:
       security:
@@ -913,6 +966,7 @@ paths:
           required: true
           schema:
             type: string
+          example: 60b2b1c551929b3f8b7a7e83
       requestBody:
         content:
           application/json:
@@ -966,6 +1020,7 @@ paths:
           required: true
           schema:
             type: string
+          example: 60b2b1c551929b3f8b7a7e83
       requestBody:
         content:
           application/json:
@@ -1021,6 +1076,7 @@ paths:
           required: true
           schema:
             type: string
+          example: 60b2b1c551929b3f8b7a7e83
       requestBody:
         content:
           application/json:
@@ -1028,11 +1084,18 @@ paths:
               properties:
                 resolutionStatus:
                   type: string
-            example:
-              resolutionStatus: resolved
+            examples:
+              resolved:
+                summary: mark as resolved
+                value:
+                  resolutionStatus: resolved
+              unresolved:
+                summary: mark as unresolved
+                value:
+                  resolutionStatus: unresolved
       responses:
         "200":
-          description: "Case resolved"
+          description: "Case resolved/unresolved"
           content:
             application/json:
               schema:
@@ -1067,7 +1130,7 @@ paths:
       security:
         - bearerAuth: []
       summary: "Fetch all personal cases"
-      tags: ["Case"]
+      tags: ["Case", "User"]
       responses:
         "200":
           description: "Case fetched"
@@ -1080,32 +1143,43 @@ paths:
                   message:
                     type: string
                   data:
-                    $ref: "#/components/schemas/Case"
+                    type: object
+                    cases:
+                      type: array
+                      items:
+                        $ref: "#/components/schemas/Case"
+                    total:
+                      type: integer
+                    page:
+                      type: integer
               example:
-                _id: 60b2b1c551929b3f8b7a7e83
-                caseTitle: NotYetAssigned
-                dateOfIncident: "2021-05-29T21:21:57.922Z"
-                caseTypeStatus: Incidence
-                publishStatus: published
-                resolutionStatus: resolved
-                verificationStatus: verified
-                platformOfReport: web
-                categoryID: 60b2b051f4ff133eeaaaca1a
-                publishedBy: 60b180282525d74ce37cbd84
-                addressOfIncident: Gatara
-                state: Abuja
-                reportType: Standard
-                publicUserID: 60b0050a1416ba54d2af818b
-                createdAt: "2021-05-29T21:27:33.145Z"
-                updatedAt: "2021-05-29T21:27:33.145Z"
-                caseID: SCSE44766
-                __v: 0
+                status: success
+                message: Fetched Personal Cases
+                cases:
+                  - _id: 60b2b1c551929b3f8b7a7e83
+                    caseTitle: NotYetAssigned
+                    dateOfIncident: "2021-05-29T21:21:57.922Z"
+                    caseTypeStatus: Incidence
+                    publishStatus: published
+                    resolutionStatus: resolved
+                    verificationStatus: verified
+                    platformOfReport: web
+                    categoryID: 60b2b051f4ff133eeaaaca1a
+                    publishedBy: 60b180282525d74ce37cbd84
+                    addressOfIncident: Gatara
+                    state: Abuja
+                    reportType: Standard
+                    publicUserID: 60b0050a1416ba54d2af818b
+                    createdAt: "2021-05-29T21:27:33.145Z"
+                    updatedAt: "2021-05-29T21:27:33.145Z"
+                    caseID: SCSE44766
+                    __v: 0
   /case/{id}/follow:
     patch:
       security:
         - bearerAuth: []
       summary: "Follow/Unfollow Case case"
-      tags: ["Case"]
+      tags: ["Case", "User"]
       parameters:
         - description: "Case ID"
           in: path
@@ -1120,8 +1194,16 @@ paths:
               properties:
                 followStatus:
                   type: string
-            example:
-              followStatus: follow
+                  enum: [follow, unfollow]
+            examples:
+              follow:
+                summary: follow a case
+                value:
+                  followStatus: follow
+              unfollow:
+                summary: unfollow a case
+                value:
+                  followStatus: unfollow
       responses:
         "200":
           description: "Case Followed/Unfollowed"
@@ -1141,18 +1223,20 @@ paths:
       security:
         - bearerAuth: []
       summary: "Get all followed cases"
-      tags: ["Case"]
+      tags: ["Case", "User"]
       parameters:
         - description: "Page"
           in: query
           name: page
           schema:
             type: integer
+          example: 1
         - description: "Limit"
           in: query
           name: limit
           schema:
             type: integer
+          example: 20
       responses:
         "200":
           description: "Cases fetched"
@@ -1532,7 +1616,21 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: "#/components/schemas/CaseCategoryGroup"
+                      groups:
+                        $ref: "#/components/schemas/CaseCategoryGroup"
+              example:
+                status: success
+                message: Case Category Groups Fetched
+                data:
+                  groups:
+                    - _id: 60affb6a3dc1114794a4cb64
+                      groupName: "Human Rights"
+                      description: "Human Rights"
+                      createdAt: "2021-05-27T20:04:58.743Z"
+                      updatedAt: "2021-05-27T20:04:58.743Z"
+                      categoryGroupID: "SGRP72360"
+                      _v: 0
+
   /case/category/group/create:
     post:
       security:
@@ -1872,6 +1970,7 @@ paths:
           name: id
           schema:
             type: string
+          example: 60b1807b2525d74ce37cbd85
       requestBody:
         content:
           application/json:

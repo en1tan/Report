@@ -58,7 +58,6 @@ const publicUserSchema = new Schema(
     // Gender of the user
     gender: {
       type: String,
-
       enum: ["Male", "Female"],
     },
 
@@ -119,7 +118,7 @@ const publicUserSchema = new Schema(
     // Religious oreintation of the user
     religion: String,
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 publicUserSchema.pre("save", async function (next) {
@@ -130,7 +129,7 @@ publicUserSchema.pre("save", async function (next) {
 
 publicUserSchema.methods.correctPassword = async function (
   incomingPassword,
-  userPassword,
+  userPassword
 ) {
   return await bcrypt.compare(incomingPassword, userPassword);
 };

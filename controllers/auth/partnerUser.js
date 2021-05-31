@@ -8,14 +8,14 @@ const {
 } = require("../../utils/errorHandlers");
 const { successWithData } = require("../../utils/successHandler");
 
-const signToken = (id, userType, role) => {
-  return jwt.sign({ id, role, userType }, process.env.JWT_SECRET, {
+const signToken = (id, userType) => {
+  return jwt.sign({ id, userType }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
 
 const createSendToken = (user, statusCode, res, message) => {
-  const token = signToken(user._id, user.role, user.userType);
+  const token = signToken(user._id, user.userType);
   const data = {
     token,
     user,
@@ -24,6 +24,7 @@ const createSendToken = (user, statusCode, res, message) => {
 };
 
 exports.signup = async (req, res, next) => {
+  let errors = {};
   try {
     const user = await User.findOne({ email: req.body.email });
     if (user) {

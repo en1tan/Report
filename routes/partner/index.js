@@ -8,6 +8,13 @@ const partnerAuthController = require("../../controllers/auth/partnerUser");
 const partnerController = require("../../controllers/partner");
 
 router.get(
+  "/",
+  auth(),
+  authorize("super-admin"),
+  partnerController.getAllPartners
+);
+
+router.get(
   "/:id/users",
   auth(),
   authorize(["super-admin", "admin"]),

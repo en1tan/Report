@@ -325,12 +325,23 @@ exports.editEvidence = async (req, res, next) => {
 };
 
 exports.getPersonalCases = async (req, res, next) => {
+  let { page = 1, limit = 20 } = req.query;
   try {
     const cases = await Case.find({ publicUserID: req.user.id })
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
       .sort("-created")
       .select("-followedBy");
-    return successWithData(res, 200, "Fetched cases", {
-      data: { cases },
+    const count = await Case.countDocuments({
+      publicUserID: req.user.id,
+    });
+    const data = {
+      cases,
+      total: Math.ceil(count / limit),
+      page: parseInt(page),
+    };
+    return successWithData(res, 200, "Fetched personal cases", {
+      data,
     });
   } catch (err) {
     return tryCatchError(res, err);

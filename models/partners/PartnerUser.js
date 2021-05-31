@@ -142,6 +142,14 @@ partnerUserSchema.methods.correctPassword = async function (
   return await bcrypt.compare(incomingPassword, userPassword);
 };
 
+partnerUserSchema.pre("find", function () {
+  this.where({ active: true });
+});
+
+partnerUserSchema.pre("findOne", function () {
+  this.where({ active: true });
+});
+
 const PartnerUser = mongoose.model("PartnerUser", partnerUserSchema);
 
 module.exports = PartnerUser;
