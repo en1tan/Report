@@ -57,13 +57,12 @@ exports.getFollowedCases = async (req, res, next) => {
       followedBy: req.user,
     })
       .select(
-        "caseAvatar caseTitle caseSummary categoryGroupID publishedBy datePublished"
+        "caseAvatar caseTitle caseSummary categoryGroupID publishedBy datePublished followedBy"
       )
       .sort("-createdAt")
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .exec();
-
     const count = await Case.countDocuments({
       followedBy: req.user._id,
     }).exec();
@@ -334,22 +333,6 @@ exports.saveEvidence = async (req, res, next) => {
   }
 };
 
-exports.editEvidence = async (req, res, next) => {
-  try {
-    const editedCase = await Case.findOneAndUpdate(
-      { _id: req.params.id },
-      { ...req.body },
-      { new: true }
-    );
-    const data = {
-      case: editedCase,
-    };
-    return successWithData(res, 201, "Case Saved Succesfully", data);
-  } catch (err) {
-    return tryCatchError(res, err);
-  }
-};
-
 exports.getPersonalCases = async (req, res, next) => {
   let { page = 1, limit = 20 } = req.query;
   try {
@@ -450,20 +433,52 @@ exports.resolveCase = async (req, res, next) => {
   }
 };
 
+exports.getSinglePublicCase = async (req, res, next) => {
+  try {
+    const existingCase = Case.findById(req.params.id).select();
+    const categories = CaseTaggedCategories.find({
+      caseID: existingCase._id,
+    });
+    const data = {
+      ..._.pick(existingCase, [
+        "caseAvatar",
+        "caseTitle",
+        "categoryGroupID",
+        "caseSummary",
+        "datePublished",
+        "dateOfIncident",
+        "publishedBy",
+        "resolutionStatus",
+        "reportType",
+        "state",
+        "lga",
+        "address",
+        "hourOfIncident",
+      ]),
+      categories,
+    };
+    return successWithData(res, 200, "Fetched case", data);
+  } catch (err) {}
+};
+
 exports.getPublicCases = async (req, res, next) => {
+  const selectedFields = req.user
+    ? "caseAvatar caseTitle publishedBy datePublished categoryGroupID caseSummary"
+    : "caseAvatar caseTitle publishedBy datePublished categoryGroupID caseSummary";
   let { page = 1, limit = 20 } = req.query;
   const filter = _.pick(req.query, [
     "resolutionStatus",
     "reportType",
+    "caseTypeStatus",
+    "state",
+    "lga",
   ]);
-  //filter.verificationStatus = "verified";
-  //  filter.publishStatus = "published";
+  filter.verificationStatus = "verified";
+  filter.publishStatus = "published";
   try {
     const cases = await Case.find(filter)
       .sort("-createdAt")
-      .select(
-        "caseAvatar caseTitle publishedBy datePublished caseCategoryID caseSummary"
-      )
+      .select(selectedFields)
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .exec();

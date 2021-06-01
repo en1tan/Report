@@ -689,6 +689,22 @@ paths:
           schema:
             type: string
             enum: [resolved, unresolved]
+        - description: Filter by Case Type Status
+          in: query
+          name: caseTypeStatus
+          schema:
+            type: string
+            enum: [unResolved, resolved]
+        - description: Filter by state
+          in: query
+          name: state
+          schema:
+            type: string
+        - description: filter by local government area
+          in: query
+          name: lga
+          schema:
+            type: string
         - description: "Filter by Report Type"
           in: query
           name: reportType
@@ -735,10 +751,14 @@ paths:
                 data:
                   cases:
                     - _id: 60b2b1c551929b3f8b7a7e83
-                      caseTitle: NotYetAssigned
+                      caseTitle: Swatted
+                      caseAvatar: "https://via.placeholder.com/150"
                       caseSummary: Swaatted
                       resolutionStatus: unResolved
                       categoryGroupID: 60b2b051f4ff133eeaaaca1a
+                      publishedBy: 304nv0n0493n220230
+                      datePublished: "2021-05-27T20:04:58.743Z"
+                      createdAt: "2021-05-27T20:04:58.743Z"
                       __v: 0
                   total: 1
                   page: 1
@@ -2283,7 +2303,7 @@ components:
         publicUserID:
           $ref: "#/components/schemas/PublicUser"
           readOnly: true
-        categoryID:
+        categoryGroupID:
           $ref: "#/components/schemas/CaseCategory"
         assignedPartnerUserId:
           $ref: "#/components/schemas/PartnerUser"

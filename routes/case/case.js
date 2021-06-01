@@ -44,11 +44,6 @@ router.post(
   arrayUpload,
   caseController.saveEvidence
 );
-router.patch(
-  "edit/:id/evidence",
-  authorize(["admin", "staff"]),
-  caseController.editEvidence
-);
 
 router.patch(
   "/:id/assign",
