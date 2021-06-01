@@ -42,7 +42,7 @@ exports.signup = async (req, res, next) => {
     const user = await User.findOne({ email });
     if (user) {
       errors.email = "Email already exists";
-      return normalError(res, 400, "Unable to create user", errors)
+      return normalError(res, 400, "Unable to create user", errors);
     }
     const newUser = await User.create({
       firstName,
@@ -63,10 +63,13 @@ exports.signin = async (req, res, next) => {
   if (!isValid) {
     return normalError(res, 404, "Incomplete Fields", errors);
   }
-  const { email, password } = req.body;
+  const { userName, password } = req.body;
   try {
-    const user = await User.findOne({ email }).select("+password");
-    if (!user || !(await user.correctPassword(password, user.password))) {
+    const user = await User.findOne({ userName }).select("+password");
+    if (
+      !user ||
+      !(await user.correctPassword(password, user.password))
+    ) {
       return validationError(res, "Authentication error");
     }
 

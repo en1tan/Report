@@ -25,40 +25,35 @@ const createSendToken = (user, statusCode, res, message) => {
 };
 
 exports.signup = async (req, res, next) => {
-  let errors = {};
+  const { email, userName } = req.body;
   try {
-    const user = await User.findOne({ email: req.body.email }).select(
-      "-password"
-    );
-    if (user) {
-      errors.email = "Email already exists";
-      return normalError(res, 400, "Unable to create user", errors);
+    const user = await User.findOne({ email }).select("-password");
+    if (user || (await User.findOne({ userName }))) {
+      const error = "User already exists";
+      return normalError(res, 400, "Unable to create user", error);
     }
     const newUser = await User.create({
       ...req.body,
     });
-    return successWithData(
-      res,
-      201,
-      "User succesfully created",
-      newUser
-    );
+    return successWithData(res, 201, "User succesfully created", {
+      user: newUser,
+    });
   } catch (err) {
     return tryCatchError(res, err);
   }
 };
 
 exports.signin = async (req, res, next) => {
-  const { email, password } = req.body;
+  const { userName, password } = req.body;
   try {
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ userName }).select("+password");
     if (
       !user ||
       !(await user.correctPassword(password, user.password))
     ) {
       return authorizationError(
         res,
-        "email or password is incorrrect"
+        "username or password is incorrrect"
       );
     }
     await User.findByIdAndUpdate(

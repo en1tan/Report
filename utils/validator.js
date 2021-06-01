@@ -4,6 +4,7 @@ const capitalize = require("../utils/capitalize");
 const validators = {
   signup: Joi.object({
     firstName: Joi.string().min(2).max(30).required(),
+    middleName: Joi.string().optional(),
     lastName: Joi.string().min(2).max(30).required(),
     userName: Joi.string().min(3).max(20).required(),
     email: Joi.string().email().lowercase().required(),
@@ -11,12 +12,14 @@ const validators = {
     gender: Joi.string().valid("Male", "Female"),
     address: Joi.string().required(),
     password: Joi.string().min(8).required().strict(),
-    confirmPassword: Joi.string()
-      .min(8)
-      .valid(Joi.ref("password"))
-      .required()
-      .strict(),
-    userAgeGroup: Joi.string(),
+    userAgeGroup: Joi.string().optional(),
+    addressLandmark: Joi.string().optional(),
+    lga: Joi.string().optional(),
+    state: Joi.string().optional(),
+    country: Joi.string().optional(),
+    avatar: Joi.string().optional(),
+    disabilityStatus: Joi.string().optional(),
+    religion: Joi.string().optional(),
   }),
   login: Joi.object({
     email: Joi.string().email().lowercase().required(),

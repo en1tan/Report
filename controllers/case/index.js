@@ -5,6 +5,7 @@ const CaseWitness = require("../../models/cases/CaseWitness");
 const CaseOtherDetails = require("../../models/cases/CaseOtherDetails");
 const CaseProgress = require("../../models/cases/CaseProgress");
 const CaseEvidence = require("../../models/cases/CaseEvidence");
+const CaseTaggedCategories = require("../../models/cases/CaseTaggedCategories");
 const { uploadEvidenceImages } = require("./cloudUpload");
 
 const {
@@ -24,10 +25,22 @@ exports.followCase = async (req, res, next) => {
     if (!existingCase)
       return normalError(res, 404, "Case not found", null);
     if (req.body.followStatus === "follow") {
+      if (existingCase.followedBy.includes(req.user._id))
+        return successNoData(
+          res,
+          200,
+          "You are following this case already"
+        );
       existingCase.followedBy.push(req.user);
       await existingCase.save();
       return successNoData(res, 200, "Case followed successfully");
     } else {
+      if (!existingCase.followedBy.includes(req.user._id))
+        return successNoData(
+          res,
+          200,
+          "You are already unfollowing this case"
+        );
       existingCase.followedBy.pop(req.user);
       await existingCase.save();
       return successNoData(res, 200, "Case unfollowed successfully");
@@ -40,8 +53,12 @@ exports.followCase = async (req, res, next) => {
 exports.getFollowedCases = async (req, res, next) => {
   try {
     let { page = 1, limit = 20 } = req.query;
-    const cases = await Case.find({ followedBy: req.user._id })
-      .select("-followedBy -areYouTheVictim caseID")
+    const cases = await Case.find({
+      followedBy: req.user,
+    })
+      .select(
+        "caseAvatar caseTitle caseSummary categoryGroupID publishedBy datePublished"
+      )
       .sort("-createdAt")
       .limit(limit * 1)
       .skip((page - 1) * limit)
@@ -109,7 +126,7 @@ exports.getAllCase = async (req, res, next) => {
   try {
     const cases = await Case.find(filter)
       .sort("-createdAt")
-      .select("-followedBy -areYouTheVictim  -publicUserID")
+      .select("")
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .exec();
@@ -168,10 +185,18 @@ exports.getCase = async (req, res, next) => {
 
 exports.createCase = async (req, res, next) => {
   try {
+    const categories = req.body.caseCategories.split(",");
     const newCase = await Case.create({
       ...req.body,
       publicUserID: req.user._id,
+      followedBy: [req.user.id],
     });
+    for (i = 0; i < categories.length; i++) {
+      await CaseTaggedCategories.create({
+        caseCategoryID: categories[i],
+        caseID: newCase._id,
+      });
+    }
     const data = {
       case: newCase,
     };
@@ -191,6 +216,7 @@ exports.createCaseVictim = async (req, res, next) => {
     const existingCase = await Case.findById(req.params.caseID);
     if (!existingCase) return normalError(res, 404, "case not found");
     req.body.caseID = req.params.caseID;
+    req.body.addedBy = req.user._id;
     const newVictim = await CaseVictim.create(req.body);
     const data = {
       victim: newVictim,
@@ -328,10 +354,13 @@ exports.getPersonalCases = async (req, res, next) => {
   let { page = 1, limit = 20 } = req.query;
   try {
     const cases = await Case.find({ publicUserID: req.user.id })
+      .select(
+        "caseAvatar caseID descriptionOfIncident categoryGroupID assignedPartnerUserId"
+      )
       .limit(limit * 1)
       .skip((page - 1) * limit)
-      .sort("-created")
-      .select("-followedBy");
+      .sort("-createdAt")
+      .exec();
     const count = await Case.countDocuments({
       publicUserID: req.user.id,
     });

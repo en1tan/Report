@@ -9,6 +9,7 @@ const connect = () => {
           useCreateIndex: true,
           useFindAndModify: false,
           useUnifiedTopology: true,
+          autoIndex: true,
         })
         .then((res, err) => {
           if (err) return reject(err);
@@ -21,6 +22,7 @@ const connect = () => {
           useCreateIndex: true,
           useFindAndModify: false,
           useUnifiedTopology: true,
+          autoIndex: true,
         })
         .then((res, err) => {
           if (err) return reject(err);
@@ -33,6 +35,7 @@ const connect = () => {
           useCreateIndex: true,
           useFindAndModify: false,
           useUnifiedTopology: true,
+          autoIndex: true,
         })
         .then((res, err) => {
           if (err) return reject(err);

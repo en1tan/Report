@@ -30,7 +30,6 @@ paths:
               address: 1, Sorosoke Av.
               addressLandmark: ""
               password: sorosokeWere@1
-              confirmPassword: sorosokeWere@1
               userAgeGroup: 20-90
               lga: ""
               state: ""
@@ -52,16 +51,12 @@ paths:
                   data:
                     type: object
                     properties:
-                      token:
-                        type: string
                       user:
                         $ref: "#/components/schemas/PublicUser"
                     example:
                       message: User succesfully created
                       status: success
                       data:
-                        token: >-
-                          eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYjAwOGZhOWM5NDYyNTgxMTFjNzI3MSIsImlhdCI6MTYyMjE0OTM3MCwiZXhwIjoxNjIyMjM1NzcwfQ.-VwyYghlk7k68rqKdPzqCBjGNiG2VSsOAAag_DwsoZY
                         user:
                           onlineStatus: offline
                           active: true
@@ -78,7 +73,12 @@ paths:
                           createdAt: "2021-05-27T21:02:50.182Z"
                           updatedAt: "2021-05-27T21:02:50.182Z"
                           __v: 0
-
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/400"
   /user/login:
     post:
       summary: Login user
@@ -89,14 +89,13 @@ paths:
           application/json:
             schema:
               properties:
-                email:
+                userName:
                   type: string
-                  format: email
                 password:
                   type: string
                   format: password
               example:
-                email: user@sorosoke.com
+                userName: sorosoke
                 password: sorosokeWere@1
 
       responses:
@@ -193,6 +192,23 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PublicUser"
+            example:
+              firstName: string
+              lastName: string
+              middleName: string
+              email: user@example.com
+              phoneNumber: string
+              userAgeGroup: string
+              gender: Male
+              address: string
+              addressLandmark: string
+              lga: string
+              state: string
+              country: string
+              avatar: string
+              disabilityStatus: string
+              religion: string
+
       responses:
         "200":
           description: "Updated user details"
@@ -918,7 +934,6 @@ paths:
                   type: string
             example:
               verificationStatus: verified
-              caseTypeStatus: Case
       responses:
         200:
           description: "Case verified"
@@ -1089,10 +1104,6 @@ paths:
                 summary: mark as resolved
                 value:
                   resolutionStatus: resolved
-              unresolved:
-                summary: mark as unresolved
-                value:
-                  resolutionStatus: unresolved
       responses:
         "200":
           description: "Case resolved/unresolved"
@@ -1157,21 +1168,10 @@ paths:
                 message: Fetched Personal Cases
                 cases:
                   - _id: 60b2b1c551929b3f8b7a7e83
-                    caseTitle: NotYetAssigned
-                    dateOfIncident: "2021-05-29T21:21:57.922Z"
-                    caseTypeStatus: Incidence
-                    publishStatus: published
-                    resolutionStatus: resolved
-                    verificationStatus: verified
-                    platformOfReport: web
-                    categoryID: 60b2b051f4ff133eeaaaca1a
-                    publishedBy: 60b180282525d74ce37cbd84
-                    addressOfIncident: Gatara
-                    state: Abuja
-                    reportType: Standard
-                    publicUserID: 60b0050a1416ba54d2af818b
-                    createdAt: "2021-05-29T21:27:33.145Z"
-                    updatedAt: "2021-05-29T21:27:33.145Z"
+                    caseAvatar: ""
+                    categoryGroupID: 60b2b051f4ff133eeaaaca1a
+                    descripionOfIncident: ""
+                    assignedPartnerID: ""
                     caseID: SCSE44766
                     __v: 0
   /case/{id}/follow:
@@ -1260,21 +1260,10 @@ paths:
                 data:
                   cases:
                     - _id: 60b2b1c551929b3f8b7a7e83
-                      caseTitle: NotYetAssigned
                       dateOfIncident: "2021-05-29T21:21:57.922Z"
-                      caseTypeStatus: Incidence
-                      publishStatus: published
-                      resolutionStatus: resolved
-                      verificationStatus: verified
-                      platformOfReport: web
-                      categoryID: 60b2b051f4ff133eeaaaca1a
+                      categoryGroupID: 60b2b051f4ff133eeaaaca1a
                       publishedBy: 60b180282525d74ce37cbd84
-                      addressOfIncident: Gatara
-                      state: Abuja
-                      reportType: Standard
-                      publicUserID: 60b0050a1416ba54d2af818b
-                      createdAt: "2021-05-29T21:27:33.145Z"
-                      updatedAt: "2021-05-29T21:27:33.145Z"
+                      datePublished: "2021-05-29T21:27:33.145Z"
                 total: 1
                 page: 1
   /case/create/{caseID}/caseVictim:
@@ -1304,6 +1293,17 @@ paths:
               genderOfVictim: Male
               residentialAddressOfVictim: 12, Vitc Cl.
               relationshipWithVictim: Friend
+              middleNameOfVictim: ""
+              addressLandmark: ""
+              lgaOfVictim: ""
+              stateOfVictim: ""
+              countryOfVictim: ""
+              victimOccupation: ""
+              victimOrganizationType: "Private"
+              victimOrganizationName: ""
+              otherDetailsOfVictim: ""
+              disabilityStatus: ""
+              religion: ""
       responses:
         "201":
           description: "Victim added successfully"

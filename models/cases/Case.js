@@ -17,10 +17,14 @@ const caseSchema = new Schema(
       required: true,
     },
 
+    caseAvatar: {
+      type: String,
+    },
+
     // Category ID ofthe case
-    categoryID: {
+    categoryGroupID: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "CaseCategory",
+      ref: "CaseCategoryGroup",
     },
 
     // ID NBA official that has been assigned the case for follow up and updates
@@ -104,6 +108,9 @@ const caseSchema = new Schema(
     publishedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "PartnerUser",
+    },
+    datePublished: {
+      type: String,
     },
 
     // If the case has been resolved and closed or unresolved and open

@@ -33,7 +33,9 @@ const publicUserSchema = new Schema(
     // Unique username of the user and also used to login
     userName: {
       type: String,
-      required: [true, "User Name is required"],
+      required: true,
+      unique: true,
+      immutable: true,
     },
 
     // Email Address of the User

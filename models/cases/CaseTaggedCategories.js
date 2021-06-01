@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { genIDs } = require("../../utils/genID");
 
 const Schema = mongoose.Schema;
 
@@ -7,7 +8,6 @@ const caseTaggedCategoriesSchema = new Schema(
     // Unique Identifier of the Case Tag
     caseTagID: {
       type: String,
-      default: () => nanoid(),
     },
 
     // ID of Case
@@ -22,12 +22,17 @@ const caseTaggedCategoriesSchema = new Schema(
       ref: "CaseCategory",
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
+
+caseTaggedCategoriesSchema.pre("save", function (next) {
+  this.caseTagID = genIDs("STAG");
+  next();
+});
 
 const CaseTaggedCategories = mongoose.model(
   "CaseTaggedCategories",
-  caseTaggedCategoriesSchema,
+  caseTaggedCategoriesSchema
 );
 
 module.exports = CaseTaggedCategories;
