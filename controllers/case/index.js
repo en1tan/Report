@@ -198,7 +198,7 @@ exports.createCase = async (req, res, next) => {
       });
     }
     const data = {
-      case: newCase,
+      case: _.pick(newCase, ["_id", "caseID"]),
     };
     return successWithData(
       res,
@@ -409,8 +409,9 @@ exports.publishCase = async (req, res, next) => {
     const publishedCase = await Case.findByIdAndUpdate(
       existingCase._id,
       {
-        publishStatus: req.body.publishStatus,
+        ...req.body,
         publishedBy: req.user,
+        datePublished: new Date(Date.now()),
       },
       { new: true }
     );
@@ -454,15 +455,14 @@ exports.getPublicCases = async (req, res, next) => {
   const filter = _.pick(req.query, [
     "resolutionStatus",
     "reportType",
-    "caseTypeStatus",
   ]);
-  filter.verificationStatus = "verified";
-  filter.publishStatus = "published";
+  //filter.verificationStatus = "verified";
+  //  filter.publishStatus = "published";
   try {
     const cases = await Case.find(filter)
       .sort("-createdAt")
       .select(
-        "-followedBy  -areYouTheVictim  -publicUserID -caseID -verificationStatus -publishStatus"
+        "caseAvatar caseTitle publishedBy datePublished caseCategoryID caseSummary"
       )
       .limit(limit * 1)
       .skip((page - 1) * limit)

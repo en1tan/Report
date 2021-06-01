@@ -1,7 +1,6 @@
 const express = require("express");
 const caseController = require("../../controllers/category");
 const authorize = require("../../middleware/authorization");
-const { singleUpload } = require("../../middleware/imageUpload");
 
 const router = express.Router();
 
@@ -9,7 +8,6 @@ router.get("/groups", caseController.getAllCategoryGroup);
 router.post(
   "/group/create",
   authorize(["super-admin", "admin"]),
-  singleUpload,
   caseController.createCaseCategoryGroup
 );
 router.patch(

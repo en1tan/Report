@@ -4,7 +4,7 @@ info:
   title: SorosokeAPI Server
   description: API Server for SorosokeAPI
 servers:
-  - url: https://sorosoke-api-server.onrender.com/api/v1
+  - url: https://sorosokeapi.onrender.com/api/v1
     description: Production Server
   - url: http://localhost:5000/api/v1
     description: Local Server
@@ -294,7 +294,6 @@ paths:
                     __v: 0
                   total: 1
                   page: 1
-
   /partner/user/{id}/update:
     patch:
       security:
@@ -645,7 +644,8 @@ paths:
               $ref: "#/components/schemas/Case"
             example:
               dateOfIncident: "2021-05-29T21:21:57.922Z"
-              categoryID: 60b2b051f4ff133eeaaaca1a
+              categoryGroupID: 60b2b051f4ff133eeaaaca1a
+              caseCategories: 60a1ccb70a71ff3510d288b3,60a1ccb70a71ff3510d288b3,60a1ccb70a71ff3510d288b3
               state: Abuja
               addressOfIncident: Gatara
               areYouTheVictim: Yes
@@ -675,19 +675,7 @@ paths:
                 data:
                   case:
                     _id: 60b2b1c551929b3f8b7a7e83
-                    caseTitle: NotYetAssigned
-                    dateOfIncident: "2021-05-29T21:21:57.922Z"
-                    areYouTheVictim: "Yes"
-                    caseTypeStatus: Incidence
-                    publishStatus: unPublished
-                    platformOfReport: web
-                    categoryID: 60b2b051f4ff133eeaaaca1a
-                    addressOfIncident: Gatara
-                    state: Abuja
-                    reportType: Standard
-                    publicUserID: 60b0050a1416ba54d2af818b
-                    createdAt: "2021-05-29T21:27:33.145Z"
-                    updatedAt: "2021-05-29T21:27:33.145Z"
+                    caseID: SCSE64407
                     __v: 0
 
   /public/cases:
@@ -748,15 +736,9 @@ paths:
                   cases:
                     - _id: 60b2b1c551929b3f8b7a7e83
                       caseTitle: NotYetAssigned
-                      dateOfIncident: "2021-05-29T21:21:57.922Z"
-                      caseTypeStatus: Incidence
+                      caseSummary: Swaatted
                       resolutionStatus: unResolved
-                      categoryID: 60b2b051f4ff133eeaaaca1a
-                      addressOfIncident: Gatara
-                      state: Abuja
-                      reportType: Standard
-                      createdAt: "202a1-05-29T21:27:33.145Z"
-                      updatedAt: "2021-05-29T21:27:33.145Z"
+                      categoryGroupID: 60b2b051f4ff133eeaaaca1a
                       __v: 0
                   total: 1
                   page: 1
@@ -1490,40 +1472,6 @@ paths:
                     properties:
                       suspect:
                         $ref: "#/components/schemas/CaseOtherDetails"
-  /case/create/{caseID}/caseProgress:
-    post:
-      security:
-        - bearerAuth: []
-      summary: "Add case progress"
-      tags: ["Case"]
-      parameters:
-        - description: "Case ID"
-          in: path
-          name: caseID
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CaseProgress"
-      responses:
-        "201":
-          description: "Case progress added successfully"
-          content:
-            application/json:
-              schema:
-                properties:
-                  status:
-                    type: string
-                  message:
-                    type: string
-                  data:
-                    type: object
-                    properties:
-                      suspect:
-                        $ref: "#/components/schemas/CaseProgress"
   /case/create/{id}/evidence:
     post:
       security:

@@ -1,9 +1,6 @@
 const CaseCategoryGroup = require("../../models/cases/CaseCategoryGroup");
 const CaseCategory = require("../../models/cases/CaseCategory");
 const {
-  uploadCaseCategoryGroupImages,
-} = require("../case/cloudUpload");
-const {
   successWithData,
   successNoData,
 } = require("../../utils/successHandler");
@@ -14,7 +11,9 @@ const {
 
 exports.getAllCategoryGroup = async (req, res, next) => {
   try {
-    const groups = await CaseCategoryGroup.find().sort("-createdAt");
+    const groups = await CaseCategoryGroup.find()
+      .sort("-createdAt")
+      .select("imageIcon groupName");
     return successWithData(
       res,
       200,
@@ -28,8 +27,6 @@ exports.getAllCategoryGroup = async (req, res, next) => {
 
 exports.createCaseCategoryGroup = async (req, res, next) => {
   try {
-    const imageIcon = await uploadCaseCategoryGroupImages(req.file);
-    req.body.imageIcon = imageIcon.url;
     const newGroup = await CaseCategoryGroup.create(req.body);
     const data = {
       group: newGroup,
@@ -76,7 +73,7 @@ exports.getAllCategories = async (req, res, next) => {
   try {
     const categories = await CaseCategory.find({
       categoryGroupID: req.params.groupID,
-    });
+    }).select("categoryName");
     return successWithData(
       res,
       200,

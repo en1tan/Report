@@ -14,6 +14,7 @@ const caseCategoryGroupSchema = new Schema(
     groupName: {
       type: String,
       required: [true, "Group Name is required"],
+      unique: true,
     },
     // Explanation of the type of cases within this group
     description: {
@@ -25,7 +26,7 @@ const caseCategoryGroupSchema = new Schema(
       type: String,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 caseCategoryGroupSchema.pre("save", function (next) {
@@ -35,7 +36,7 @@ caseCategoryGroupSchema.pre("save", function (next) {
 
 const CaseCategoryGroup = mongoose.model(
   "CaseCategoryGroup",
-  caseCategoryGroupSchema,
+  caseCategoryGroupSchema
 );
 
 module.exports = CaseCategoryGroup;
