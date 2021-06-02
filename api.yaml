@@ -456,9 +456,8 @@ paths:
           application/json:
             schema:
               properties:
-                email:
+                userName:
                   type: string
-                  format: email
                 password:
                   type: string
                   format: password
@@ -466,22 +465,22 @@ paths:
               superadmin:
                 summary: superadmin login
                 value:
-                  email: superadmin@sorosoke.com
+                  userName: superadmin
                   password: superadminWere@2
               admin:
                 summary: admin login
                 value:
-                  email: admin@sorosoke.com
+                  userName: admin
                   password: adminWere@2
               staff:
                 summary: staff login
                 value:
-                  email: staff@sorosoke.com
+                  userName: staff
                   password: staffWere@2
               verifier:
                 summary: verifier login
                 value:
-                  email: verifier@sorosoke.com
+                  userName: verifier
                   password: verifierWere@2
       responses:
         "200":
