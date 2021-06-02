@@ -22,7 +22,7 @@ const validators = {
     religion: Joi.string().optional(),
   }),
   login: Joi.object({
-    email: Joi.string().email().lowercase().required(),
+    userName: Joi.string().lowercase().required(),
     password: Joi.string().min(8).required().strict(),
   }),
   partnerSignup: Joi.object({
