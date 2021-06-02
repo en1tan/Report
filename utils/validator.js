@@ -37,11 +37,6 @@ const validators = {
     address: Joi.string().required(),
     stateOfAssignment: Joi.string().optional(),
     password: Joi.string().min(8).required().strict(),
-    confirmPassword: Joi.string()
-      .min(8)
-      .valid(Joi.ref("password"))
-      .required()
-      .strict(),
     lga: Joi.string().optional(),
     userType: Joi.string()
       .valid("super-admin", "admin", "verifier", "staff")
