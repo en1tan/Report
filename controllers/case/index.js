@@ -421,7 +421,8 @@ exports.getSinglePublicCase = async (req, res, next) => {
         "reportType",
         "state",
         "lga",
-        "address",
+        "country",
+        "caseTypeStatus",
         "hourOfIncident",
       ]),
       categories,
@@ -443,8 +444,8 @@ exports.getPublicCases = async (req, res, next) => {
     "state",
     "lga",
   ]);
-  //filter.verificationStatus = "verified";
-  //  filter.publishStatus = "published";
+  filter.verificationStatus = "verified";
+  filter.publishStatus = "published";
   try {
     const cases = await Case.find(filter)
       .sort("-createdAt")
