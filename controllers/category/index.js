@@ -5,6 +5,7 @@ const {
   successNoData,
 } = require("../../utils/successHandler");
 const { tryCatchError, normalError } = require("../../utils/errorHandlers");
+const auth = require("../../middleware/authenticate");
 
 exports.getAllCategoryGroup = async (req, res, next) => {
   try {
@@ -110,4 +111,11 @@ exports.deleteCaseCategory = async (req, res, next) => {
   } catch (err) {
     return tryCatchError(res, err);
   }
+};
+
+exports.getAuthorized = async (req, res, next) => {
+  console.log(req.authorized);
+  console.log(req.user);
+  // if (req.authorized)
+  return res.send(req.user);
 };

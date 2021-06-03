@@ -7,6 +7,7 @@ const CaseProgress = require("../../models/cases/CaseProgress");
 const CaseEvidence = require("../../models/cases/CaseEvidence");
 const CaseCategory = require("../../models/cases/CaseCategory");
 const CaseTaggedCategories = require("../../models/cases/CaseTaggedCategories");
+const PublicUser = require("../../models/PublicUser");
 const { uploadEvidenceImages } = require("./cloudUpload");
 
 const { tryCatchError, normalError } = require("../../utils/errorHandlers");
@@ -159,7 +160,6 @@ exports.getCase = async (req, res, next) => {
 exports.createCase = async (req, res, next) => {
   try {
     const imageURL = await uploadCaseAvatar(req.file);
-    console.log(imageURL);
     req.body.caseAvatar = imageURL.url;
     const newCase = await Case.create({
       ...req.body,
@@ -389,6 +389,7 @@ exports.resolveCase = async (req, res, next) => {
 
 exports.getSinglePublicCase = async (req, res, next) => {
   let categories = [];
+  let userFollowStatus;
   try {
     const existingCase = await Case.findById(req.params.id);
     const categoryIDs = await CaseTaggedCategories.find({
@@ -400,7 +401,10 @@ exports.getSinglePublicCase = async (req, res, next) => {
       );
       categories.push(category.categoryName);
     }
-    console.log(categories);
+    if (req.authorized) {
+      const loggedInUser = await PublicUser.findById(req.user._id);
+      userFollowStatus = existingCase.followedBy.includes(loggedInUser._id);
+    }
 
     const data = {
       ..._.pick(existingCase, [
@@ -421,6 +425,7 @@ exports.getSinglePublicCase = async (req, res, next) => {
         "hourOfIncident",
       ]),
       categories,
+      userFollowStatus,
     };
     return successWithData(res, 200, "Fetched case", data);
   } catch (err) {}
@@ -444,7 +449,7 @@ exports.getPublicCases = async (req, res, next) => {
     const cases = await Case.find(filter)
       .sort("-createdAt")
       .select(selectedFields)
-      .limit(limit * 1)
+      .limit(limit)
       .skip((page - 1) * limit)
       .exec();
 

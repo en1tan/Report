@@ -46,7 +46,7 @@ exports.uploadDocs = async (file) => {
 exports.uploadCaseAvatar = async (file) => {
   try {
     const { path } = file;
-    const filePath = await uploader(path, file.fileName);
+    const filePath = await uploader(path, file.filename);
     fs.unlinkSync(path);
     return filePath;
   } catch (err) {
