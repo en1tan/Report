@@ -518,7 +518,6 @@ paths:
                     createdAt: "2021-05-29T00:55:06.510Z"
                     updatedAt: "2021-05-29T00:55:06.510Z"
                     __v: 0
-
   /partner/profile:
     get:
       security:
@@ -710,6 +709,8 @@ paths:
                   page: 1
   /public/cases/{id}:
     get:
+      security:
+        - bearerAuth: []
       summary: Get single public case
       tags: [ Public ]
       parameters:
@@ -737,27 +738,55 @@ paths:
                       type: array
                       items:
                         $ref: "#/components/schemas/CaseCategories"
-              example:
-                status: success
-                message: Case fetched successfully
-                data:
-                  _id: 60b6d73aa76ede328c15c863
-                  caseTitle: Swatted
-                  caseAvatar: "https://api.placeholder.com/150"
-                  caseSunnary: Swatted
-                  categoryGroupID: 60b6d32afb84141a1e397f82
-                  categories:
-                    - Assault
-                    - Abuse
-                  publishedBy: 60b6d32afb84141a1e397fsd
-                  datePublished: "2021-05-29T00:55:06.510Z"
-                  dateOfIncident: "2021-05-29T00:55:06.510Z"
-                  hourOfIncident: "00:55:06"
-                  address: 12, Owonikoko St.
-                  lga: ""
-                  state: Ondo
-                  resolutionStatus: resolved
-                  reportType: Standard
+              examples:
+                userLoggedIn:
+                  summary: when user is logged in
+                  value:
+                    status: success
+                    message: case fetched successfully
+                    data:
+                      _id: 60b6d73aa76ede328c15c863
+                      caseTitle: Swatted
+                      caseAvatar: "https://api.placeholder.com/150"
+                      caseSunnary: Swatted
+                      categoryGroupID: 60b6d32afb84141a1e397f82
+                      categories:
+                        - Assault
+                        - Abuse
+                      publishedBy: 60b6d32afb84141a1e397fsd
+                      datePublished: "2021-05-29T00:55:06.510Z"
+                      dateOfIncident: "2021-05-29T00:55:06.510Z"
+                      hourOfIncident: "00:55:06"
+                      address: 12, Owonikoko St.
+                      lga: ""
+                      state: Ondo
+                      resolutionStatus: resolved
+                      reportType: Standard
+                      userFollowStatus: true
+                userNotLoggedIn:
+                  summary: when user is not logged in
+                  value:
+                    status: success
+                    message: Case fetched successfully
+                    data:
+                      _id: 60b6d73aa76ede328c15c863
+                      caseTitle: Swatted
+                      caseAvatar: "https://api.placeholder.com/150"
+                      caseSunnary: Swatted
+                      categoryGroupID: 60b6d32afb84141a1e397f82
+                      categories:
+                        - Assault
+                        - Abuse
+                      publishedBy: 60b6d32afb84141a1e397fsd
+                      datePublished: "2021-05-29T00:55:06.510Z"
+                      dateOfIncident: "2021-05-29T00:55:06.510Z"
+                      hourOfIncident: "00:55:06"
+                      address: 12, Owonikoko St.
+                      lga: ""
+                      state: Ondo
+                      resolutionStatus: resolved
+                      reportType: Standard
+                      userFollowStatus: false
   /public/case/category/groups:
     get:
       summary: "Get all category groups"
@@ -864,7 +893,6 @@ paths:
                     _id: 60b2b1c551929b3f8b7a7e83
                     caseID: SCSE64407
                     __v: 0
-
   /case:
     get:
       security:
@@ -999,21 +1027,14 @@ paths:
                 case:
                   _id: 60b2b1c551929b3f8b7a7e83
                   caseID: SCSE44766
-                  caseTitle: NotYetAssigned
                   dateOfIncident: "2021-05-29T21:21:57.922Z"
-                  areYouTheVictim: "Yes"
-                  caseTypeStatus: Incidence
-                  publishStatus: unPublished
                   resolutionStatus: unResolved
                   verificationStatus: unVerified
                   platformOfReport: web
                   categoryID: 60b2b051f4ff133eeaaaca1a
-                  addressOfIncident: Gatara
                   state: Abuja
                   reportType: Standard
-                  publicUserID: 60b0050a1416ba54d2af818b
                   createdAt: "2021-05-29T21:27:33.145Z"
-                  updatedAt: "2021-05-29T21:27:33.145Z"
                   __v: 0
   /case/{id}/update:
     patch:
@@ -1172,7 +1193,6 @@ paths:
                 updatedAt: "2021-05-29T21:27:33.145Z"
                 caseID: SCSE44766
                 __v: 0
-
   /case/{id}/publish:
     patch:
       security:
@@ -1228,7 +1248,6 @@ paths:
                 updatedAt: "2021-05-29T21:27:33.145Z"
                 caseID: SCSE44766
                 __v: 0
-
   /case/{id}/resolve:
     patch:
       security:
@@ -1401,7 +1420,7 @@ paths:
                     type: string
                   data:
                     type: object
-                    cases:
+                    followedCases:
                       type: array
                       items:
                         $ref: "#/components/schemas/Case"
@@ -1409,14 +1428,29 @@ paths:
                 status: success
                 message: Cases Fetched Succesfully
                 data:
-                  cases:
-                    - _id: 60b2b1c551929b3f8b7a7e83
-                      dateOfIncident: "2021-05-29T21:21:57.922Z"
-                      categoryGroupID: 60b2b051f4ff133eeaaaca1a
-                      publishedBy: 60b180282525d74ce37cbd84
-                      datePublished: "2021-05-29T21:27:33.145Z"
-                total: 1
-                page: 1
+                  followedCases:
+                    - _id: 60b9120dc1fb0225fd342a88
+                      caseAvatar: >-
+                        http://res.cloudinary.com/dh27qdolw/image/upload/v1622741516/sorosoke/2021-06-03T17_31_54.369Z-ac7404c9-23ed-44ce-9219-b3bcaffb8098-Screenshot%20from%202021-06-01%2016-33-59.png.png
+                      caseTitle: NotYetAssigned
+                      categoryGroupID: 60b6d32afb84141a1e397f82
+                      resolutionStatus: unResolved
+                      reportType: Standard
+                      state: Lagos
+                      country: Nigeria
+                      caseTypeStatus: Incidence
+                      userFollowStatus: true
+                      caseSummary: ""
+                      lga: ""
+                      hourOfIncident: ""
+                      datePublished: ""
+                      publishedBy: ""
+                      categories:
+                        - Assault
+                        - Abuse
+                      _v: 0
+                  total: 1
+                  page: 1
   /case/create/{caseID}/caseVictim:
     post:
       security:
@@ -1489,7 +1523,6 @@ paths:
                     updatedAt: "2021-05-30T22:54:52.960Z"
                     caseVictimID: SCEV56754
                     __v: 0
-
   /case/create/{caseID}/caseSuspect:
     post:
       security:
@@ -1712,7 +1745,6 @@ paths:
                     properties:
                       case:
                         $ref: "#/components/schemas/Case"
-
   /case/category/groups:
     get:
       security:
@@ -1860,7 +1892,6 @@ paths:
                     type: string
                   message:
                     type: string
-
   /case/category/{groupID}/categories:
     get:
       security:
