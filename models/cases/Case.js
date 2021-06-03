@@ -8,6 +8,7 @@ const caseSchema = new Schema(
     // Unique identifier of the case on the Sorosoke platform
     caseID: {
       type: String,
+      immutable: true,
     },
 
     // Unique ID of the User reporting the case
@@ -15,16 +16,20 @@ const caseSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "PublicUser",
       required: true,
+      immutable: true,
     },
 
     caseAvatar: {
       type: String,
+      required: true,
+      immutable: true,
     },
 
-    // Category ID ofthe case
+    // Category ID of the case
     categoryGroupID: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "CaseCategoryGroup",
+      required: true,
     },
 
     // ID NBA official that has been assigned the case for follow up and updates
@@ -39,7 +44,6 @@ const caseSchema = new Schema(
     caseTitle: {
       type: String,
       default: "NotYetAssigned",
-      required: true,
     },
 
     // Where exactly the incident took place
@@ -48,7 +52,7 @@ const caseSchema = new Schema(
     // Areas Close to the address to help locate it faster
     addressLandmark: String,
 
-    // Date the incident occured
+    // Date the incident occurred
     dateOfIncident: {
       type: Date,
       required: true,
@@ -75,12 +79,15 @@ const caseSchema = new Schema(
       type: String,
       enum: ["Yes", "No"],
       default: "No",
+      required: true,
     },
 
     // Type of Report
     reportType: {
       type: String,
       enum: ["Standard", "QuickReport"],
+      required: true,
+      immutable: true,
     },
 
     // What are the things the case reporter want to be done by the platform
@@ -91,6 +98,7 @@ const caseSchema = new Schema(
       type: String,
       enum: ["Incidence", "Case", "QuickReport"],
       default: "Incidence",
+      required: true,
     },
 
     // Summary of all what the case is about by the official handling the case and this will be displayed
@@ -113,13 +121,6 @@ const caseSchema = new Schema(
       type: String,
     },
 
-    // If the case has been resolved and closed or unresolved and open
-    resolutionStatus: {
-      type: String,
-      enum: ["resolved", "unResolved", "onlyReport"],
-      default: "unResolved",
-    },
-
     // If the case has been resolved and closed or unresolved and open. by default for Quick report the value will be "onlyReport"
     resolutionStatus: {
       type: String,
@@ -139,10 +140,7 @@ const caseSchema = new Schema(
       type: String,
       enum: ["mobile", "web", "sms"],
       default: "web",
-    },
-    // Case tags. Can be used to search later
-    tags: {
-      type: String,
+      immutable: true,
     },
 
     followedBy: [

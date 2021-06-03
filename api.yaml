@@ -12,7 +12,7 @@ paths:
   /user/signup:
     post:
       summary: Register new user
-      tags: [User]
+      tags: [ User ]
       description: ""
       requestBody:
         content:
@@ -82,7 +82,7 @@ paths:
   /user/login:
     post:
       summary: Login user
-      tags: [User]
+      tags: [ User ]
       description: ""
       requestBody:
         content:
@@ -141,9 +141,9 @@ paths:
   /user/profile:
     get:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: User profile
-      tags: [User]
+      tags: [ User ]
       description: ""
       responses:
         200:
@@ -183,9 +183,9 @@ paths:
   /user/account:
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Update user details"
-      tags: [User]
+      tags: [ User ]
       description: ""
       requestBody:
         content:
@@ -238,9 +238,9 @@ paths:
     get:
       summary: Get all partner users
       description: Returns all users of a partner organization
-      tags: ["Partner Organization"]
+      tags: [ "Partner Organization" ]
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - description: The partner organization id
           in: path
@@ -291,9 +291,9 @@ paths:
   /partner/user/{id}/update:
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Update partner user details
-      tags: ["Partner Organization"]
+      tags: [ "Partner Organization" ]
       description: "userTypes:['admin']"
       parameters:
         - description: partner user id
@@ -349,10 +349,10 @@ paths:
   /partner/user/{id}:
     delete:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: delete partner user
       description: "userTypes: [super-admin,admin]"
-      tags: ["Partner Organization", "Super Admin"]
+      tags: [ "Partner Organization", "Super Admin" ]
       parameters:
         - description: partner user id
           in: path
@@ -378,7 +378,7 @@ paths:
   /partner/signup:
     post:
       summary: Add partner account
-      tags: [Partner User]
+      tags: [ Partner User ]
       description: ""
       requestBody:
         content:
@@ -443,7 +443,7 @@ paths:
   /partner/login:
     post:
       summary: "Login partner user"
-      tags: ["Partner User"]
+      tags: [ "Partner User" ]
       description: ""
       requestBody:
         content:
@@ -522,9 +522,9 @@ paths:
   /partner/profile:
     get:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Get partner profile"
-      tags: ["Partner User"]
+      tags: [ "Partner User" ]
       description: ""
       responses:
         "200":
@@ -564,9 +564,9 @@ paths:
   /partner/account:
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Update partner user details"
-      tags: ["Partner User"]
+      tags: [ "Partner User" ]
       description: ""
       requestBody:
         content:
@@ -623,71 +623,24 @@ paths:
                   createdAt: "2021-05-29T00:55:06.510Z"
                   updatedAt: "2021-05-29T00:55:06.510Z"
                   __v: 0
-  /case/create:
-    post:
-      security:
-        - bearerAuth: []
-      summary: Create a case report
-      tags: ["Case"]
-      description: ""
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Case"
-            example:
-              dateOfIncident: "2021-05-29T21:21:57.922Z"
-              categoryGroupID: 60b2b051f4ff133eeaaaca1a
-              caseCategories: 60a1ccb70a71ff3510d288b3,60a1ccb70a71ff3510d288b3,60a1ccb70a71ff3510d288b3
-              state: Abuja
-              addressOfIncident: Gatara
-              areYouTheVictim: Yes
-              reportType: Standard
-              country: Nigeria
-              descriptionOfIncident: A friend got swatted
-              lga: ""
-              casePleas: ""
-              tags: ""
-              hourOfIncident: ""
-      responses:
-        201:
-          description: "Case reported successfully"
-          content:
-            application/json:
-              schema:
-                properties:
-                  status:
-                    type: string
-                  message:
-                    type: string
-                  data:
-                    $ref: "#/components/schemas/Case"
-              example:
-                message: Case Created Succesfully
-                status: success
-                data:
-                  case:
-                    _id: 60b2b1c551929b3f8b7a7e83
-                    caseID: SCSE64407
-                    __v: 0
 
   /public/cases:
     get:
       summary: "Get all cases"
-      tags: ["Public"]
+      tags: [ "Public" ]
       parameters:
         - description: "Filter by Resolution Status"
           in: query
           name: resolutionStatus
           schema:
             type: string
-            enum: [resolved, unresolved]
+            enum: [ resolved, unresolved ]
         - description: "Filter by Report Type"
           in: query
           name: reportType
           schema:
             type: string
-            enum: [Standard, QuickReport]
+            enum: [ Standard, QuickReport ]
         - description: "Page"
           in: query
           name: page
@@ -717,7 +670,7 @@ paths:
           example: Standard
           schema:
             type: string
-            enum: [QuickReport, Standard]
+            enum: [ QuickReport, Standard ]
       responses:
         200:
           description: "All cases fetched"
@@ -758,7 +711,7 @@ paths:
   /public/cases/{id}:
     get:
       summary: Get single public case
-      tags: [Public]
+      tags: [ Public ]
       parameters:
         - description: Case ID
           in: path
@@ -783,7 +736,7 @@ paths:
                     categories:
                       type: array
                       items:
-                        $ref: "#/components/schemas/CaseTaggedCategories"
+                        $ref: "#/components/schemas/CaseCategories"
               example:
                 status: success
                 message: Case fetched successfully
@@ -793,6 +746,9 @@ paths:
                   caseAvatar: "https://api.placeholder.com/150"
                   caseSunnary: Swatted
                   categoryGroupID: 60b6d32afb84141a1e397f82
+                  categories:
+                    - Assault
+                    - Abuse
                   publishedBy: 60b6d32afb84141a1e397fsd
                   datePublished: "2021-05-29T00:55:06.510Z"
                   dateOfIncident: "2021-05-29T00:55:06.510Z"
@@ -805,7 +761,7 @@ paths:
   /public/case/category/groups:
     get:
       summary: "Get all category groups"
-      tags: ["Public"]
+      tags: [ "Public" ]
       responses:
         "200":
           description: "Category groups fetched"
@@ -831,11 +787,10 @@ paths:
                       groupName: "Human Rights"
                       imageIcon: "https://api.placeholder.com/150"
                       _v: 0
-
   /public/case/category/{groupID}/categories:
     get:
       summary: "Get all categories"
-      tags: ["Public"]
+      tags: [ "Public" ]
       parameters:
         - description: group ID
           in: path
@@ -862,49 +817,97 @@ paths:
                 _id: 60b1807b2525d74ce37cbd85
                 categoryName: Human Trafficking
 
+  /case/create:
+    post:
+      security:
+        - bearerAuth: [ ]
+      summary: Create a case report
+      tags: [ "Case" ]
+      description: ""
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Case"
+            example:
+              dateOfIncident: "2021-05-29T21:21:57.922Z"
+              categoryGroupID: 60b2b051f4ff133eeaaaca1a
+              caseCategories: 60b6d4e8a76ede328c15c85b,60b6d4f7a76ede328c15c85c
+              state: Abuja
+              addressOfIncident: Gatara
+              areYouTheVictim: Yes
+              reportType: Standard
+              country: Nigeria
+              descriptionOfIncident: A friend got swatted
+              lga: ""
+              casePleas: ""
+              tags: ""
+              hourOfIncident: ""
+      responses:
+        201:
+          description: "Case reported successfully"
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/Case"
+              example:
+                message: Case Created Succesfully
+                status: success
+                data:
+                  case:
+                    _id: 60b2b1c551929b3f8b7a7e83
+                    caseID: SCSE64407
+                    __v: 0
+
   /case:
     get:
       security:
-        - partnerBearerAuth: []
+        - partnerBearerAuth: [ ]
       summary: "Get all cases"
-      tags: ["Case"]
+      tags: [ "Case" ]
       parameters:
         - description: "Filter by Resolution Status"
           in: query
           name: resolutionStatus
           schema:
             type: string
-            enum: [unresolved, resolved, onlyReport]
+            enum: [ unresolved, resolved, onlyReport ]
         - description: "Filter by Verification Status"
           in: query
           name: verificationStatus
           schema:
             type: string
-            enum: [unVerified, verified]
+            enum: [ unVerified, verified ]
         - description: "Filter by Platform of Report"
           in: query
           name: platformOfReport
           schema:
             type: string
-            enum: [web, mobile, sms]
+            enum: [ web, mobile, sms ]
         - description: "Filter by Published status"
           in: query
           name: publishStatus
           schema:
             type: string
-            enum: [unPublished, published]
+            enum: [ unPublished, published ]
         - description: "Filter by Report Type"
           in: query
           name: reportType
           schema:
             type: string
-            enum: [Standard, QuickReport]
+            enum: [ Standard, QuickReport ]
         - description: "Filter by Case Type Status"
           in: query
           name: caseTypeStatus
           schema:
             type: string
-            enum: [Incidence, Case, QuickReport]
+            enum: [ Incidence, Case, QuickReport ]
         - description: "Page"
           in: query
           name: page
@@ -966,9 +969,9 @@ paths:
   /case/{id}:
     get:
       security:
-        - partnerBearerAuth: []
+        - partnerBearerAuth: [ ]
       summary: "Get a case"
-      tags: ["Case"]
+      tags: [ "Case" ]
       parameters:
         - description: "Case id"
           in: path
@@ -1012,12 +1015,59 @@ paths:
                   createdAt: "2021-05-29T21:27:33.145Z"
                   updatedAt: "2021-05-29T21:27:33.145Z"
                   __v: 0
-  /case/{id}/verify:
+  /case/{id}/update:
     patch:
       security:
         - bearerAuth: []
+      summary: Update an existing case
+      tags: [Case]
+      parameters:
+        - description: Case ID
+          in: path
+          required: true
+          name: id
+          schema:
+            type: string
+            example: 60b8f1390df63e6153510c9c
+      requestBody:
+        content:
+          application/json:
+            schema:
+                $ref: "#/components/schemas/Case"
+            example:
+              casePleas: Please help me
+              addressLandmarK: Owonikoko
+      responses:
+        200:
+          description: Case updated
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/Case"
+              example:
+                status: success
+                message: Case updated successfully
+                data:
+                  _id: 60b8f1390df63e6153510c9c
+                  casePleas: Please help me
+                  addressLandmark: Owonikoko
+                  caseAvatar: ""
+                  lga: ""
+                  state: ""
+                  country: ""
+                  categoryGroupID: ""
+  /case/{id}/verify:
+    patch:
+      security:
+        - bearerAuth: [ ]
       summary: "Verify a case"
-      tags: ["Case"]
+      tags: [ "Case" ]
       parameters:
         - description: "Case ID"
           in: path
@@ -1072,9 +1122,9 @@ paths:
   /case/{id}/assign:
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Assign a case to a partner"
-      tags: ["Case"]
+      tags: [ "Case" ]
       parameters:
         - description: "Case id"
           in: path
@@ -1126,9 +1176,9 @@ paths:
   /case/{id}/publish:
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Publish case"
-      tags: ["Case"]
+      tags: [ "Case" ]
       parameters:
         - description: "Case ID"
           in: path
@@ -1182,9 +1232,9 @@ paths:
   /case/{id}/resolve:
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Resolve case"
-      tags: ["Case"]
+      tags: [ "Case" ]
       parameters:
         - description: "Case ID"
           in: path
@@ -1240,9 +1290,9 @@ paths:
   /case/personal:
     get:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Fetch all personal cases"
-      tags: ["Case", "User"]
+      tags: [ "Case", "User" ]
       responses:
         "200":
           description: "Case fetched"
@@ -1278,9 +1328,9 @@ paths:
   /case/{id}/follow:
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Follow/Unfollow Case case"
-      tags: ["Case", "User"]
+      tags: [ "Case", "User" ]
       parameters:
         - description: "Case ID"
           in: path
@@ -1295,7 +1345,7 @@ paths:
               properties:
                 followStatus:
                   type: string
-                  enum: [follow, unfollow]
+                  enum: [ follow, unfollow ]
             examples:
               follow:
                 summary: follow a case
@@ -1322,9 +1372,9 @@ paths:
   /case/followed:
     get:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Get all followed cases"
-      tags: ["Case", "User"]
+      tags: [ "Case", "User" ]
       parameters:
         - description: "Page"
           in: query
@@ -1370,9 +1420,9 @@ paths:
   /case/create/{caseID}/caseVictim:
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Add case victim"
-      tags: ["Case"]
+      tags: [ "Case" ]
       parameters:
         - description: "Case ID"
           in: path
@@ -1443,9 +1493,9 @@ paths:
   /case/create/{caseID}/caseSuspect:
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Add case suspect"
-      tags: ["Case"]
+      tags: [ "Case" ]
       parameters:
         - description: "Case ID"
           in: path
@@ -1502,9 +1552,9 @@ paths:
   /case/create/{caseID}/caseWitness:
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Add case witness"
-      tags: ["Case"]
+      tags: [ "Case" ]
       parameters:
         - description: "Case ID"
           in: path
@@ -1560,9 +1610,9 @@ paths:
   /case/create/{caseID}/otherDetails:
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Add case other details"
-      tags: ["Case"]
+      tags: [ "Case" ]
       parameters:
         - description: "Case ID"
           in: path
@@ -1594,9 +1644,9 @@ paths:
   /case/create/{id}/evidence:
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Add case evidence"
-      tags: ["Case"]
+      tags: [ "Case" ]
       parameters:
         - description: "Case ID"
           in: path
@@ -1631,9 +1681,9 @@ paths:
   /case/edit/{id}/evidence:
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Edit case evidence"
-      tags: ["Case"]
+      tags: [ "Case" ]
       parameters:
         - description: "Case ID"
           in: path
@@ -1666,9 +1716,9 @@ paths:
   /case/category/groups:
     get:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Get all category groups"
-      tags: ["Category Group"]
+      tags: [ "Category Group" ]
       responses:
         "200":
           description: "Category groups fetched"
@@ -1701,10 +1751,10 @@ paths:
   /case/category/group/create:
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Add case category group"
       description: "userTypes: ['super-admin','admin']"
-      tags: ["Category Group"]
+      tags: [ "Category Group" ]
       requestBody:
         content:
           application/json:
@@ -1748,7 +1798,7 @@ paths:
   /case/category/group/{id}/update:
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - description: "Group ID"
           in: path
@@ -1756,7 +1806,7 @@ paths:
           required: true
           schema:
             type: string
-      tags: ["Category Group"]
+      tags: [ "Category Group" ]
       requestBody:
         content:
           application/json:
@@ -1790,8 +1840,8 @@ paths:
     delete:
       summary: delete category group
       security:
-        - bearerAuth: []
-      tags: ["Category Group"]
+        - bearerAuth: [ ]
+      tags: [ "Category Group" ]
       parameters:
         - description: "Group ID"
           in: path
@@ -1814,9 +1864,9 @@ paths:
   /case/category/{groupID}/categories:
     get:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Get all categories"
-      tags: ["Category"]
+      tags: [ "Category" ]
       parameters:
         - description: group ID
           in: path
@@ -1842,9 +1892,9 @@ paths:
   /case/category/group/{id}/create:
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Add case category"
-      tags: ["Category"]
+      tags: [ "Category" ]
       parameters:
         - description: "Group ID"
           in: path
@@ -1879,7 +1929,7 @@ paths:
   /case/category/{id}/update:
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - description: "Category ID"
           in: path
@@ -1887,7 +1937,7 @@ paths:
           required: true
           schema:
             type: string
-      tags: ["Category"]
+      tags: [ "Category" ]
       requestBody:
         content:
           application/json:
@@ -1909,8 +1959,8 @@ paths:
   /case/category/{id}:
     delete:
       security:
-        - bearerAuth: []
-      tags: ["Category"]
+        - bearerAuth: [ ]
+      tags: [ "Category" ]
       parameters:
         - description: "Category ID"
           in: path
@@ -1932,9 +1982,9 @@ paths:
   /comment/create/{caseId}:
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Comment on a case"
-      tags: ["Misc"]
+      tags: [ "Misc" ]
       parameters:
         - description: "Case ID"
           in: path
@@ -1966,9 +2016,9 @@ paths:
   /contact/create:
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Request contact details"
-      tags: ["Misc"]
+      tags: [ "Misc" ]
       requestBody:
         content:
           application/json:
@@ -1984,9 +2034,9 @@ paths:
   /partner/create:
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "create partner details"
-      tags: ["Super Admin"]
+      tags: [ "Super Admin" ]
       requestBody:
         content:
           application/json:
@@ -2028,10 +2078,10 @@ paths:
   /partner/{id}/branch/create:
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: create a branch of an organization
       description: "userTypes: [super-admin,admin]"
-      tags: [Partner Organization]
+      tags: [ Partner Organization ]
       parameters:
         - description: partner organization id
           in: path
@@ -2074,9 +2124,9 @@ paths:
   /progress/create/{caseID}:
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Add case progress"
-      tags: ["Case Progress", "Case"]
+      tags: [ "Case Progress", "Case" ]
       parameters:
         - description: "Case ID"
           in: path
@@ -2108,9 +2158,9 @@ paths:
   /progress/upload/{progressId}:
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Upload progress document"
-      tags: ["Case", "Case Progress"]
+      tags: [ "Case", "Case Progress" ]
       parameters:
         - description: "Progress ID"
           name: progressId
@@ -2133,9 +2183,9 @@ paths:
   /details/create/{caseID}:
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Add case other details"
-      tags: ["Case Other Details", "Case"]
+      tags: [ "Case Other Details", "Case" ]
       parameters:
         - description: "Case ID"
           in: path
@@ -2167,9 +2217,9 @@ paths:
   /progress/upload/{otherDetailsId}:
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: "Upload other details document"
-      tags: ["Case", "Case Other Details"]
+      tags: [ "Case", "Case Other Details" ]
       parameters:
         - description: "Progress ID"
           name: otherDetailsId
@@ -2206,13 +2256,13 @@ components:
       type: object
       required:
         [
-          firstName,
-          lastName,
-          userName,
-          email,
-          phoneNumber,
-          password,
-          address,
+            firstName,
+            lastName,
+            userName,
+            email,
+            phoneNumber,
+            password,
+            address,
         ]
       properties:
         _id:
@@ -2238,7 +2288,7 @@ components:
           type: string
         gender:
           type: string
-          enum: ["Male", "Female"]
+          enum: [ "Male", "Female" ]
         address:
           type: string
         addressLandmark:
@@ -2257,7 +2307,7 @@ components:
           writeOnly: true
         onlineStatus:
           type: string
-          enum: ["online", "offline"]
+          enum: [ "online", "offline" ]
           readOnly: true
           default: offline
         active:
@@ -2280,7 +2330,7 @@ components:
       additionalProperties: false
       type: object
       required:
-        [organizationName, email, phoneNumber, address, regNumber]
+        [ organizationName, email, phoneNumber, address, regNumber ]
       properties:
         _id:
           type: string
@@ -2300,7 +2350,7 @@ components:
           type: string
         organizationType:
           type: string
-          enum: ["Government", "NGO", "Private", "Others"]
+          enum: [ "Government", "NGO", "Private", "Others" ]
         regNumber:
           type: string
         descriptionOfOrg:
@@ -2319,15 +2369,15 @@ components:
       type: object
       required:
         [
-          firstName,
-          lastName,
-          userName,
-          email,
-          phoneNumber,
-          password,
-          address,
-          stateOfAssignment,
-          userType,
+            firstName,
+            lastName,
+            userName,
+            email,
+            phoneNumber,
+            password,
+            address,
+            stateOfAssignment,
+            userType,
         ]
       properties:
         _id:
@@ -2358,10 +2408,10 @@ components:
           format: date-time
         gender:
           type: string
-          enum: ["Male", "Female"]
+          enum: [ "Male", "Female" ]
         userType:
           type: string
-          enum: ["super-admin", "admin", "staff", "verifier"]
+          enum: [ "super-admin", "admin", "staff", "verifier" ]
           default: staff
         address:
           type: string
@@ -2379,7 +2429,7 @@ components:
           writeOnly: true
         onlineStatus:
           type: string
-          enum: ["online", "offline"]
+          enum: [ "online", "offline" ]
           readOnly: true
           default: offline
         active:
@@ -2393,7 +2443,19 @@ components:
     Case:
       additionalProperties: false
       type: object
-      required: [caseTitle, dateOfIncident]
+      required:
+        - caseAvatar
+        - categoryGroupID
+        - descriptionOfIncident
+        - areYouTheVictim
+        - reportType
+        - platformOfReport
+        - address
+        - hourOfIncident
+        - lga
+        - state
+        - country
+        - dateOfIncident
       properties:
         _id:
           type: string
@@ -2402,15 +2464,20 @@ components:
           type: string
           readOnly: true
         publicUserID:
-          $ref: "#/components/schemas/PublicUser"
+          allOf:
+            - $ref: "#/components/schemas/PublicUser"
           readOnly: true
-        categoryID:
+        categoryGroupID:
           $ref: "#/components/schemas/CaseCategory"
         assignedPartnerUserId:
-          $ref: "#/components/schemas/PartnerUser"
+          allOf:
+            - $ref: "#/components/schemas/PartnerUser"
           readOnly: true
         caseTitle:
           type: string
+        caseAvatar:
+          type: file
+          format: binary
         addressOfIncident:
           type: string
         addressLandmark:
@@ -2430,43 +2497,43 @@ components:
           type: string
         areYouTheVictim:
           type: string
-          enum: ["Yes", "No"]
+          enum: [ "Yes", "No" ]
           default: "No"
         reportType:
           type: string
-          enum: ["Standard", "QuickReport"]
+          enum: [ "Standard", "QuickReport" ]
         casePleas:
           type: string
         caseTypeStatus:
           type: string
-          enum: ["Incidence", "Case", "QuickReport"]
+          enum: [ "Incidence", "Case", "QuickReport" ]
           default: "Incidence"
         caseSummary:
           type: string
           readOnly: true
         publishStatus:
           type: string
-          enum: ["published", "unPublished"]
+          enum: [ "published", "unPublished" ]
           default: "unPublished"
           readOnly: true
         publishedBy:
-          $ref: "#/components/schemas/PartnerUser"
+          allOf:
+            - $ref: "#/components/schemas/PartnerUser"
+          readOnly: true
         resolutionStatus:
           type: string
-          enum: ["resolved", "unResolved", "onlyReport"]
+          enum: [ "resolved", "unResolved", "onlyReport" ]
           default: "unResolved"
           readOnly: true
         verificationStatus:
           type: string
-          enum: ["verified", "unVerified", "onlyReport"]
+          enum: [ "verified", "unVerified", "onlyReport" ]
           default: "unVerified"
           readOnly: true
         platformOfReport:
           type: string
-          enum: ["mobile", "web", "sms"]
+          enum: [ "mobile", "web", "sms" ]
           default: "web"
-        tags:
-          type: string
         followedBy:
           readOnly: true
           type: array
@@ -2483,7 +2550,7 @@ components:
     CaseCategory:
       additionalProperties: false
       type: object
-      required: [categoryName]
+      required: [ categoryName ]
       properties:
         _id:
           type: string
@@ -2582,7 +2649,7 @@ components:
           readOnly: true
         from:
           type: string
-          enum: ["super-admin", "admin", "staff", "verifier", "user"]
+          enum: [ "super-admin", "admin", "staff", "verifier", "user" ]
         userID:
           type: string
           format: uuid
@@ -2643,7 +2710,7 @@ components:
           type: string
         privacyStatus:
           type: string
-          enum: ["public", "private"]
+          enum: [ "public", "private" ]
           default: "private"
         createdAt:
           type: string
@@ -2704,10 +2771,10 @@ components:
           type: string
         genderOfSuspect:
           type: string
-          enum: ["Male", "Female"]
+          enum: [ "Male", "Female" ]
         guiltStatus:
           type: string
-          enum: ["Guilty", "Not-guilty", "Accomplice"]
+          enum: [ "Guilty", "Not-guilty", "Accomplice" ]
           default: "Not-guilty"
         residentialAddressOfSuspect:
           type: string
@@ -2721,12 +2788,12 @@ components:
           type: string
           enum:
             [
-              "Government",
-              "NGO",
-              "Private",
-              "Self Employed",
-              "Others",
-              "Unknown",
+                "Government",
+                "NGO",
+                "Private",
+                "Self Employed",
+                "Others",
+                "Unknown",
             ]
         suspectOrganizationName:
           type: string
@@ -2798,7 +2865,7 @@ components:
           type: string
         genderOfVictim:
           type: string
-          enum: ["Male", "Female"]
+          enum: [ "Male", "Female" ]
         residentialAddressOfVictim:
           type: string
         addressLandmark:
@@ -2815,12 +2882,12 @@ components:
           type: string
           enum:
             [
-              "Government",
-              "NGO",
-              "Private",
-              "Self Employed",
-              "Others",
-              "Unknown",
+                "Government",
+                "NGO",
+                "Private",
+                "Self Employed",
+                "Others",
+                "Unknown",
             ]
         victimOrganizationID:
           $ref: "#/components/schemas/Organization"
@@ -2870,7 +2937,7 @@ components:
           type: string
         genderOfWitness:
           type: string
-          enum: ["Male", "Female"]
+          enum: [ "Male", "Female" ]
         residentialAddressOfWitness:
           type: string
         addressLandmark:
@@ -2887,12 +2954,12 @@ components:
           type: string
           enum:
             [
-              "Government",
-              "NGO",
-              "Private",
-              "Self Employed",
-              "Others",
-              "Unknown",
+                "Government",
+                "NGO",
+                "Private",
+                "Self Employed",
+                "Others",
+                "Unknown",
             ]
         witnessOrganizationID:
           $ref: "#/components/schemas/Organization"
@@ -2932,12 +2999,12 @@ components:
           $ref: "#/components/schemas/PublicUser"
         followStatus:
           type: string
-          enum: ["following", "notFollowing"]
+          enum: [ "following", "notFollowing" ]
           default: "notFollowing"
     Organization:
       additionalProperties: false
       type: object
-      required: [orgName, emails, address, addressLandmark, phones]
+      required: [ orgName, emails, address, addressLandmark, phones ]
       properties:
         _id:
           type: string
@@ -2951,7 +3018,7 @@ components:
           type: string
         orgType:
           type: string
-          enum: ["Government", "NGO", "Private", "Others"]
+          enum: [ "Government", "NGO", "Private", "Others" ]
         description:
           type: string
         emails:
@@ -2989,7 +3056,7 @@ components:
           readOnly: true
     PartnerBranch:
       type: object
-      required: ["branchName", "address"]
+      required: [ "branchName", "address" ]
       properties:
         _id:
           type: string
@@ -3019,7 +3086,7 @@ components:
           readOnly: true
     Contact:
       type: object
-      required: ["email", "subject", "message"]
+      required: [ "email", "subject", "message" ]
       properties:
         ticketID:
           type: string

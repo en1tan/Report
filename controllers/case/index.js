@@ -9,39 +9,28 @@ const CaseCategory = require("../../models/cases/CaseCategory");
 const CaseTaggedCategories = require("../../models/cases/CaseTaggedCategories");
 const { uploadEvidenceImages } = require("./cloudUpload");
 
-const {
-  tryCatchError,
-  normalError,
-} = require("../../utils/errorHandlers");
+const { tryCatchError, normalError } = require("../../utils/errorHandlers");
 const {
   successWithData,
   successNoData,
 } = require("../../utils/successHandler");
 
 const _ = require("lodash");
+const { uploadCaseAvatar } = require("./cloudUpload");
 
 exports.followCase = async (req, res, next) => {
   try {
     const existingCase = await Case.findById(req.params.id);
-    if (!existingCase)
-      return normalError(res, 404, "Case not found", null);
+    if (!existingCase) return normalError(res, 404, "Case not found", null);
     if (req.body.followStatus === "follow") {
       if (existingCase.followedBy.includes(req.user._id))
-        return successNoData(
-          res,
-          200,
-          "You are following this case already",
-        );
+        return successNoData(res, 200, "You are following this case already");
       existingCase.followedBy.push(req.user);
       await existingCase.save();
       return successNoData(res, 200, "Case followed successfully");
     } else {
       if (!existingCase.followedBy.includes(req.user._id))
-        return successNoData(
-          res,
-          200,
-          "You are already unfollowing this case",
-        );
+        return successNoData(res, 200, "You are already unfollowing this case");
       existingCase.followedBy.pop(req.user);
       await existingCase.save();
       return successNoData(res, 200, "Case unfollowed successfully");
@@ -58,10 +47,10 @@ exports.getFollowedCases = async (req, res, next) => {
       followedBy: req.user,
     })
       .select(
-        "caseAvatar caseTitle caseSummary categoryGroupID publishedBy datePublished followedBy",
+        "caseAvatar caseTitle caseSummary categoryGroupID publishedBy datePublished followedBy"
       )
       .sort("-createdAt")
-      .limit(limit * 1)
+      .limit(limit)
       .skip((page - 1) * limit)
       .exec();
     const count = await Case.countDocuments({
@@ -72,12 +61,7 @@ exports.getFollowedCases = async (req, res, next) => {
       total: Math.ceil(count / limit),
       page: parseInt(page),
     };
-    return successWithData(
-      res,
-      200,
-      "Case Fetched Succesfully",
-      data,
-    );
+    return successWithData(res, 200, "Case Fetched Succesfully", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -86,20 +70,19 @@ exports.getFollowedCases = async (req, res, next) => {
 exports.assignPartnerToCase = async (req, res, next) => {
   try {
     const existingCase = await Case.findById(req.params.id);
-    if (!existingCase)
-      return normalError(res, 404, "Case not found", null);
+    if (!existingCase) return normalError(res, 404, "Case not found", null);
     const updatedCase = await Case.findByIdAndUpdate(
       existingCase._id,
       {
         assignedPartnerUserId: req.body.partnerId,
       },
-      { new: true },
+      { new: true }
     );
     return successWithData(
       res,
       200,
       "Partner assigned successfully",
-      updatedCase,
+      updatedCase
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -127,7 +110,7 @@ exports.getAllCase = async (req, res, next) => {
     const cases = await Case.find(filter)
       .sort("-createdAt")
       .select("")
-      .limit(limit * 1)
+      .limit(limit)
       .skip((page - 1) * limit)
       .exec();
 
@@ -137,12 +120,7 @@ exports.getAllCase = async (req, res, next) => {
       total: Math.ceil(count / limit),
       page: parseInt(page),
     };
-    return successWithData(
-      res,
-      200,
-      "Cases Fetched Succesfully",
-      data,
-    );
+    return successWithData(res, 200, "cases fetched successfully", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -172,12 +150,7 @@ exports.getCase = async (req, res, next) => {
         suspect,
       },
     };
-    return successWithData(
-      res,
-      200,
-      "Cases Fetched Succesfully",
-      data,
-    );
+    return successWithData(res, 200, "Cases Fetched successfully", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -185,13 +158,16 @@ exports.getCase = async (req, res, next) => {
 
 exports.createCase = async (req, res, next) => {
   try {
-    const categories = req.body.caseCategories.split(",");
+    const imageURL = await uploadCaseAvatar(req.file);
+    console.log(imageURL);
+    req.body.caseAvatar = imageURL.url;
     const newCase = await Case.create({
       ...req.body,
       publicUserID: req.user._id,
       followedBy: [req.user.id],
     });
-    for (i = 0; i < categories.length; i++) {
+    const categories = req.body.categories.split(",");
+    for (let i = 0; i < categories.length; i++) {
       await CaseTaggedCategories.create({
         caseCategoryID: categories[i],
         caseID: newCase._id,
@@ -200,12 +176,22 @@ exports.createCase = async (req, res, next) => {
     const data = {
       case: _.pick(newCase, ["_id", "caseID"]),
     };
-    return successWithData(
-      res,
-      200,
-      "Case Created Succesfully",
-      data,
+    return successWithData(res, 200, "case created successfully", data);
+  } catch (err) {
+    return tryCatchError(res, err);
+  }
+};
+
+exports.updateExistingCase = async (req, res, next) => {
+  try {
+    const existingCase = await Case.findById(req.params.id);
+    if (!existingCase) return normalError(res, 404, "case not found!");
+    const updatedCase = await Case.findByIdAndUpdate(
+      existingCase._id,
+      req.body,
+      { new: true }
     );
+    return successWithData(res, 200, "case updated successfully", updatedCase);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -221,12 +207,7 @@ exports.createCaseVictim = async (req, res, next) => {
     const data = {
       victim: newVictim,
     };
-    return successWithData(
-      res,
-      200,
-      "Victim Created Succesfully",
-      data,
-    );
+    return successWithData(res, 200, "victim created successfully", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -241,12 +222,7 @@ exports.createCaseSuspect = async (req, res, next) => {
     const data = {
       suspect: newSuspect,
     };
-    return successWithData(
-      res,
-      200,
-      "Suspect Created Succesfully",
-      data,
-    );
+    return successWithData(res, 200, "Suspect Created Succesfully", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -261,12 +237,7 @@ exports.createCaseWitness = async (req, res, next) => {
     const data = {
       witness: newWitness,
     };
-    return successWithData(
-      res,
-      200,
-      "Witness Created Succesfully",
-      data,
-    );
+    return successWithData(res, 200, "Witness Created Succesfully", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -282,12 +253,7 @@ exports.createCaseOtherDetails = async (req, res, next) => {
     const data = {
       details: newDetails,
     };
-    return successWithData(
-      res,
-      200,
-      "More Details Updated Succesfully",
-      data,
-    );
+    return successWithData(res, 200, "More Details Updated Succesfully", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -302,12 +268,7 @@ exports.createCaseProgress = async (req, res, next) => {
     const data = {
       progress: newProgress,
     };
-    return successWithData(
-      res,
-      200,
-      "Progress Saved Succesfully",
-      data,
-    );
+    return successWithData(res, 200, "Progress Saved Succesfully", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -328,7 +289,7 @@ exports.saveEvidence = async (req, res, next) => {
       });
     }
     await CaseEvidence.insertMany(allEvidence);
-    return successNoData(res, 201, "Evidence Saved Succesfully");
+    return successNoData(res, 201, "evidence saved successfully");
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -339,9 +300,9 @@ exports.getPersonalCases = async (req, res, next) => {
   try {
     const cases = await Case.find({ publicUserID: req.user.id })
       .select(
-        "caseAvatar caseID descriptionOfIncident categoryGroupID assignedPartnerUserId",
+        "caseAvatar caseID descriptionOfIncident categoryGroupID assignedPartnerUserId"
       )
-      .limit(limit * 1)
+      .limit(limit)
       .skip((page - 1) * limit)
       .sort("-createdAt")
       .exec();
@@ -364,21 +325,15 @@ exports.getPersonalCases = async (req, res, next) => {
 exports.verifyCase = async (req, res, next) => {
   try {
     const existingCase = await Case.findById(req.params.id).select(
-      "-followedBy -areYouTheVictim",
+      "-followedBy -areYouTheVictim"
     );
-    if (!existingCase)
-      return normalError(res, 404, "Case does not exist");
+    if (!existingCase) return normalError(res, 404, "Case does not exist");
     const updatedCase = await Case.findByIdAndUpdate(
       req.params.id,
       { verificationStatus: req.body.verificationStatus },
-      { new: true },
+      { new: true }
     );
-    return successWithData(
-      res,
-      200,
-      "Case verified successfully",
-      updatedCase,
-    );
+    return successWithData(res, 200, "Case verified successfully", updatedCase);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -387,8 +342,7 @@ exports.verifyCase = async (req, res, next) => {
 exports.publishCase = async (req, res, next) => {
   try {
     const existingCase = await Case.findById(req.params.id);
-    if (!existingCase)
-      return normalError(res, 404, "Case does not exist");
+    if (!existingCase) return normalError(res, 404, "Case does not exist");
 
     const publishedCase = await Case.findByIdAndUpdate(
       existingCase._id,
@@ -397,13 +351,13 @@ exports.publishCase = async (req, res, next) => {
         publishedBy: req.user,
         datePublished: new Date(Date.now()),
       },
-      { new: true },
+      { new: true }
     );
     return successWithData(
       res,
       200,
       "Case published successfully",
-      publishedCase,
+      publishedCase
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -413,21 +367,20 @@ exports.publishCase = async (req, res, next) => {
 exports.resolveCase = async (req, res, next) => {
   try {
     const existingCase = await Case.findById(req.params.id);
-    if (!existingCase)
-      return normalError(res, 404, "Case does not exist");
+    if (!existingCase) return normalError(res, 404, "Case does not exist");
 
     const resolvedCase = await Case.findByIdAndUpdate(
       existingCase._id,
       {
         resolutionStatus: req.body.resolutionStatus,
       },
-      { new: true },
+      { new: true }
     );
     return successWithData(
       res,
       200,
       "Case resolved successfully",
-      resolvedCase,
+      resolvedCase
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -437,20 +390,18 @@ exports.resolveCase = async (req, res, next) => {
 exports.getSinglePublicCase = async (req, res, next) => {
   let categories = [];
   try {
-    const existingCase = await Case.findById(req.params.id).select();
-    const categorieIDs = await CaseTaggedCategories.find({
+    const existingCase = await Case.findById(req.params.id);
+    const categoryIDs = await CaseTaggedCategories.find({
       caseID: existingCase._id,
     });
-    categorieIDs.forEach(async (id) => {
-      console.log(id);
-      const category = await CaseCategory.findOne({
-        caseCategoryID: id.caseCategoryID,
-      });
-      console.log(category);
-      if (category) categories.push(category.cateogoryName);
-      else {
-      }
-    });
+    for (let i = 0; i < categoryIDs.length; i++) {
+      const category = await CaseCategory.findById(
+        categoryIDs[i].caseCategoryID
+      );
+      categories.push(category.categoryName);
+    }
+    console.log(categories);
+
     const data = {
       ..._.pick(existingCase, [
         "_id",
@@ -503,12 +454,7 @@ exports.getPublicCases = async (req, res, next) => {
       total: Math.ceil(count / limit),
       page: parseInt(page),
     };
-    return successWithData(
-      res,
-      200,
-      "Cases Fetched Succesfully",
-      data,
-    );
+    return successWithData(res, 200, "Cases Fetched Succesfully", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
