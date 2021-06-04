@@ -92,7 +92,9 @@ const caseSuspectSchema = new Schema(
         "Government",
         "NGO",
         "Private",
+        "Business Person",
         "Self Employed",
+        "Unemployed",
         "Others",
         "Unknown",
       ],
@@ -112,6 +114,12 @@ const caseSuspectSchema = new Schema(
 
     // ID of who added the suspect to the case Whether a user or Official
     addedBy: String,
+
+     // User type of who added the suspect to the case Whether a user or Official
+     addedByUserType: {
+      type: String,
+      enum: ["Public_User", "Partner_User"],
+    },
 
     // if the suspect has any disability
     disabilityStatus: String,

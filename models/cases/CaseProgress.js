@@ -50,7 +50,7 @@ const caseProgressSchema = new Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "CaseProgressDoc",
       },
-    ],
+    ]
   },
   { timestamps: true },
 );

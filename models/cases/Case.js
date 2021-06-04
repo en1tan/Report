@@ -89,8 +89,8 @@ const caseSchema = new Schema(
     // Status of the case- "Incidence" when not confirmed- "case" when incident has be confirmed and filed
     caseTypeStatus: {
       type: String,
-      enum: ["Incidence", "Case", "QuickReport"],
-      default: "Incidence",
+      enum: ["Incident", "Case", "QuickReport"],
+      default: "Incident",
     },
 
     // Summary of all what the case is about by the official handling the case and this will be displayed
@@ -114,11 +114,11 @@ const caseSchema = new Schema(
     },
 
     // If the case has been resolved and closed or unresolved and open
-    resolutionStatus: {
+    /**resolutionStatus: {
       type: String,
       enum: ["resolved", "unResolved", "onlyReport"],
       default: "unResolved",
-    },
+    },*/
 
     // If the case has been resolved and closed or unresolved and open. by default for Quick report the value will be "onlyReport"
     resolutionStatus: {
@@ -140,10 +140,10 @@ const caseSchema = new Schema(
       enum: ["mobile", "web", "sms"],
       default: "web",
     },
-    // Case tags. Can be used to search later
+    /*// Case tags. Can be used to search later
     tags: {
       type: String,
-    },
+    },*/
 
     followedBy: [
       {
