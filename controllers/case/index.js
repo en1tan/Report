@@ -210,8 +210,6 @@ exports.getCase = async (req, res, next) => {
 
 exports.createCase = async (req, res, next) => {
   try {
-    const imageURL = await uploadCaseAvatar(req.file);
-    req.body.caseAvatar = imageURL.url;
     const newCase = await Case.create({
       ...req.body,
       publicUserID: req.user._id,

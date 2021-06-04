@@ -9,6 +9,6 @@ router.post(
   auth(),
   commentController.createComment
 );
+router.get("/:caseID", commentController.readComments);
 
 module.exports = router;
-
