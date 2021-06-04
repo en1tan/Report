@@ -4,22 +4,15 @@ const {
   successWithData,
   successNoData,
 } = require("../../utils/successHandler");
-const {
-  tryCatchError,
-  normalError,
-} = require("../../utils/errorHandlers");
+const { tryCatchError, normalError } = require("../../utils/errorHandlers");
+const auth = require("../../middleware/authenticate");
 
 exports.getAllCategoryGroup = async (req, res, next) => {
   try {
     const groups = await CaseCategoryGroup.find()
       .sort("-createdAt")
       .select("imageIcon groupName");
-    return successWithData(
-      res,
-      200,
-      "Fetched all category groups",
-      groups
-    );
+    return successWithData(res, 200, "Fetched all category groups", groups);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -31,12 +24,7 @@ exports.createCaseCategoryGroup = async (req, res, next) => {
     const data = {
       group: newGroup,
     };
-    return successWithData(
-      res,
-      201,
-      "Case Group Created Succesfully",
-      data
-    );
+    return successWithData(res, 201, "Case Group Created Succesfully", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -71,15 +59,11 @@ exports.deleteCaseCategoryGroup = async (req, res, next) => {
 
 exports.getAllCategories = async (req, res, next) => {
   try {
+    const { groupID } = req.params;
     const categories = await CaseCategory.find({
-      categoryGroupID: req.params.groupID,
+      categoryGroupID: groupID,
     }).select("categoryName");
-    return successWithData(
-      res,
-      200,
-      "Categories fetched",
-      categories
-    );
+    return successWithData(res, 200, "Categories fetched", categories);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -94,12 +78,7 @@ exports.createCaseCategory = async (req, res, next) => {
     const data = {
       category: newCategory,
     };
-    return successWithData(
-      res,
-      200,
-      "Case Category Created Succesfully",
-      data
-    );
+    return successWithData(res, 200, "Case Category Created Succesfully", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -108,8 +87,7 @@ exports.createCaseCategory = async (req, res, next) => {
 exports.editCaseCategory = async (req, res, next) => {
   try {
     const existingCase = await CaseCategory.findById(req.params.id);
-    if (!existingCase)
-      return normalError(res, 404, "Category not found", null);
+    if (!existingCase) return normalError(res, 404, "Category not found", null);
     const updatedCategory = await CaseCategory.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -133,4 +111,11 @@ exports.deleteCaseCategory = async (req, res, next) => {
   } catch (err) {
     return tryCatchError(res, err);
   }
+};
+
+exports.getAuthorized = async (req, res, next) => {
+  console.log(req.authorized);
+  console.log(req.user);
+  // if (req.authorized)
+  return res.send(req.user);
 };

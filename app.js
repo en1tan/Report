@@ -9,6 +9,7 @@ const swaggerUI = require("swagger-ui-express"),
 
 const app = express();
 
+const queryAuth = require("./utils/queryAuth");
 const routes = require("./routes");
 
 //cors
@@ -23,7 +24,7 @@ if (process.env.NODE_ENV === "development") {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/v1/", routes);
+app.use("/api/v1/", queryAuth(), routes);
 
 app.use(
   "/docs",
@@ -33,7 +34,7 @@ app.use(
     next();
   },
   swaggerUI.serve,
-  swaggerUI.setup(swaggerDoc),
+  swaggerUI.setup(swaggerDoc)
 );
 
 module.exports = app;
