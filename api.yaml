@@ -787,7 +787,7 @@ paths:
                       resolutionStatus: resolved
                       reportType: Standard
                       userFollowStatus: false
-  /public/case/category/groups:
+  /public/category/groups:
     get:
       summary: "Get all category groups"
       tags: ["Public"]
@@ -816,7 +816,7 @@ paths:
                       groupName: "Human Rights"
                       imageIcon: "https://api.placeholder.com/150"
                       _v: 0
-  /public/case/category/{groupID}/categories:
+  /public/category/{groupID}/categories:
     get:
       summary: "Get all categories"
       tags: ["Public"]
@@ -2167,7 +2167,7 @@ paths:
               $ref: "#/components/schemas/PartnerBranch"
             example:
               branchName: Buff Up Branch
-              address: "2, Sorosoke Branch"
+              address: 2, Sorosoke Branch
       responses:
         201:
           description: ""

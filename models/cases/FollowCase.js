@@ -3,12 +3,6 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const followCaseSchema = new Schema({
-  // Unique Identifier of the follow
-  followCaseID: {
-    type: String,
-    default: () => nanoid(),
-  },
-
   // ID of the case the user is following
   caseID: {
     type: mongoose.Schema.Types.ObjectId,
@@ -23,9 +17,8 @@ const followCaseSchema = new Schema({
 
   // Whether a user is still following a case or not
   followStatus: {
-    type: String,
-    enum: ["following", "notFollowing"],
-    default: "notFollowing",
+    type: Boolean,
+    default: true,
   },
 });
 

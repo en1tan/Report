@@ -8,6 +8,7 @@ const CaseEvidence = require("../../models/cases/CaseEvidence");
 const CaseCategory = require("../../models/cases/CaseCategory");
 const CaseTaggedCategories = require("../../models/cases/CaseTaggedCategories");
 const PublicUser = require("../../models/PublicUser");
+const FollowCase = require("../../models/cases/FollowCase");
 const { uploadEvidenceImages } = require("./cloudUpload");
 
 const { tryCatchError, normalError } = require("../../utils/errorHandlers");
@@ -17,23 +18,24 @@ const {
 } = require("../../utils/successHandler");
 
 const _ = require("lodash");
-const { uploadCaseAvatar } = require("./cloudUpload");
 
 exports.followCase = async (req, res, next) => {
   try {
-    const existingCase = await Case.findById(req.params.id);
-    if (!existingCase) return normalError(res, 404, "Case not found", null);
+    const follow = await FollowCase.findOne({ caseID: req.params.id });
     if (req.body.followStatus === "follow") {
-      if (existingCase.followedBy.includes(req.user._id))
+      if (follow)
         return successNoData(res, 200, "You are following this case already");
-      existingCase.followedBy.push(req.user);
-      await existingCase.save();
+      await FollowCase.create({
+        caseID: req.params.id,
+        publicUserID: req.user._id,
+      });
       return successNoData(res, 200, "Case followed successfully");
     } else {
-      if (!existingCase.followedBy.includes(req.user._id))
+      if (!follow)
         return successNoData(res, 200, "You are already unfollowing this case");
-      existingCase.followedBy.pop(req.user);
-      await existingCase.save();
+      const resp = await FollowCase.findOneAndDelete({
+        caseID: req.params.id,
+      });
       return successNoData(res, 200, "Case unfollowed successfully");
     }
   } catch (err) {
@@ -41,36 +43,33 @@ exports.followCase = async (req, res, next) => {
   }
 };
 
-const getCategories = async (caseID) => {
-  let categories = [];
-  const cats = await CaseTaggedCategories.find({ caseID });
-  for (let i = 0; i < cats.length; i++) {
-    const category = await CaseCategory.findById(cats[i].caseCategoryID);
-    categories.push(category.categoryName);
-  }
-  return categories;
-};
-
 exports.getFollowedCases = async (req, res, next) => {
   let categories = [];
-  let followedCases = [];
+  let cases = [];
+  const followedCases = [];
+  let count;
   try {
     let { page = 1, limit = 20 } = req.query;
-    const cases = await Case.find({
-      followedBy: req.user,
-    })
-      .sort("-createdAt")
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
-      .exec();
-    const count = await Case.countDocuments({
-      followedBy: req.user._id,
-    }).exec();
+    const f = await FollowCase.find({ publicUserID: req.user._id });
+    for (let i = 0; i < f.length; i++) {
+      cases = await Case.find({ followedBy: f[i]._id })
+        .sort("-createdAt")
+        .limit(limit * 1)
+        .skip((page - 1) * limit)
+        .exec();
+      count = await Case.countDocuments({
+        followedBy: f[i]._id,
+      }).exec();
+    }
+
     for (let i = 0; i < cases.length; i++) {
       categories = await getCategories(cases[i]._id);
     }
-    cases.map((c) => {
-      const userFollowStatus = c.followedBy.includes(req.user._id);
+
+    cases.map(async (c) => {
+      const followStatus = c.followedBy.some(
+        async (cf) => cf === (await FollowCase.findOne(cf._id))
+      );
       followedCases.push({
         ..._.pick(c, [
           "_id",
@@ -90,7 +89,7 @@ exports.getFollowedCases = async (req, res, next) => {
           "categories",
           "caseTypeStatus",
         ]),
-        userFollowStatus,
+        followStatus,
         categories,
       });
     });
@@ -103,6 +102,16 @@ exports.getFollowedCases = async (req, res, next) => {
   } catch (err) {
     return tryCatchError(res, err);
   }
+};
+
+const getCategories = async (caseID) => {
+  let categories = [];
+  const cats = await CaseTaggedCategories.find({ caseID });
+  for (let i = 0; i < cats.length; i++) {
+    const category = await CaseCategory.findById(cats[i].caseCategoryID);
+    categories.push(category.categoryName);
+  }
+  return categories;
 };
 
 exports.assignPartnerToCase = async (req, res, next) => {
@@ -213,8 +222,15 @@ exports.createCase = async (req, res, next) => {
     const newCase = await Case.create({
       ...req.body,
       publicUserID: req.user._id,
-      followedBy: [req.user.id],
     });
+    const follow = await FollowCase.create({
+      caseID: newCase._id,
+      publicUserID: req.user._id,
+      followStatus: true,
+    });
+    const eCase = await Case.findById(newCase._id);
+    eCase.followedBy.push(follow);
+    await eCase.save();
     const categories = req.body.categories.split(",");
     for (let i = 0; i < categories.length; i++) {
       await CaseTaggedCategories.create({

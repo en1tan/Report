@@ -7,12 +7,6 @@ const Schema = mongoose.Schema;
 
 const publicUserSchema = new Schema(
   {
-    // Unique identification code of the user on sorosoke platform
-    userID: {
-      type: String,
-      default: () => nanoid(),
-    },
-
     // First Name of the User
     firstName: {
       type: String,

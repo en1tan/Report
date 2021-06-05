@@ -21,7 +21,6 @@ const caseSchema = new Schema(
 
     caseAvatar: {
       type: String,
-      required: true,
       immutable: true,
     },
 
@@ -135,6 +134,13 @@ const caseSchema = new Schema(
       default: "unVerified",
     },
 
+    followedBy: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "FollowCase",
+      },
+    ],
+
     // Which of the sorosoke platforms was used in reporting the case
     platformOfReport: {
       type: String,
@@ -142,13 +148,6 @@ const caseSchema = new Schema(
       default: "web",
       immutable: true,
     },
-
-    followedBy: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "PublicUser",
-      },
-    ],
   },
   { timestamps: true }
 );
