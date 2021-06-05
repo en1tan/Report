@@ -861,7 +861,7 @@ paths:
             example:
               dateOfIncident: "2021-05-29T21:21:57.922Z"
               categoryGroupID: 60b2b051f4ff133eeaaaca1a
-              caseCategories: 60b6d4e8a76ede328c15c85b,60b6d4f7a76ede328c15c85c
+              categories: 60b6d4e8a76ede328c15c85b,60b6d4f7a76ede328c15c85c
               state: Abuja
               addressOfIncident: Gatara
               areYouTheVictim: Yes
