@@ -1,18 +1,15 @@
 const express = require("express");
 const caseController = require("../../controllers/case");
 const authorize = require("../../middleware/authorization");
-const { singleUpload } = require("../../middleware/imageUpload");
-const { arrayUpload } = require("../../middleware/imageUpload");
-
 const router = express.Router();
 
+router.post("/create", caseController.createCase);
 router.get(
   "/",
   authorize(["super-admin", "admin", "staff", "verifier"]),
   caseController.getAllCase
 );
 router.get("/personal", caseController.getPersonalCases);
-router.post("/create", singleUpload, caseController.createCase);
 router.patch("/:id/update", caseController.updateExistingCase);
 router.get("/followed", caseController.getFollowedCases);
 router.get("/:id", caseController.getCase);
@@ -34,7 +31,6 @@ router.post(
 router.post(
   "/create/:id/evidence",
   authorize(["admin", "staff"]),
-  arrayUpload,
   caseController.saveEvidence
 );
 

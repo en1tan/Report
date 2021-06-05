@@ -633,7 +633,7 @@ paths:
           name: resolutionStatus
           schema:
             type: string
-            enum: [resolved, unresolved]
+            enum: [resolved, unResolved]
         - description: "Filter by Report Type"
           in: query
           name: reportType
@@ -666,10 +666,10 @@ paths:
         - description: Filter by Case Type Status
           in: query
           name: caseTypeStatus
-          example: Standard
+          example: Case
           schema:
             type: string
-            enum: [QuickReport, Standard]
+            enum: [QuickReport, Case]
       responses:
         200:
           description: "All cases fetched"

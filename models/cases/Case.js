@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const PartnerUser = require("../partners/PartnerUser");
 const { genIDs } = require("../../utils/genID");
 
 const Schema = mongoose.Schema;
