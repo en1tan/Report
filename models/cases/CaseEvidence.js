@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { genEvidenceID } = require("../../utils/genID");
+const { genIDs } = require("../../utils/genID");
 
 const Schema = mongoose.Schema;
 
@@ -8,7 +8,6 @@ const caseEvidenceSchema = new Schema(
     // ID of the file
     fileID: {
       type: String,
-      default: genEvidenceID,
     },
 
     // ID of case in question
@@ -27,12 +26,14 @@ const caseEvidenceSchema = new Schema(
       type: String,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-const CaseEvidence = mongoose.model(
-  "CaseEvidence",
-  caseEvidenceSchema,
-);
+caseEvidenceSchema.pre("save", function (next) {
+  this.fileID = genIDs("SEVF");
+  next();
+});
+
+const CaseEvidence = mongoose.model("CaseEvidence", caseEvidenceSchema);
 
 module.exports = CaseEvidence;

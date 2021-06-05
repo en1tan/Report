@@ -816,7 +816,7 @@ paths:
                       groupName: "Human Rights"
                       imageIcon: "https://api.placeholder.com/150"
                       _v: 0
-  /public/category/{groupID}/categories:
+  /public/group/{groupID}/categories:
     get:
       summary: "Get all categories"
       tags: ["Public"]

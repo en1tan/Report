@@ -341,19 +341,8 @@ exports.createCaseProgress = async (req, res, next) => {
 
 exports.saveEvidence = async (req, res, next) => {
   try {
-    const allEvidence = [];
-
-    if (req.files && req.files.length > 0) {
-      const evidenceImages = await uploadEvidenceImages(req.files);
-      evidenceImages.forEach((el, i) => {
-        allEvidence.push({
-          fileName: `evidence${i + 1}`,
-          URL: el.url,
-          caseID: req.params.id,
-        });
-      });
-    }
-    await CaseEvidence.insertMany(allEvidence);
+    req.body.caseID = req.params.id;
+    await CaseEvidence.create(req.body);
     return successNoData(res, 201, "evidence saved successfully");
   } catch (err) {
     return tryCatchError(res, err);
