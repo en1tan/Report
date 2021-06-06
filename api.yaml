@@ -633,7 +633,7 @@ paths:
           name: resolutionStatus
           schema:
             type: string
-            enum: [resolved, unresolved]
+            enum: [resolved, unResolved]
         - description: "Filter by Report Type"
           in: query
           name: reportType
@@ -666,10 +666,10 @@ paths:
         - description: Filter by Case Type Status
           in: query
           name: caseTypeStatus
-          example: Standard
+          example: Case
           schema:
             type: string
-            enum: [QuickReport, Standard]
+            enum: [QuickReport, Case]
       responses:
         200:
           description: "All cases fetched"
@@ -787,7 +787,7 @@ paths:
                       resolutionStatus: resolved
                       reportType: Standard
                       userFollowStatus: false
-  /public/case/category/groups:
+  /public/category/groups:
     get:
       summary: "Get all category groups"
       tags: ["Public"]
@@ -816,7 +816,7 @@ paths:
                       groupName: "Human Rights"
                       imageIcon: "https://api.placeholder.com/150"
                       _v: 0
-  /public/case/category/{groupID}/categories:
+  /public/group/{groupID}/categories:
     get:
       summary: "Get all categories"
       tags: ["Public"]
@@ -861,7 +861,7 @@ paths:
             example:
               dateOfIncident: "2021-05-29T21:21:57.922Z"
               categoryGroupID: 60b2b051f4ff133eeaaaca1a
-              caseCategories: 60b6d4e8a76ede328c15c85b,60b6d4f7a76ede328c15c85c
+              categories: 60b6d4e8a76ede328c15c85b,60b6d4f7a76ede328c15c85c
               state: Abuja
               addressOfIncident: Gatara
               areYouTheVictim: Yes
@@ -2167,7 +2167,7 @@ paths:
               $ref: "#/components/schemas/PartnerBranch"
             example:
               branchName: Buff Up Branch
-              address: "2, Sorosoke Branch"
+              address: 2, Sorosoke Branch
       responses:
         201:
           description: ""

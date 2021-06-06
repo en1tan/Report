@@ -32,6 +32,7 @@ exports.signup = async (req, res, next) => {
       return normalError(res, 400, "Unable to create user", errors);
     }
     const newUser = await User.create(req.body);
+    newUser.password = null;
     return successWithData(
       res,
       201,
@@ -47,10 +48,7 @@ exports.signin = async (req, res, next) => {
   const { userName, password } = req.body;
   try {
     const user = await User.findOne({ userName }).select("+password");
-    if (
-      !user ||
-      !(await user.correctPassword(password, user.password))
-    ) {
+    if (!user || !(await user.correctPassword(password, user.password))) {
       return validationError(res, "Authentication error");
     }
 
@@ -74,17 +72,10 @@ exports.editAccount = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id);
     if (!user) return validationError(res, "Authentication error");
-    const updatedUser = await User.findByIdAndUpdate(
-      user._id,
-      req.body,
-      { new: true }
-    );
-    return successWithData(
-      res,
-      200,
-      "User updated successfully",
-      updatedUser
-    );
+    const updatedUser = await User.findByIdAndUpdate(user._id, req.body, {
+      new: true,
+    });
+    return successWithData(res, 200, "User updated successfully", updatedUser);
   } catch (err) {
     return tryCatchError(res, err);
   }
