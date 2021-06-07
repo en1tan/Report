@@ -15,7 +15,6 @@ router.patch("/:id/update", caseController.updateExistingCase);
 router.get("/followed", caseController.getFollowedCases);
 router.get("/:id", caseController.getCase);
 
-router.post("/create/:caseID/caseVictim", caseController.createCaseVictim);
 router.post("/create/:caseID/caseSuspect", caseController.createCaseSuspect);
 router.post("/create/:caseID/caseWitness", caseController.createCaseWitness);
 router.post(

@@ -3163,6 +3163,159 @@
         }
       }
     },
+    "/victim/case/{id}/create": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Create case victim",
+        "tags": [
+          "Victim"
+        ],
+        "parameters": [
+          {
+            "description": "Case ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CaseVictim"
+              },
+              "example": {
+                "firstNameOfVictim": "John",
+                "lastNameOfVictim": "Doe",
+                "emailOfVictim": "johndoe@vict.com",
+                "phoneNumberOfVictim": "08035468521",
+                "genderOfVictim": "Male",
+                "residentialAddressOfVictim": "12, Vitc Cl.",
+                "relationshipWithVictim": "Friend",
+                "middleNameOfVictim": "",
+                "addressLandmark": "",
+                "lgaOfVictim": "",
+                "stateOfVictim": "",
+                "countryOfVictim": "",
+                "victimOccupation": "",
+                "victimOrganizationType": "Private",
+                "victimOrganizationName": "",
+                "otherDetailsOfVictim": "",
+                "disabilityStatus": "",
+                "religion": ""
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Victim created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/CaseVictim"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "case victim created",
+                  "status": "success",
+                  "data": {
+                    "firstNameOfVictim": "John",
+                    "lastNameOfVictim": "Doe",
+                    "middleNameOfVictim": "",
+                    "_id": "60be5ee9f599125afcee9267",
+                    "__v": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/victim": {
+      "get": {
+        "summary": "Get all victims",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "description": "Case ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": ["Victim"],
+        "responses": {
+          "201": {
+            "description": "Fetched victims",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/component/schemas/CaseVictim"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "success",
+                  "message": "Fetched victims",
+                  "data": [
+                    {
+                      "firstNameOfVictim": "John",
+                      "lastNameOfVictim": "Doe",
+                      "middleNameOfVictim": "",
+                      "_id": "60be5ee9f599125afcee9267",
+                      "__v": 0
+                    },
+                    {
+                      "firstNameOfVictim": "John",
+                      "lastNameOfVictim": "Doe",
+                      "middleNameOfVictim": "",
+                      "_id": "60be5ee9f599125afcee9267",
+                      "__v": 0
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/comment/create/{caseId}": {
       "post": {
         "security": [

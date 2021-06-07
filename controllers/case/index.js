@@ -252,22 +252,6 @@ exports.updateExistingCase = async (req, res, next) => {
   }
 };
 
-exports.createCaseVictim = async (req, res, next) => {
-  try {
-    const existingCase = await Case.findById(req.params.caseID);
-    if (!existingCase) return normalError(res, 404, "case not found");
-    req.body.caseID = req.params.caseID;
-    req.body.addedBy = req.user._id;
-    const newVictim = await CaseVictim.create(req.body);
-    const data = {
-      victim: newVictim,
-    };
-    return successWithData(res, 200, "victim created successfully", data);
-  } catch (err) {
-    return tryCatchError(res, err);
-  }
-};
-
 exports.createCaseSuspect = async (req, res, next) => {
   try {
     const newSuspect = await CaseSuspect.create({
@@ -374,7 +358,9 @@ exports.getPersonalCases = async (req, res, next) => {
           "caseAvatar",
           "caseID",
           "descriptionOfIncident",
-          "categoryGroupID"
+          "categoryGroupID",
+          "_id",
+          "__v"
         ]),
         userFollowStatus: !!userFollowStatus,
         assignedPartner,
@@ -581,7 +567,7 @@ exports.getPublicCases = async (req, res, next) => {
       .exec();
     const count = await Case.countDocuments(filter).exec();
     for (let i = 0; i < cases.length; i++) {
-      const user = req.user ? req.user._id : "";
+      const user = req.user ? req.user._id : null;
       const userFollowStatus = await FollowCase.findOne({caseID: cases[i]._id}).where("publicUserID").in([user])
       const publicCase = {
         ..._.pick(cases[i], selectedFields.split(" ")),

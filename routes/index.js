@@ -12,6 +12,7 @@ const details = require("./otherDetails");
 const error = require("../controllers/errors");
 const partner = require("./partner");
 const public = require("./public");
+const victim = require("./victim");
 
 const appicationError = require("../utils/applicationError");
 
@@ -19,13 +20,14 @@ const router = express.Router();
 
 router.use("/public", public);
 router.use("/user", user);
-router.use("/partner", partner);
-router.use("/case", auth(), cases);
+router.use("/partner",auth(true), partner);
+router.use("/case", auth(true), cases);
 router.use("/organization", organization);
 router.use("/progress", progress);
 router.use("/details", details);
-router.use("/contact", contact);
+router.use("/contact", auth(true), contact);
 router.use("/comment", comment);
+router.use("/victim",auth(true), victim);
 router.all("*", error.globalErrors);
 
 router.use(appicationError);
