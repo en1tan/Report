@@ -11,7 +11,10 @@ const PublicUser = require("../../models/PublicUser");
 const PartnerUser = require("../../models/partners/PartnerUser");
 const FollowCase = require("../../models/cases/FollowCase");
 
-const { tryCatchError, normalError } = require("../../utils/errorHandlers");
+const {
+  tryCatchError,
+  normalError
+} = require("../../utils/errorHandlers");
 const {
   successWithData,
   successNoData,
@@ -21,7 +24,7 @@ const _ = require("lodash");
 
 exports.followCase = async (req, res, next) => {
   try {
-    const follow = await FollowCase.findOne({ caseID: req.params.id });
+    const follow = await FollowCase.findOne({caseID: req.params.id});
     if (req.body.followStatus === "follow") {
       if (follow)
         return successNoData(res, 200, "You are following this case already");
@@ -49,10 +52,10 @@ exports.getFollowedCases = async (req, res, next) => {
   const followedCases = [];
   let count;
   try {
-    let { page = 1, limit = 20 } = req.query;
-    const f = await FollowCase.find({ publicUserID: req.user._id });
+    let {page = 1, limit = 20} = req.query;
+    const f = await FollowCase.find({publicUserID: req.user._id});
     for (let i = 0; i < f.length; i++) {
-      cases = await Case.find({ followedBy: f[i]._id })
+      cases = await Case.find({followedBy: f[i]._id})
         .sort("-createdAt")
         .limit(limit * 1)
         .skip((page - 1) * limit)
@@ -106,7 +109,7 @@ exports.getFollowedCases = async (req, res, next) => {
 
 const getCategories = async (caseID) => {
   let categories = [];
-  const cats = await CaseTaggedCategories.find({ caseID });
+  const cats = await CaseTaggedCategories.find({caseID});
   for (let i = 0; i < cats.length; i++) {
     const category = await CaseCategory.findById(cats[i].caseCategoryID);
     categories.push(category.categoryName);
@@ -124,7 +127,7 @@ exports.assignPartnerToCase = async (req, res, next) => {
         assignedPartnerUserId: req.body.assignedPartnerUserId,
         caseTypeStatus: req.body.caseTypeStatus,
       },
-      { new: true }
+      {new: true}
     );
     return successNoData(res, 200, "Partner assigned successfully");
   } catch (err) {
@@ -133,7 +136,7 @@ exports.assignPartnerToCase = async (req, res, next) => {
 };
 
 exports.getAllCase = async (req, res, next) => {
-  let { page = 1, limit = 20 } = req.query;
+  let {page = 1, limit = 20} = req.query;
   const filter = _.pick(req.query, [
     "resolutionStatus",
     "verificationStatus",
@@ -155,8 +158,8 @@ exports.getAllCase = async (req, res, next) => {
     const cases = await Case.find()
       .select(
         "caseID categoryGroupID descriptionOfIncident" +
-          " dateOfIncident verificationStatus reportType" +
-          " platformOfReort state lga resolutionStatus createdAt"
+        " dateOfIncident verificationStatus reportType" +
+        " platformOfReort state lga resolutionStatus createdAt"
       )
       .sort("-createdAt")
       .limit(limit * 1)
@@ -186,9 +189,9 @@ exports.getCase = async (req, res, next) => {
     let victim;
     let suspect;
     if (fetchedCase) {
-      witness = await CaseWitness.findOne({ caseID: req.params.id });
-      victim = await CaseVictim.findOne({ caseID: req.params.id });
-      suspect = await CaseSuspect.findOne({ caseID: req.params.id });
+      witness = await CaseWitness.findOne({caseID: req.params.id});
+      victim = await CaseVictim.findOne({caseID: req.params.id});
+      suspect = await CaseSuspect.findOne({caseID: req.params.id});
     }
     const data = {
       caseData: {
@@ -241,7 +244,7 @@ exports.updateExistingCase = async (req, res, next) => {
     const updatedCase = await Case.findByIdAndUpdate(
       existingCase._id,
       req.body,
-      { new: true }
+      {new: true}
     );
     return successWithData(res, 200, "case updated successfully", updatedCase);
   } catch (err) {
@@ -337,12 +340,12 @@ exports.saveEvidence = async (req, res, next) => {
 };
 
 exports.getPersonalCases = async (req, res, next) => {
-  let { page = 1, limit = 20 } = req.query;
+  let {page = 1, limit = 20} = req.query;
   try {
-    const cases = await Case.find({ publicUserID: req.user.id })
+    const cases = await Case.find({publicUserID: req.user.id})
       .select(
         "caseAvatar caseID descriptionOfIncident" +
-          " categoryGroupID assignedPartnerUserId"
+        " categoryGroupID assignedPartnerUserId"
       )
       .limit(limit * 1)
       .skip((page - 1) * limit)
@@ -373,8 +376,8 @@ exports.verifyCase = async (req, res, next) => {
       return successNoData(res, 200, "case verified already");
     await Case.findByIdAndUpdate(
       req.params.id,
-      { verificationStatus: req.body.verificationStatus },
-      { new: true }
+      {verificationStatus: req.body.verificationStatus},
+      {new: true}
     );
     return successNoData(res, 200, "Case verified successfully");
   } catch (err) {
@@ -399,10 +402,10 @@ exports.publishCase = async (req, res, next) => {
         publishedBy: req.user,
         datePublished: new Date(Date.now()),
       },
-      { new: true }
+      {new: true}
     ).select(
       "-followedBy -verificationStatus -resolutionStatus" +
-        " -areYouTheVictim -assignedPartnerUserId"
+      " -areYouTheVictim -assignedPartnerUserId"
     );
     return successWithData(
       res,
@@ -425,7 +428,7 @@ exports.resolveCase = async (req, res, next) => {
       {
         resolutionStatus: req.body.resolutionStatus,
       },
-      { new: true }
+      {new: true}
     );
     return successWithData(
       res,
@@ -440,7 +443,7 @@ exports.resolveCase = async (req, res, next) => {
 
 exports.getSinglePublicCase = async (req, res, next) => {
   let categories = [];
-  let userFollowStatus;
+  let userFollowStatus = false;
   try {
     const existingCase = await Case.findById(req.params.id);
     if (!existingCase) return normalError(res, 404, "case not found");
@@ -453,9 +456,10 @@ exports.getSinglePublicCase = async (req, res, next) => {
       );
       categories.push(category.categoryName);
     }
+    const publisher = await PartnerUser.findById(existingCase.publishedBy).select("firstName lastName middleName")
     if (req.authorized) {
       const loggedInUser = await PublicUser.findById(req.user._id);
-      const f = await FollowCase.findOne({ publicUserID: loggedInUser._id })
+      const f = await FollowCase.findOne({publicUserID: loggedInUser._id})
         .where("caseID")
         .in([req.params.id]);
       userFollowStatus = existingCase.followedBy.includes(f._id);
@@ -482,16 +486,19 @@ exports.getSinglePublicCase = async (req, res, next) => {
       ]),
       categories,
       userFollowStatus,
+      publisher
     };
     return successWithData(res, 200, "Fetched case", data);
-  } catch (err) {}
+  } catch (err) {
+  }
 };
 
 exports.getPublicCases = async (req, res, next) => {
+  const publicCases = [];
   const selectedFields = req.user
-    ? "caseAvatar caseTitle publishedBy datePublished categoryGroupID caseSummary"
-    : "caseAvatar caseTitle publishedBy datePublished categoryGroupID caseSummary";
-  let { page = 1, limit = 20 } = req.query;
+    ? "caseAvatar caseTitle datePublished categoryGroupID caseSummary"
+    : "caseAvatar caseTitle datePublished categoryGroupID caseSummary";
+  let {page = 1, limit = 20} = req.query;
   const filter = _.pick(req.query, [
     "resolutionStatus",
     "reportType",
@@ -504,14 +511,21 @@ exports.getPublicCases = async (req, res, next) => {
   try {
     const cases = await Case.find(filter)
       .sort("-createdAt")
-      .select(selectedFields)
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .exec();
 
     const count = await Case.countDocuments(filter).exec();
+    for (let i = 0; i < cases.length; i++) {
+      const publicCase = {
+        ..._.pick(cases[i], selectedFields.split(" ")),
+        publisher:
+          await PartnerUser.findById(cases[i].publishedBy).select("firstName lastName middleName")
+    }
+    publicCases.push(publicCase)
+    }
     const data = {
-      cases,
+      publicCases,
       total: Math.ceil(count / limit),
       page: parseInt(page),
     };

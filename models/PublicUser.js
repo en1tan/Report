@@ -4,7 +4,6 @@ const { customAlphabet } = require("nanoid");
 const nanoid = customAlphabet("0123456789", 10);
 
 const Schema = mongoose.Schema;
-
 const publicUserSchema = new Schema(
   {
     // First Name of the User

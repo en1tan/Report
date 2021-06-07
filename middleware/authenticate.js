@@ -1,14 +1,15 @@
 const jwt = require("jsonwebtoken");
 const PartnerUser = require("../models/partners/PartnerUser");
 const PublicUser = require("../models/PublicUser");
-const { authorizationError } = require("../utils/errorHandlers");
+const {authorizationError} = require("../utils/errorHandlers");
 
 module.exports = authenticate;
+
 function authenticate() {
   return async (req, res, next) => {
-    if (req.authorized) {
-      try {
-        let token;
+    let token;
+    try {
+      if (req.authorized) {
         if (
           req.headers.authorization &&
           req.headers.authorization.startsWith("Bearer")
@@ -19,19 +20,14 @@ function authenticate() {
         if (decoded.exp < Date.now().valueOf() / 1000)
           return authorizationError(res, "invalid token");
         if (!decoded.userType) {
-          const user = await PublicUser.findById(decoded.id);
-          req.user = user;
+          req.user = await PublicUser.findById(decoded.id);
         } else {
-          const user = await PartnerUser.findById(decoded.id);
-          req.user = user;
+          req.user = await PartnerUser.findById(decoded.id);
         }
-        next();
-      } catch (err) {
-        return authorizationError(res, "Unauthorized");
       }
-    } else {
-      return authorizationError(res, "you need a token");
       next();
+    } catch (err) {
+      return authorizationError(res, "Unauthorized");
     }
   };
 }
