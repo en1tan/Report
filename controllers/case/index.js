@@ -338,15 +338,20 @@ exports.saveEvidence = async (req, res, next) => {
     return tryCatchError(res, err);
   }
 };
-
+/**
+ * Fetch personal cases
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @param {*} next
+ * @returns {Promise<[]>}
+ */
 exports.getPersonalCases = async (req, res, next) => {
-  let {page = 1, limit = 20} = req.query;
   try {
-    const cases = await Case.find({publicUserID: req.user.id})
-      .select(
-        "caseAvatar caseID descriptionOfIncident" +
-        " categoryGroupID assignedPartnerUserId"
-      )
+    let {page = 1, limit = 20} = req.query;
+    let categories = [];
+    let personalCases = [];
+    const user = req.user ? req.user._id : "";
+    const cases = await Case.find({publicUserID: user})
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .sort("-createdAt")
@@ -354,8 +359,30 @@ exports.getPersonalCases = async (req, res, next) => {
     const count = await Case.countDocuments({
       publicUserID: req.user.id,
     });
+    for (let i = 0; i < cases.length; i++) {
+      const categoryIDs = await CaseTaggedCategories.find(
+        {caseID: cases[i]._id}
+      )
+      for (let c = 0; c < categoryIDs.length; c++) {
+        const category = await CaseCategory.findById(categoryIDs[c].caseCategoryID)
+        categories.push(category.categoryName)
+      }
+      const userFollowStatus = await FollowCase.findOne({caseID: cases[i]._id}).where("publicUserID").in([user])
+      const assignedPartner = await PartnerUser.findById(cases[i].assignedPartnerUserId).select("firstName middleName lastName")
+      personalCases.push({
+        ..._.pick(cases[i], [
+          "caseAvatar",
+          "caseID",
+          "descriptionOfIncident",
+          "categoryGroupID"
+        ]),
+        userFollowStatus: !!userFollowStatus,
+        assignedPartner,
+        categories
+      })
+    }
     const data = {
-      cases,
+      personalCases,
       total: Math.ceil(count / limit),
       page: parseInt(page),
     };
@@ -365,8 +392,14 @@ exports.getPersonalCases = async (req, res, next) => {
   }
 };
 
+/**
+ * Verify a case
+ * @param {Express.Request} req
+ * @param {Express.response} res
+ * @param {*} next
+ * @returns {Promise<{}>}
+ */
 exports.verifyCase = async (req, res, next) => {
-  console.log("here");
   try {
     const existingCase = await Case.findById(req.params.id).select(
       "-followedBy -areYouTheVictim"
@@ -385,6 +418,13 @@ exports.verifyCase = async (req, res, next) => {
   }
 };
 
+/**
+ * Publish Case
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @param {*} next
+ * @returns {Promise<{}>}
+ */
 exports.publishCase = async (req, res, next) => {
   try {
     const existingCase = await Case.findById(req.params.id);
@@ -418,6 +458,13 @@ exports.publishCase = async (req, res, next) => {
   }
 };
 
+/**
+ * Resolve a case
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @param {*} next
+ * @returns {Promise<{}>}
+ */
 exports.resolveCase = async (req, res, next) => {
   try {
     const existingCase = await Case.findById(req.params.id);
@@ -441,6 +488,14 @@ exports.resolveCase = async (req, res, next) => {
   }
 };
 
+/**
+ * Get a single public case
+ * Also supports log in status
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @param {*} next
+ * @returns {Promise<{}>}
+ */
 exports.getSinglePublicCase = async (req, res, next) => {
   let categories = [];
   let userFollowStatus = false;
@@ -493,11 +548,21 @@ exports.getSinglePublicCase = async (req, res, next) => {
   }
 };
 
+/**
+ * Get public cases
+ * Also supports log in status
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @param {*} next
+ * @returns {Promise<[]>}
+ */
 exports.getPublicCases = async (req, res, next) => {
   const publicCases = [];
   const selectedFields = req.user
-    ? "caseAvatar caseTitle datePublished categoryGroupID caseSummary"
-    : "caseAvatar caseTitle datePublished categoryGroupID caseSummary";
+    ? "_id __v caseAvatar caseTitle datePublished categoryGroupID" +
+    " caseSummary"
+    : "_id __v caseAvatar caseTitle datePublished categoryGroupID" +
+    " caseSummary";
   let {page = 1, limit = 20} = req.query;
   const filter = _.pick(req.query, [
     "resolutionStatus",
@@ -514,15 +579,17 @@ exports.getPublicCases = async (req, res, next) => {
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .exec();
-
     const count = await Case.countDocuments(filter).exec();
     for (let i = 0; i < cases.length; i++) {
+      const user = req.user ? req.user._id : "";
+      const userFollowStatus = await FollowCase.findOne({caseID: cases[i]._id}).where("publicUserID").in([user])
       const publicCase = {
         ..._.pick(cases[i], selectedFields.split(" ")),
         publisher:
-          await PartnerUser.findById(cases[i].publishedBy).select("firstName lastName middleName")
-    }
-    publicCases.push(publicCase)
+          await PartnerUser.findById(cases[i].publishedBy).select("firstName lastName middleName"),
+        followStatus: !!userFollowStatus
+      }
+      publicCases.push(publicCase)
     }
     const data = {
       publicCases,

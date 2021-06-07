@@ -5,7 +5,7 @@ const {authorizationError} = require("../utils/errorHandlers");
 
 module.exports = authenticate;
 
-function authenticate() {
+function authenticate(status= false) {
   return async (req, res, next) => {
     let token;
     try {
@@ -24,7 +24,8 @@ function authenticate() {
         } else {
           req.user = await PartnerUser.findById(decoded.id);
         }
-      }
+      } else if(!req.authorized && status===true)
+        return authorizationError(res,"Unauhorized")
       next();
     } catch (err) {
       return authorizationError(res, "Unauthorized");

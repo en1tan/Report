@@ -892,6 +892,11 @@
         "tags": [
           "Public"
         ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "description": "Filter by Resolution Status",
@@ -956,7 +961,6 @@
             "description": "Filter by Case Type Status",
             "in": "query",
             "name": "caseTypeStatus",
-            "example": "Case",
             "schema": {
               "type": "string",
               "enum": [
@@ -1016,7 +1020,8 @@
                           "_id": "60bb9a66ae288b566f0428f5",
                           "firstName": "Admin",
                           "lastName": "Sorosoke"
-                        }
+                        },
+                        "followStatus": false
                       }
                     ],
                     "total": 1,
@@ -2011,17 +2016,56 @@
                 "example": {
                   "status": "success",
                   "message": "Fetched Personal Cases",
-                  "cases": [
-                    {
-                      "_id": "60b2b1c551929b3f8b7a7e83",
-                      "caseAvatar": "",
-                      "categoryGroupID": "60b2b051f4ff133eeaaaca1a",
-                      "descripionOfIncident": "",
-                      "assignedPartnerID": "",
-                      "caseID": "SCSE44766",
-                      "__v": 0
-                    }
-                  ]
+                  "data": {
+                    "personalCases": [
+                      {
+                        "caseAvatar": "https://via.placeholder.com/150",
+                        "caseID": "SCSE02100",
+                        "descriptionOfIncident": "A friend got swatted",
+                        "categoryGroupID": "60b2b051f4ff133eeaaaca1a",
+                        "userFollowStatus": true,
+                        "assignedPartner": {
+                          "_id": "60bb9182a613c75be1bc5ca2",
+                          "firstName": "Staff",
+                          "lastName": "Sorosoke"
+                        },
+                        "categories": [
+                          "Assault",
+                          "Assault",
+                          "Assault",
+                          "Assault"
+                        ]
+                      },
+                      {
+                        "caseAvatar": "https://via.placeholder.com/150",
+                        "caseID": "SCSE75170",
+                        "descriptionOfIncident": "A friend got swatted",
+                        "categoryGroupID": "60b2b051f4ff133eeaaaca1a",
+                        "userFollowStatus": true,
+                        "assignedPartner": null,
+                        "categories": [
+                          "Assault",
+                          "Assault",
+                          "Assault",
+                          "Assault"
+                        ]
+                      },
+                      {
+                        "caseAvatar": "https://via.placeholder.com/150",
+                        "caseID": "SCSE41524",
+                        "descriptionOfIncident": "A friend got swatted",
+                        "categoryGroupID": "60b2b051f4ff133eeaaaca1a",
+                        "userFollowStatus": true,
+                        "assignedPartner": null,
+                        "categories": [
+                          "Assault",
+                          "Assault",
+                          "Assault",
+                          "Assault"
+                        ]
+                      }
+                    ]
+                  }
                 }
               }
             }

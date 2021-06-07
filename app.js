@@ -1,17 +1,14 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-const yamljs = require("yamljs");
 const doc = require("./swagger.json");
 
-const swaggerUI = require("swagger-ui-express"),
-  swaggerDoc = yamljs.load("./api.yaml");
+const swaggerUI = require("swagger-ui-express");
 
 const app = express();
 
 const queryAuth = require("./utils/queryAuth");
 const routes = require("./routes");
-const path = require("path");
 
 //cors
 app.use(cors({ origin: true }));
