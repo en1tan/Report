@@ -2,6 +2,7 @@ const express = require("express");
 const caseController = require("../../controllers/case");
 const authorize = require("../../middleware/authorization");
 const router = express.Router();
+const auth = require('../../middleware/authenticate')
 
 router.post("/create", caseController.createCase);
 router.get(
@@ -9,12 +10,11 @@ router.get(
   authorize(["super-admin", "admin", "staff", "verifier"]),
   caseController.getAllCase
 );
-router.get("/personal", caseController.getPersonalCases);
+router.get("/personal", auth(), caseController.getPersonalCases);
 router.patch("/:id/update", caseController.updateExistingCase);
 router.get("/followed", caseController.getFollowedCases);
 router.get("/:id", caseController.getCase);
 
-router.post("/create/:caseID/caseVictim", caseController.createCaseVictim);
 router.post("/create/:caseID/caseSuspect", caseController.createCaseSuspect);
 router.post("/create/:caseID/caseWitness", caseController.createCaseWitness);
 router.post(

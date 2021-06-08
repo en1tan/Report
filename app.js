@@ -1,11 +1,9 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const doc = require("./swagger.json");
 
-const yamljs = require("yamljs");
-
-const swaggerUI = require("swagger-ui-express"),
-  swaggerDoc = yamljs.load("./api.yaml");
+const swaggerUI = require("swagger-ui-express");
 
 const app = express();
 
@@ -29,12 +27,12 @@ app.use("/api/v1/", queryAuth(), routes);
 app.use(
   "/docs",
   (req, res, next) => {
-    swaggerDoc.host = req.get("host");
-    req.swaggerDoc = swaggerDoc;
+    doc.host = req.get("host");
+    req.doc = doc;
     next();
   },
   swaggerUI.serve,
-  swaggerUI.setup(swaggerDoc)
+  swaggerUI.setup(doc)
 );
 
 module.exports = app;

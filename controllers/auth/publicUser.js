@@ -6,6 +6,7 @@ const {
   tryCatchError,
   normalError,
   authorizationError,
+  validationError
 } = require("../../utils/errorHandlers");
 const { successWithData } = require("../../utils/successHandler");
 
@@ -24,8 +25,9 @@ const createSendToken = (user, statusCode, res, message) => {
   return successWithData(res, statusCode, message, data);
 };
 
-exports.signup = async (req, res, next) => {
+exports.signup = async function (req, res, next) {
   const { email, userName } = req.body;
+  userName.toLowerCase();
   try {
     const user = await User.findOne({ email }).select("-password");
     if (user || (await User.findOne({ userName }))) {
@@ -45,16 +47,11 @@ exports.signup = async (req, res, next) => {
 
 exports.signin = async (req, res, next) => {
   const { userName, password } = req.body;
+  userName.toLowerCase()
   try {
     const user = await User.findOne({ userName }).select("+password");
-    if (
-      !user ||
-      !(await user.correctPassword(password, user.password))
-    ) {
-      return authorizationError(
-        res,
-        "Username or password is incorrrect"
-      );
+    if (!user || !(await user.correctPassword(password, user.password))) {
+      return authorizationError(res, "Username or password is incorrrect");
     }
     await User.findByIdAndUpdate(
       user._id,
@@ -78,17 +75,10 @@ exports.editAccount = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id);
     if (!user) return validationError(res, "Authentication error");
-    const updatedUser = await User.findByIdAndUpdate(
-      user._id,
-      req.body,
-      { new: true }
-    );
-    return successWithData(
-      res,
-      200,
-      "User records updated successfully",
-      updatedUser
-    );
+    const updatedUser = await User.findByIdAndUpdate(user._id, req.body, {
+      new: true,
+    });
+    return successWithData(res, 200, "User records updated successfully", updatedUser);
   } catch (err) {
     return tryCatchError(res, err);
   }

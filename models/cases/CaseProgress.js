@@ -1,15 +1,8 @@
 const mongoose = require("mongoose");
-const { genIDs } = require("../../utils/genID");
-
 const Schema = mongoose.Schema;
 
 const caseProgressSchema = new Schema(
   {
-    // Unique Identifier of the case progress
-    progressID: {
-      type: String,
-    },
-
     // ID of the Case
     caseID: {
       type: mongoose.Schema.Types.ObjectId,
@@ -54,11 +47,6 @@ const caseProgressSchema = new Schema(
   },
   { timestamps: true },
 );
-
-caseProgressSchema.pre("save", function (next) {
-  this.progressID = genIDs("SPGD");
-  next();
-});
 
 const CaseProgress = mongoose.model(
   "CaseProgress",

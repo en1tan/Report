@@ -1,9 +1,5 @@
 const mongoose = require("mongoose");
-const { customAlphabet } = require("nanoid");
-const nanoid = customAlphabet(
-  "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-  10
-);
+const {genIDs} = require("../../utils/genID");
 
 const Schema = mongoose.Schema;
 
@@ -12,7 +8,6 @@ const partnerBranchSchema = new Schema(
     // Unique Identifier of Branch
     branchID: {
       type: String,
-      default: () => nanoid(),
     },
 
     // ID of the Parent Organization
@@ -53,8 +48,13 @@ const partnerBranchSchema = new Schema(
       type: String,
     },
   },
-  { timestamps: true }
+  {timestamps: true}
 );
+
+partnerBranchSchema.pre('save', function (next) {
+  this.branchID = genIDs("SPRB");
+  next();
+})
 
 const PartnerBranch = mongoose.model(
   "PartnerBranch",

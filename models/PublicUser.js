@@ -1,12 +1,13 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const { customAlphabet } = require("nanoid");
-const nanoid = customAlphabet("0123456789", 10);
-
+const {genIDs} = require("../utils/genID");
 const Schema = mongoose.Schema;
 
 const publicUserSchema = new Schema(
   {
+    //Public User ID
+    userID:{
+      type: String
+    },
     // First Name of the User
     firstName: {
       type: String,
@@ -118,6 +119,7 @@ const publicUserSchema = new Schema(
 );
 
 publicUserSchema.pre("save", async function (next) {
+  this.userID=genIDs("SUSR");
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 12);
   next();
