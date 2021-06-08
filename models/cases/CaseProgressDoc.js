@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { genProgressDocID } = require("../../utils/genID");
+const { genIDs } = require("../../utils/genID");
 
 const Schema = mongoose.Schema;
 
@@ -8,7 +8,6 @@ const caseProgressDocSchema = new Schema(
     // ID of the File
     docID: {
       type: String,
-      default: genProgressDocID,
     },
 
     // ID of the Case Progress
@@ -30,6 +29,11 @@ const caseProgressDocSchema = new Schema(
   },
   { timestamps: true },
 );
+
+caseProgressDocSchema.pre('save',function(next){
+  this.docID = genIDs("SPGD");
+  next();
+})
 
 const CaseProgressDoc = mongoose.model(
   "CaseProgressDoc",

@@ -2547,66 +2547,6 @@
         }
       }
     },
-    "/case/edit/{id}/evidence": {
-      "patch": {
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "summary": "Edit case evidence",
-        "tags": [
-          "Case"
-        ],
-        "parameters": [
-          {
-            "description": "Case ID",
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CaseEvidence"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Case evidence edited successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "status": {
-                      "type": "string"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "case": {
-                          "$ref": "#/components/schemas/Case"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/case/category/groups": {
       "get": {
         "security": [
@@ -3282,7 +3222,7 @@
         }
       }
     },
-    "/victimm/{id}/update": {
+    "/victim/{id}/update": {
       "patch": {
         "security": [
           {
@@ -3549,11 +3489,6 @@
     },
     "/contact/create": {
       "post": {
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
         "summary": "Request contact details",
         "tags": [
           "Misc"
@@ -3563,6 +3498,13 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/Contact"
+              },
+              "example": {
+                "phoneNumber": "08012345678",
+                "email": "sorsoke@example.com",
+                "subject": "Help!",
+                "message": "egami ooooo",
+                "senderName": "Tunde Udo Muhammed"
               }
             }
           }
@@ -3571,9 +3513,20 @@
           "201": {
             "description": "Contact details requested",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Contact"
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "status": "success",
+                  "message": "Contact requested successfully"
                 }
               }
             }
@@ -5173,20 +5126,16 @@
         "required": [
           "email",
           "subject",
-          "message"
+          "message",
+          "senderName"
         ],
         "properties": {
           "ticketID": {
             "type": "string",
-            "format": "uuid",
             "readOnly": true
           },
           "senderName": {
             "type": "string"
-          },
-          "userID": {
-            "readOnly": true,
-            "$ref": "#/components/schemas/PublicUser"
           },
           "phoneNumber": {
             "type": "string"

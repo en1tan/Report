@@ -418,7 +418,7 @@ exports.publishCase = async (req, res, next) => {
       {
         ...req.body,
         publishedBy: req.user,
-        datePublished: new Date(Date.now()),
+        datePublished: new Date(Date.now()).toISOString(),
       },
       {new: true}
     ).select(

@@ -1,10 +1,5 @@
 const mongoose = require("mongoose");
-const { customAlphabet } = require("nanoid");
-const nanoid = customAlphabet(
-  "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-  10,
-);
-
+const {genIDs} = require("../utils/genID");
 const Schema = mongoose.Schema;
 
 const contactUsSchema = new Schema(
@@ -12,18 +7,11 @@ const contactUsSchema = new Schema(
     // ID of contact us ticket
     ticketID: {
       type: String,
-      default: () => nanoid(),
     },
 
     // Sender Name
     senderName: {
       type: String,
-    },
-
-    // ID of Public User
-    userID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "PublicUser",
     },
 
     // Phone number supplied from the currently logged in user
@@ -54,8 +42,13 @@ const contactUsSchema = new Schema(
       type: String,
     },
   },
-  { timestamps: true },
+  {timestamps: true},
 );
+
+contactUsSchema.pre('save', function (next) {
+  this.ticketID = genIDs("SCTC");
+  next();
+})
 
 const ContactUs = mongoose.model("ContactUs", contactUsSchema);
 

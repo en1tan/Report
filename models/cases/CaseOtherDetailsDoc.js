@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { genOtherDetails } = require("../../utils/genID");
+const {genIDs} = require("../../utils/genID");
 
 const Schema = mongoose.Schema;
 
@@ -14,7 +14,6 @@ const caseOtherDetailsDocSchema = new Schema(
     // Unique Identifier of the file attached to a reply convo
     docID: {
       type: String,
-      default: genOtherDetails,
     },
 
     // Document Title
@@ -33,8 +32,13 @@ const caseOtherDetailsDocSchema = new Schema(
       default: Date.now(),
     },
   },
-  { timestamps: true },
+  {timestamps: true},
 );
+
+caseOtherDetailsDocSchema.pre('save', function (next) {
+  this.docID = genIDs("SODD");
+  next();
+})
 
 const CaseOtherDetailsDoc = mongoose.model(
   "CaseOtherDetailsDoc",

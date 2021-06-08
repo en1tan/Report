@@ -1,11 +1,5 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const { customAlphabet } = require("nanoid");
-const nanoid = customAlphabet(
-  "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-  10,
-);
-
+const {genIDs} = require("../../utils/genID");
 const Schema = mongoose.Schema;
 
 const partnerSchema = new Schema(
@@ -13,7 +7,6 @@ const partnerSchema = new Schema(
     // Unique identifier of Sorosoke partner Organization
     partnerID: {
       type: String,
-      default: () => nanoid(),
     },
 
     // Full Name of Partner Organization
@@ -74,8 +67,13 @@ const partnerSchema = new Schema(
       type: String,
     },
   },
-  { timestamps: true },
+  {timestamps: true},
 );
+
+partnerSchema.pre('save', function (next) {
+  this.partnerID = genIDs("SPTR");
+  next();
+})
 
 const Partner = mongoose.model("Partner", partnerSchema);
 

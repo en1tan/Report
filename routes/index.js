@@ -25,7 +25,7 @@ router.use("/case", auth(true), cases);
 router.use("/organization", organization);
 router.use("/progress", progress);
 router.use("/details", details);
-router.use("/contact", auth(true), contact);
+router.use("/contact", contact);
 router.use("/comment", comment);
 router.use("/victim",auth(true), victim);
 router.all("*", error.globalErrors);

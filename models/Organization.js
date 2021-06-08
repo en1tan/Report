@@ -1,17 +1,11 @@
 const mongoose = require("mongoose");
-const { customAlphabet } = require("nanoid");
-const nanoid = customAlphabet(
-  "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-  10,
-);
-
+const {genIDs} = require("../utils/genID");
 const Schema = mongoose.Schema;
 
 const organizationSchema = new Schema({
   // Unique Identification code for the organization on the platform
   orgID: {
     type: String,
-    default: () => nanoid(),
   },
 
   // Full Name of the organization
@@ -86,6 +80,11 @@ const organizationSchema = new Schema({
   // ID of the official that added the organization to the platform
   addedBy: String,
 });
+
+organizationSchema.pre('save', function (next) {
+  this.orgID = genIDs("SORG");
+  next();
+})
 
 const Organization = mongoose.model(
   "Organization",

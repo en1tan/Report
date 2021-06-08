@@ -1,11 +1,5 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const { customAlphabet } = require("nanoid");
-const nanoid = customAlphabet(
-  "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-  10
-);
-
+const {genIDs} = require("../../utils/genID");
 const Schema = mongoose.Schema;
 
 const partnerUserSchema = new Schema(
@@ -13,7 +7,6 @@ const partnerUserSchema = new Schema(
     // Unique Identifier of the User
     userID: {
       type: String,
-      default: () => nanoid(),
     },
 
     // ID of the User's Organization
@@ -126,10 +119,11 @@ const partnerUserSchema = new Schema(
       default: true,
     },
   },
-  { timestamps: true }
+  {timestamps: true}
 );
 
 partnerUserSchema.pre("save", async function (next) {
+  this.userID = genIDs("SPRU");
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 12);
   next();
@@ -143,11 +137,11 @@ partnerUserSchema.methods.correctPassword = async function (
 };
 
 partnerUserSchema.pre("find", function () {
-  this.where({ active: true });
+  this.where({active: true});
 });
 
 partnerUserSchema.pre("findOne", function () {
-  this.where({ active: true });
+  this.where({active: true});
 });
 
 const PartnerUser = mongoose.model("PartnerUser", partnerUserSchema);
