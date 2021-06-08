@@ -244,21 +244,6 @@ exports.updateExistingCase = async (req, res, next) => {
   }
 };
 
-exports.createCaseSuspect = async (req, res, next) => {
-  try {
-    const newSuspect = await CaseSuspect.create({
-      ...req.body,
-      caseID: req.params.caseID,
-    });
-    const data = {
-      suspect: newSuspect,
-    };
-    return successWithData(res, 200, "Suspect has been successfully added to the case file", data);
-  } catch (err) {
-    return tryCatchError(res, err);
-  }
-};
-
 exports.createCaseWitness = async (req, res, next) => {
   try {
     const newWitness = await CaseWitness.create({
