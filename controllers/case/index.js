@@ -213,14 +213,6 @@ exports.createCase = async (req, res, next) => {
       ...req.body,
       publicUserID: req.user,
     });
-    const follow = await FollowCase.create({
-      caseID: newCase._id,
-      publicUserID: req.user._id,
-      followStatus: true,
-    });
-    const eCase = await Case.findById(newCase._id);
-    eCase.followedBy.push(follow);
-    await eCase.save();
     const categories = req.body.categories.split(",");
     for (let i = 0; i < categories.length; i++) {
       await CaseTaggedCategories.create({

@@ -6,6 +6,7 @@ const {
   tryCatchError,
   normalError,
   authorizationError,
+  validationError
 } = require("../../utils/errorHandlers");
 const { successWithData } = require("../../utils/successHandler");
 
@@ -26,6 +27,7 @@ const createSendToken = (user, statusCode, res, message) => {
 
 exports.signup = async function (req, res, next) {
   const { email, userName } = req.body;
+  userName.toLowerCase();
   try {
     const user = await User.findOne({ email }).select("-password");
     if (user || (await User.findOne({ userName }))) {
@@ -45,6 +47,7 @@ exports.signup = async function (req, res, next) {
 
 exports.signin = async (req, res, next) => {
   const { userName, password } = req.body;
+  userName.toLowerCase()
   try {
     const user = await User.findOne({ userName }).select("+password");
     if (!user || !(await user.correctPassword(password, user.password))) {

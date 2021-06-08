@@ -2246,108 +2246,6 @@
         }
       }
     },
-    "/case/create/{caseID}/caseVictim": {
-      "post": {
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "summary": "Add case victim",
-        "tags": [
-          "Case"
-        ],
-        "parameters": [
-          {
-            "description": "Case ID",
-            "in": "path",
-            "name": "caseID",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "60b2b1c551929b3f8b7a7e83"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CaseVictim"
-              },
-              "example": {
-                "firstNameOfVictim": "John",
-                "lastNameOfVictim": "Doe",
-                "emailOfVictim": "johndoe@vict.com",
-                "phoneNumberOfVictim": "08035468521",
-                "genderOfVictim": "Male",
-                "residentialAddressOfVictim": "12, Vitc Cl.",
-                "relationshipWithVictim": "Friend",
-                "middleNameOfVictim": "",
-                "addressLandmark": "",
-                "lgaOfVictim": "",
-                "stateOfVictim": "",
-                "countryOfVictim": "",
-                "victimOccupation": "",
-                "victimOrganizationType": "Private",
-                "victimOrganizationName": "",
-                "otherDetailsOfVictim": "",
-                "disabilityStatus": "",
-                "religion": ""
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Victim added successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "status": {
-                      "type": "string"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "victim": {
-                          "$ref": "#/components/schemas/CaseVictim"
-                        }
-                      }
-                    }
-                  }
-                },
-                "example": {
-                  "status": "success",
-                  "message": "Victim Created Succesfully",
-                  "data": {
-                    "victim": {
-                      "_id": "60b417bced9c8c3106ecc3fa",
-                      "firstNameOfVictim": "John",
-                      "lastNameOfVictim": "Doe",
-                      "emailOfVictim": "johndoe@vict.com",
-                      "phoneNumberOfVictim": "08035468521",
-                      "genderOfVictim": "Male",
-                      "residentialAddressOfVictim": "12, Vitc Cl.",
-                      "relationshipWithVictim": "Friend",
-                      "caseID": "60b417a0ed9c8c3106ecc3f9",
-                      "createdAt": "2021-05-30T22:54:52.960Z",
-                      "updatedAt": "2021-05-30T22:54:52.960Z",
-                      "caseVictimID": "SCEV56754",
-                      "__v": 0
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/case/create/{caseID}/caseSuspect": {
       "post": {
         "security": [
@@ -3249,7 +3147,7 @@
         }
       }
     },
-    "/victim": {
+    "/victim/{id}/all": {
       "get": {
         "summary": "Get all victims",
         "security": [
@@ -3268,7 +3166,9 @@
             }
           }
         ],
-        "tags": ["Victim"],
+        "tags": [
+          "Victim"
+        ],
         "responses": {
           "201": {
             "description": "Fetched victims",
@@ -3310,6 +3210,218 @@
                     }
                   ]
                 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/victim/{id}": {
+      "get": {
+        "tags": [
+          "Victim"
+        ],
+        "summary": "Get a victim",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "description": "Victim ID",
+            "in": "path",
+            "required": true,
+            "name": "id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Victim returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/CaseVictim"
+                    }
+                  }
+                },
+                "example": {
+                  "firstNameOfVictim": "John",
+                  "lastNameOfVictim": "Doe",
+                  "emailOfVictim": "johndoe@vict.com",
+                  "phoneNumberOfVictim": "08035468521",
+                  "genderOfVictim": "Male",
+                  "residentialAddressOfVictim": "12, Vitc Cl.",
+                  "relationshipWithVictim": "Friend",
+                  "middleNameOfVictim": "",
+                  "addressLandmark": "",
+                  "lgaOfVictim": "",
+                  "stateOfVictim": "",
+                  "countryOfVictim": "",
+                  "victimOccupation": "",
+                  "victimOrganizationType": "Private",
+                  "victimOrganizationName": "",
+                  "otherDetailsOfVictim": "",
+                  "disabilityStatus": "",
+                  "religion": ""
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/victimm/{id}/update": {
+      "patch": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Update victim details",
+        "tags": [
+          "Victim"
+        ],
+        "parameters": [
+          {
+            "description": "Victim ID",
+            "in": "path",
+            "required": true,
+            "name": "id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CaseVictim"
+              },
+              "example": {
+                "firstNameOfVictim": "John",
+                "lastNameOfVictim": "Doe",
+                "emailOfVictim": "johndoe@vict.com",
+                "phoneNumberOfVictim": "08035468521",
+                "genderOfVictim": "Male",
+                "residentialAddressOfVictim": "12, Vitc Cl.",
+                "relationshipWithVictim": "Friend",
+                "middleNameOfVictim": "",
+                "addressLandmark": "",
+                "lgaOfVictim": "",
+                "stateOfVictim": "",
+                "countryOfVictim": "",
+                "victimOccupation": "",
+                "victimOrganizationType": "Private",
+                "victimOrganizationName": "",
+                "otherDetailsOfVictim": "",
+                "disabilityStatus": "",
+                "religion": ""
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Victim updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/CaseVictim"
+                    }
+                  }
+                },
+                "example": {
+                  "firstNameOfVictim": "John",
+                  "lastNameOfVictim": "Doe",
+                  "emailOfVictim": "johndoe@vict.com",
+                  "phoneNumberOfVictim": "08035468521",
+                  "genderOfVictim": "Male",
+                  "residentialAddressOfVictim": "12, Vitc Cl.",
+                  "relationshipWithVictim": "Friend",
+                  "middleNameOfVictim": "",
+                  "addressLandmark": "",
+                  "lgaOfVictim": "",
+                  "stateOfVictim": "",
+                  "countryOfVictim": "",
+                  "victimOccupation": "",
+                  "victimOrganizationType": "Private",
+                  "victimOrganizationName": "",
+                  "otherDetailsOfVictim": "",
+                  "disabilityStatus": "",
+                  "religion": ""
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/victim/{id}/delete": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Delete case victim",
+        "tags": ["Victim"],
+        "parameters": [
+          {
+            "description": "Victim ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CaseVictim"
+              },
+              "example": {
+                "firstNameOfVictim": "John",
+                "lastNameOfVictim": "Doe",
+                "emailOfVictim": "johndoe@vict.com",
+                "phoneNumberOfVictim": "08035468521",
+                "genderOfVictim": "Male",
+                "residentialAddressOfVictim": "12, Vitc Cl.",
+                "relationshipWithVictim": "Friend",
+                "middleNameOfVictim": "",
+                "addressLandmark": "",
+                "lgaOfVictim": "",
+                "stateOfVictim": "",
+                "countryOfVictim": "",
+                "victimOccupation": "",
+                "victimOrganizationType": "Private",
+                "victimOrganizationName": "",
+                "otherDetailsOfVictim": "",
+                "disabilityStatus": "",
+                "religion": ""
               }
             }
           }
