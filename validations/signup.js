@@ -7,10 +7,10 @@ module.exports = signupValidation = (data) => {
   let errors = {};
 
   if (!validator.isLength(data.firstName, { min: 2, max: 30 })) {
-    errors.firstName = "firstName must be between 2 and 30 characters";
+    errors.firstName = "First Name must be between 2 and 30 characters";
   }
   if (!validator.isLength(data.lastName, { min: 2, max: 30 })) {
-    errors.lastName = "lastName must be between 2 and 30 characters";
+    errors.lastName = "Last Name must be between 2 and 30 characters";
   }
   if (!validator.isEmail(data.email)) {
     errors.email = "Email is invalid";

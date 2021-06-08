@@ -14,10 +14,10 @@ function authenticate() {
           req.headers.authorization.startsWith("Bearer")
         )
           token = req.headers.authorization.split(" ")[1];
-        if (!token) return authorizationError(res, "you need a token");
+        if (!token) return authorizationError(res, "You need a token");
         const decoded = await jwt.verify(token, process.env.JWT_SECRET);
         if (decoded.exp < Date.now().valueOf() / 1000)
-          return authorizationError(res, "invalid token");
+          return authorizationError(res, "Invalid token");
         if (!decoded.userType) {
           const user = await PublicUser.findById(decoded.id);
           req.user = user;
@@ -30,7 +30,7 @@ function authenticate() {
         return authorizationError(res, "Unauthorized");
       }
     } else {
-      return authorizationError(res, "you need a token");
+      return authorizationError(res, "You need a token");
       next();
     }
   };

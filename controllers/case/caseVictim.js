@@ -9,7 +9,7 @@ exports.createCaseVictim = async (req, res, next) => {
     return successWithData(
       res,
       201,
-      "case victim created",
+      "Victim has been successfully added to the case file",
       newVictim
     );
   } catch (err) {

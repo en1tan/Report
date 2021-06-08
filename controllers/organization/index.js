@@ -22,7 +22,7 @@ exports.createOrganization = async (req, res, next) => {
     return successWithData(
       res,
       200,
-      "Organization Created Succesfully",
+      "Organization profile created succesfully",
       data,
     );
   } catch (err) {

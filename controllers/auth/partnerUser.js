@@ -36,7 +36,7 @@ exports.signup = async (req, res, next) => {
     return successWithData(
       res,
       201,
-      "Partner user created successfully",
+      "Admin user created successfully",
       newUser
     );
   } catch (err) {
@@ -58,7 +58,7 @@ exports.signin = async (req, res, next) => {
       { new: true }
     );
 
-    createSendToken(user, 200, res, "User Authorized");
+    createSendToken(user, 200, res, "User authorized");
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -75,7 +75,7 @@ exports.editAccount = async (req, res, next) => {
     const updatedUser = await User.findByIdAndUpdate(user._id, req.body, {
       new: true,
     });
-    return successWithData(res, 200, "User updated successfully", updatedUser);
+    return successWithData(res, 200, "User records updated successfully", updatedUser);
   } catch (err) {
     return tryCatchError(res, err);
   }

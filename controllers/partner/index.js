@@ -18,7 +18,7 @@ exports.getAllStaff = async (req, res, next) => {
       return normalError(
         res,
         404,
-        "partner organization does not exist"
+        "Partner organization does not exist"
       );
     const staffs = await PartnerUser.find(filter)
       .sort("-createdAt")
@@ -41,7 +41,7 @@ exports.editStaff = async (req, res, next) => {
   try {
     const staff = await PartnerUser.findById(req.params.id);
     if (!staff)
-      return normalError(res, 404, "partner user data not found");
+      return normalError(res, 404, "Partner user data not found");
     const updatedStaff = await PartnerUser.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -50,7 +50,7 @@ exports.editStaff = async (req, res, next) => {
     return successWithData(
       res,
       200,
-      "partner user updated successfully.",
+      "Partner user records updated successfully.",
       updatedStaff
     );
   } catch (err) {
@@ -62,14 +62,14 @@ exports.deleteStaff = async (req, res, next) => {
   try {
     const staff = await PartnerUser.findById(req.params.id);
     if (!staff)
-      return normalError(res, 404, "partner user data not found");
+      return normalError(res, 404, "Partner user data not found");
     await PartnerUser.findByIdAndUpdate(req.params.id, {
       active: false,
     });
     return successNoData(
       res,
       200,
-      "partner user deleted successfully."
+      "Partner user record deleted successfully."
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -93,7 +93,7 @@ exports.getAllPartners = async (req, res, next) => {
     return successWithData(
       res,
       200,
-      "fetched all partner organizations",
+      "Fetched all partner organizations",
       data
     );
   } catch (err) {
@@ -109,7 +109,7 @@ exports.createPartnerOrganization = async (req, res, next) => {
     return successWithData(
       res,
       201,
-      "partner organization created",
+      "Partner organization created successfully",
       partnerOrg
     );
   } catch (err) {
@@ -121,7 +121,7 @@ exports.addBranchToPartnerOrganization = async (req, res, next) => {
   try {
     const partnerOrg = await Partner.findById(req.params.id);
     if (!partnerOrg)
-      return normalError(res, 404, "partner organization not found");
+      return normalError(res, 404, "Partner organization not found");
     const branchData = Object.assign(req.body, {
       partnerID: req.params.id,
     });
@@ -129,7 +129,7 @@ exports.addBranchToPartnerOrganization = async (req, res, next) => {
     return successWithData(
       res,
       201,
-      "branch created successfully",
+      "Partner organization branch created successfully",
       branch
     );
   } catch (err) {

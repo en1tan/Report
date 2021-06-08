@@ -51,7 +51,7 @@ module.exports = (validator, property) => async (req, res, next) => {
     return res.status(500).send({
       status: false,
       statusCode: 500,
-      message: "request cannot be validated. please try again",
+      message: "Request cannot be validated. Please try again",
       data: null,
     });
   const { error } = validatorFunc.validate(req[property]);

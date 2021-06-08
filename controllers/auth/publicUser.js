@@ -35,7 +35,7 @@ exports.signup = async (req, res, next) => {
     const newUser = await User.create({
       ...req.body,
     });
-    return successWithData(res, 201, "User succesfully created", {
+    return successWithData(res, 201, "User created succesfully", {
       user: newUser,
     });
   } catch (err) {
@@ -53,7 +53,7 @@ exports.signin = async (req, res, next) => {
     ) {
       return authorizationError(
         res,
-        "username or password is incorrrect"
+        "Username or password is incorrrect"
       );
     }
     await User.findByIdAndUpdate(
@@ -62,14 +62,14 @@ exports.signin = async (req, res, next) => {
       { new: true }
     );
     const data = _.omit(user.toObject(), "password");
-    createSendToken(data, 200, res, "User Authorized");
+    createSendToken(data, 200, res, "User authorized");
   } catch (err) {
     return tryCatchError(res, err);
   }
 };
 
 exports.profile = async (req, res, next) => {
-  if (!req.user) return authorizationError(res, "user unauthorized");
+  if (!req.user) return authorizationError(res, "User unauthorized");
   const data = _.omit(req.user.toObject(), "password");
   return successWithData(res, 200, "User details", data);
 };
@@ -86,7 +86,7 @@ exports.editAccount = async (req, res, next) => {
     return successWithData(
       res,
       200,
-      "User updated successfully",
+      "User records updated successfully",
       updatedUser
     );
   } catch (err) {

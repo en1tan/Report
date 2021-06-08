@@ -19,7 +19,7 @@ exports.createContact = async (req, res, next) => {
     return successWithData(
       res,
       200,
-      "Contact Request Created Succesfully",
+      "Contact enquiry submitted succesfully",
       data,
     );
   } catch (err) {

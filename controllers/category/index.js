@@ -24,7 +24,7 @@ exports.createCaseCategoryGroup = async (req, res, next) => {
     const data = {
       group: newGroup,
     };
-    return successWithData(res, 201, "Case Group Created Succesfully", data);
+    return successWithData(res, 201, "Case category group created succesfully", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -40,7 +40,7 @@ exports.editCaseCategoryGroup = async (req, res, next) => {
     return successWithData(
       res,
       200,
-      "Case Group updated successfully",
+      "Case category group updated successfully",
       updatedCase
     );
   } catch (err) {
@@ -51,7 +51,7 @@ exports.editCaseCategoryGroup = async (req, res, next) => {
 exports.deleteCaseCategoryGroup = async (req, res, next) => {
   try {
     await CaseCategoryGroup.findByIdAndDelete(req.params.id).orFail();
-    return successNoData(res, 200, "Case Group deleted successfully");
+    return successNoData(res, 200, "Case category group deleted successfully");
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -63,7 +63,7 @@ exports.getAllCategories = async (req, res, next) => {
     const categories = await CaseCategory.find({
       categoryGroupID: groupID,
     }).select("categoryName");
-    return successWithData(res, 200, "Categories fetched", categories);
+    return successWithData(res, 200, "Sub categories fetched", categories);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -78,7 +78,7 @@ exports.createCaseCategory = async (req, res, next) => {
     const data = {
       category: newCategory,
     };
-    return successWithData(res, 200, "Case Category Created Succesfully", data);
+    return successWithData(res, 200, "Case sub category added Succesfully", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -96,7 +96,7 @@ exports.editCaseCategory = async (req, res, next) => {
     return successWithData(
       res,
       200,
-      "Category updated successfully.",
+      "Sub category updated successfully.",
       updatedCategory
     );
   } catch (err) {
@@ -107,7 +107,7 @@ exports.editCaseCategory = async (req, res, next) => {
 exports.deleteCaseCategory = async (req, res, next) => {
   try {
     await CaseCategory.findByIdAndDelete(req.params.id).orFail();
-    return successNoData(res, 200, "Category deleted successfully");
+    return successNoData(res, 200, "Sub category deleted successfully");
   } catch (err) {
     return tryCatchError(res, err);
   }

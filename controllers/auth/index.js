@@ -52,7 +52,7 @@ exports.signup = async (req, res, next) => {
       phoneNumber,
       userType,
     });
-    createSendToken(newUser, 201, res, "User succesfully created");
+    createSendToken(newUser, 201, res, "User created succesfully");
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -73,7 +73,7 @@ exports.signin = async (req, res, next) => {
       return validationError(res, "Authentication error");
     }
 
-    createSendToken(user, 200, res, "User Authorized");
+    createSendToken(user, 200, res, "User authorized");
   } catch (err) {
     return tryCatchError(res, err);
   }

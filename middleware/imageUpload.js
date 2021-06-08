@@ -24,7 +24,7 @@ const multerFilter = (req, file, cb) => {
     (file.mime && file.mime.startsWith("image"))
   ) {
     cb(null, true);
-  } else cb(new Error("invalid filetype"), false);
+  } else cb(new Error("Invalid filetype"), false);
 };
 
 const upload = multer({

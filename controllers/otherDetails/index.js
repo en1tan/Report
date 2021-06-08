@@ -18,7 +18,7 @@ exports.createOtherDetails = async (req, res, next) => {
     return successWithData(
       res,
       200,
-      "Other details Created Succesfully",
+      "Your message has been added to the case conversation succesfully",
       data,
     );
   } catch (err) {
@@ -40,7 +40,7 @@ exports.uploadOtherDetailsDoc = async (req, res, next) => {
     return successWithData(
       res,
       200,
-      "Other Details Documents uploaded Succesfully",
+      "Message attachments uploaded succesfully",
       otherDetailsDoc,
     );
   } catch (err) {

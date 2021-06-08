@@ -17,7 +17,7 @@ exports.createComment = async (req, res, next) => {
     return successWithData(
       res,
       200,
-      "Comment Created Succesfully",
+      "Comment posted succesfully",
       data
     );
   } catch (err) {
@@ -47,7 +47,7 @@ exports.readComments = async (req, res, next) => {
         __v: comments[i].__v,
       });
     }
-    return successWithData(res, 200, "comments fetched", commenters);
+    return successWithData(res, 200, "Comments fetched", commenters);
   } catch (err) {
     return tryCatchError(res, err);
   }

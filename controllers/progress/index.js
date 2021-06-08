@@ -21,7 +21,7 @@ exports.createProgress = async (req, res, next) => {
     return successWithData(
       res,
       200,
-      "Progress Created Succesfully",
+      "Progress report has been succesfully added to the case file",
       data,
     );
   } catch (err) {
@@ -36,14 +36,14 @@ exports.uploadProgressDoc = async (req, res, next) => {
     const progress = await CaseProgress.findById(
       req.params.progressId,
     );
-    if (!progress) return normalError(res, 404, "Progress not found");
+    if (!progress) return normalError(res, 404, "Progress report not found");
     progress.progressDocs.push(req.body);
     await progress.save();
     const progressDoc = await CaseProgressDoc.create(req.body);
     return successWithData(
       res,
       200,
-      "Progress Documents uploaded Succesfully",
+      "Progress report documents uploaded succesfully",
       progressDoc,
     );
   } catch (err) {

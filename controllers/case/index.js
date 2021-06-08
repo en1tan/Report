@@ -32,7 +32,7 @@ exports.followCase = async (req, res, next) => {
       return successNoData(res, 200, "Case followed successfully");
     } else {
       if (!follow)
-        return successNoData(res, 200, "You are already unfollowing this case");
+        return successNoData(res, 200, "You have unfollowed this case");
       const resp = await FollowCase.findOneAndDelete({
         caseID: req.params.id,
       });
@@ -126,7 +126,7 @@ exports.assignPartnerToCase = async (req, res, next) => {
       },
       { new: true }
     );
-    return successNoData(res, 200, "Partner assigned successfully");
+    return successNoData(res, 200, "Admin assigned successfully");
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -168,7 +168,7 @@ exports.getAllCase = async (req, res, next) => {
       total: Math.ceil(count / limit),
       page: parseInt(page),
     };
-    return successWithData(res, 200, "cases fetched successfully", data);
+    return successWithData(res, 200, "Cases fetched successfully", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -198,7 +198,7 @@ exports.getCase = async (req, res, next) => {
         suspect,
       },
     };
-    return successWithData(res, 200, "Cases Fetched successfully", data);
+    return successWithData(res, 200, "Cases fetched successfully", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -228,7 +228,7 @@ exports.createCase = async (req, res, next) => {
     const data = {
       case: _.pick(newCase, ["_id", "caseID"]),
     };
-    return successWithData(res, 200, "case created successfully", data);
+    return successWithData(res, 200, "Case file has been created successfully", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -237,13 +237,13 @@ exports.createCase = async (req, res, next) => {
 exports.updateExistingCase = async (req, res, next) => {
   try {
     const existingCase = await Case.findById(req.params.id);
-    if (!existingCase) return normalError(res, 404, "case not found!");
+    if (!existingCase) return normalError(res, 404, "Case not found!");
     const updatedCase = await Case.findByIdAndUpdate(
       existingCase._id,
       req.body,
       { new: true }
     );
-    return successWithData(res, 200, "case updated successfully", updatedCase);
+    return successWithData(res, 200, "Case file updated successfully", updatedCase);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -252,14 +252,14 @@ exports.updateExistingCase = async (req, res, next) => {
 exports.createCaseVictim = async (req, res, next) => {
   try {
     const existingCase = await Case.findById(req.params.caseID);
-    if (!existingCase) return normalError(res, 404, "case not found");
+    if (!existingCase) return normalError(res, 404, "Case not found");
     req.body.caseID = req.params.caseID;
     req.body.addedBy = req.user._id;
     const newVictim = await CaseVictim.create(req.body);
     const data = {
       victim: newVictim,
     };
-    return successWithData(res, 200, "victim created successfully", data);
+    return successWithData(res, 200, "Victim has been successfully added to the case file", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -274,7 +274,7 @@ exports.createCaseSuspect = async (req, res, next) => {
     const data = {
       suspect: newSuspect,
     };
-    return successWithData(res, 200, "Suspect Created Succesfully", data);
+    return successWithData(res, 200, "Suspect has been successfully added to the case file", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -289,7 +289,7 @@ exports.createCaseWitness = async (req, res, next) => {
     const data = {
       witness: newWitness,
     };
-    return successWithData(res, 200, "Witness Created Succesfully", data);
+    return successWithData(res, 200, "Witness has been successfully added to the case file", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -305,7 +305,7 @@ exports.createCaseOtherDetails = async (req, res, next) => {
     const data = {
       details: newDetails,
     };
-    return successWithData(res, 200, "More Details Updated Succesfully", data);
+    return successWithData(res, 200, "Case conversation updated succesfully", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -320,7 +320,7 @@ exports.createCaseProgress = async (req, res, next) => {
     const data = {
       progress: newProgress,
     };
-    return successWithData(res, 200, "Progress Saved Succesfully", data);
+    return successWithData(res, 200, "Progress report has been succesfully added to the case file", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -330,7 +330,7 @@ exports.saveEvidence = async (req, res, next) => {
   try {
     req.body.caseID = req.params.id;
     await CaseEvidence.create(req.body);
-    return successNoData(res, 201, "evidence saved successfully");
+    return successNoData(res, 201, "Case evidence attached to case file successfully");
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -370,13 +370,13 @@ exports.verifyCase = async (req, res, next) => {
     );
     if (!existingCase) return normalError(res, 404, "Case does not exist");
     if (existingCase.verificationStatus === "verified")
-      return successNoData(res, 200, "case verified already");
+      return successNoData(res, 200, "Case has already been verified");
     await Case.findByIdAndUpdate(
       req.params.id,
       { verificationStatus: req.body.verificationStatus },
       { new: true }
     );
-    return successNoData(res, 200, "Case verified successfully");
+    return successNoData(res, 200, "Case has been verified successfully");
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -390,7 +390,7 @@ exports.publishCase = async (req, res, next) => {
       return successWithData(
         res,
         200,
-        "case already has status: " + req.body.publishStatus
+        "Case already has status: " + req.body.publishStatus
       );
     const publishedCase = await Case.findByIdAndUpdate(
       existingCase._id,
@@ -430,7 +430,7 @@ exports.resolveCase = async (req, res, next) => {
     return successWithData(
       res,
       200,
-      "Case resolved successfully",
+      "This case has been resolved and closed successfully",
       resolvedCase
     );
   } catch (err) {
@@ -443,7 +443,7 @@ exports.getSinglePublicCase = async (req, res, next) => {
   let userFollowStatus;
   try {
     const existingCase = await Case.findById(req.params.id);
-    if (!existingCase) return normalError(res, 404, "case not found");
+    if (!existingCase) return normalError(res, 404, "Case not found");
     const categoryIDs = await CaseTaggedCategories.find({
       caseID: existingCase._id,
     });
@@ -515,7 +515,7 @@ exports.getPublicCases = async (req, res, next) => {
       total: Math.ceil(count / limit),
       page: parseInt(page),
     };
-    return successWithData(res, 200, "Cases Fetched Succesfully", data);
+    return successWithData(res, 200, "Cases fetched Succesfully", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
