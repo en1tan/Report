@@ -305,7 +305,13 @@ exports.createCaseProgress = async (req, res, next) => {
   }
 };
 
-exports.saveEvidence = async (req, res, next) => {
+/**
+ * Save case evidence
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Promise<{}>}
+ */
+exports.saveEvidence = async (req, res) => {
   try {
     req.body.caseID = req.params.id;
     await CaseEvidence.create(req.body);

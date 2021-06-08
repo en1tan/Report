@@ -2507,21 +2507,29 @@
         ],
         "requestBody": {
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "file": {
+                  "fileName": {
+                      "type": "string"
+                  },
+                  "URLs": {
                     "type": "array",
                     "items": {
-                      "type": "string",
-                      "format": "binary"
+                      "type": "string"
                     }
-                  },
-                  "URL": {
-                    "type": "string"
                   }
                 }
+              },
+              "example": {
+                "fileName": "Evidence 1",
+                "URL": [
+                  "https://via.placeholder.com/150",
+                  "https://via.placeholder.com/150",
+                  "https://via.placeholder.com/150",
+                  "https://via.placeholder.com/150"
+                ]
               }
             }
           }
@@ -2540,6 +2548,10 @@
                       "type": "string"
                     }
                   }
+                },
+                "example": {
+                  "status": "success",
+                  "message": "Evidence Saved Successfully"
                 }
               }
             }
