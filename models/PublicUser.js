@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 const {genIDs} = require("../utils/genID");
 const Schema = mongoose.Schema;
 
