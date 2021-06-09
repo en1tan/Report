@@ -14,7 +14,7 @@ const {
 
 exports.createSuspect = async (req, res) => {
   try {
-    const existingCase = await Case.findById(req.params.id);
+    const existingCase = await Case.findById(req.params.caseID);
     if (!existingCase) return normalError(res, 404, "case not found");
     req.body.caseID = existingCase._id;
     req.body.addedBy = req.user._id;
@@ -38,9 +38,9 @@ exports.createSuspect = async (req, res) => {
 
 exports.getSuspects = async (req, res) => {
   try {
-    const existingCase = await Case.findById(req.params.id);
+    const existingCase = await Case.findById(req.params.caseID);
     if (!existingCase) return normalError(res, 404, "case not found");
-    const suspects = Model.find({caseID: req.params.id}).select(
+    const suspects = await Model.find({caseID: req.params.id}).select(
       "firstNameOfSuspect" +
       " lastNameOfSuspect" +
       " middleNameOfSuspect"

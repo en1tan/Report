@@ -1,12 +1,12 @@
-const express = require('express');
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 
-const controller = require('../../controllers/suspect');
+const controller = require("../../controllers/suspect");
 
-router.post('/:caseID/create',controller.createSuspect);
-router.get('/all',controller.getSuspects);
-router.get('/:id',controller.getSuspect);
-router.patch('/:id/update',controller.editSuspect);
-router.delete(':id/delete',controller.deleteSuspect)
+router.post("/:caseID/create", controller.createSuspect);
+router.get("/:caseID/all", controller.getSuspects);
+router.get("/:id", controller.getSuspect);
+router.patch("/:id/update", controller.editSuspect);
+router.delete(":id/delete", controller.deleteSuspect);
 
-module.exports = router
+module.exports = router;

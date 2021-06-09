@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const {genIDs} = require("../../utils/genID");
+const { genIDs } = require("../../utils/genID");
 
 const Schema = mongoose.Schema;
 
@@ -22,11 +22,11 @@ const caseEvidenceSchema = new Schema(
     },
 
     // Link path to the file
-    URLs: [{
+    URL: {
       type: String,
-    }],
+    },
   },
-  {timestamps: true}
+  { timestamps: true }
 );
 
 caseEvidenceSchema.pre("save", function (next) {
