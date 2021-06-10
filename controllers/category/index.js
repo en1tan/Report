@@ -5,7 +5,6 @@ const {
   successNoData,
 } = require("../../utils/successHandler");
 const { tryCatchError, normalError } = require("../../utils/errorHandlers");
-const auth = require("../../middleware/authenticate");
 
 exports.getAllCategoryGroup = async (req, res, next) => {
   try {
@@ -24,7 +23,12 @@ exports.createCaseCategoryGroup = async (req, res, next) => {
     const data = {
       group: newGroup,
     };
-    return successWithData(res, 201, "Case category group created succesfully", data);
+    return successWithData(
+      res,
+      201,
+      "Case category group created succesfully",
+      data
+    );
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -78,7 +82,12 @@ exports.createCaseCategory = async (req, res, next) => {
     const data = {
       category: newCategory,
     };
-    return successWithData(res, 200, "Case sub category added Succesfully", data);
+    return successWithData(
+      res,
+      200,
+      "Case sub category added Succesfully",
+      data
+    );
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -111,11 +120,4 @@ exports.deleteCaseCategory = async (req, res, next) => {
   } catch (err) {
     return tryCatchError(res, err);
   }
-};
-
-exports.getAuthorized = async (req, res, next) => {
-  console.log(req.authorized);
-  console.log(req.user);
-  // if (req.authorized)
-  return res.send(req.user);
 };

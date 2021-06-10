@@ -105,7 +105,7 @@ const caseSchema = new Schema(
     // when the public is viewing the case. This will be entered when publishing the case
     caseSummary: String,
 
-    // Status if case if visible to the public or not
+    // Status if case is visible to the public or not
     publishStatus: {
       type: String,
       enum: ["published", "unPublished"],

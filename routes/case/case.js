@@ -2,7 +2,6 @@ const express = require("express");
 const caseController = require("../../controllers/case");
 const authorize = require("../../middleware/authorization");
 const router = express.Router();
-const auth = require("../../middleware/authenticate");
 
 router.post("/create", caseController.createCase);
 router.get(

@@ -1,4 +1,4 @@
-import { exist } from "joi";
+const _ = require("lodash");
 
 const Case = require("../../models/cases/Case");
 const CaseVictim = require("../../models/cases/CaseVictim");
@@ -18,8 +18,6 @@ const {
   successWithData,
   successNoData,
 } = require("../../utils/successHandler");
-
-const _ = require("lodash");
 
 exports.followCase = async (req, res, next) => {
   try {
@@ -521,7 +519,7 @@ exports.resolveCase = async (req, res, next) => {
 
 /**
  * Get a single public case
- * Also supports log in status
+ * Also supports login status
  * @param {Express.Request} req
  * @param {Express.Response} res
  * @param {*} next

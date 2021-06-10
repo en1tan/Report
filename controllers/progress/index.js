@@ -1,19 +1,18 @@
 const CaseProgress = require("../../models/cases/CaseProgress");
 const CaseProgressDoc = require("../../models/cases/CaseProgressDoc");
 
-const {
-  tryCatchError,
-  normalError,
-} = require("../../utils/errorHandlers");
+const { tryCatchError, normalError } = require("../../utils/errorHandlers");
 const { successWithData } = require("../../utils/successHandler");
-const { uploadDocs } = require("../case/cloudUpload");
 
-exports.createProgress = async (req, res, next) => {
+/**
+ * Create case progress
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Promise<Express.Response>}
+ */
+exports.createProgress = async (req, res) => {
   try {
-    const progressData = Object.assign(
-      { caseID: req.params.caseId },
-      req.body,
-    );
+    const progressData = Object.assign({ caseID: req.params.caseID }, req.body);
     const newProgress = await CaseProgress.create(progressData);
     const data = {
       progress: newProgress,
@@ -21,21 +20,23 @@ exports.createProgress = async (req, res, next) => {
     return successWithData(
       res,
       200,
-      "Progress report has been succesfully added to the case file",
-      data,
+      "Progress report has been successfully added to the case file",
+      data
     );
   } catch (err) {
     return tryCatchError(res, err);
   }
 };
 
-exports.uploadProgressDoc = async (req, res, next) => {
+/**
+ * Upload Documents to progress
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Promise<Express.Response>}
+ */
+exports.uploadProgressDoc = async (req, res) => {
   try {
-    const progressImage = await uploadDocs(req.file);
-    req.body.URL = progressImage.url;
-    const progress = await CaseProgress.findById(
-      req.params.progressId,
-    );
+    const progress = await CaseProgress.findById(req.params.progressId);
     if (!progress) return normalError(res, 404, "Progress report not found");
     progress.progressDocs.push(req.body);
     await progress.save();
@@ -43,8 +44,8 @@ exports.uploadProgressDoc = async (req, res, next) => {
     return successWithData(
       res,
       200,
-      "Progress report documents uploaded succesfully",
-      progressDoc,
+      "Progress report documents uploaded successfully",
+      progressDoc
     );
   } catch (err) {
     return tryCatchError(res, err);

@@ -1,15 +1,23 @@
 const OtherDetails = require("../../models/cases/CaseOtherDetails");
 const OtherDetailsDoc = require("../../models/cases/CaseOtherDetailsDoc");
+const Case = require("../../models/cases/Case");
 
-const { tryCatchError } = require("../../utils/errorHandlers");
+const { tryCatchError, normalError } = require("../../utils/errorHandlers");
 const { successWithData } = require("../../utils/successHandler");
-const { uploadDocs } = require("../case/cloudUpload");
 
-exports.createOtherDetails = async (req, res, next) => {
+/**
+ * Create other details
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Promise<Express.Response>}
+ */
+exports.createOtherDetails = async (req, res) => {
   try {
+    const existingCase = await Case.findById(req.params.caseID);
+    if (!existingCase) return normalError(res, 404, "case not found");
     const otherDetailsData = Object.assign(
-      { caseID: req.params.caseId },
-      req.body,
+      { caseID: req.params.caseID },
+      req.body
     );
     const newDetails = await OtherDetails.create(otherDetailsData);
     const data = {
@@ -18,8 +26,8 @@ exports.createOtherDetails = async (req, res, next) => {
     return successWithData(
       res,
       200,
-      "Your message has been added to the case conversation succesfully",
-      data,
+      "Your message has been added to the case conversation successfully",
+      data
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -28,20 +36,15 @@ exports.createOtherDetails = async (req, res, next) => {
 
 exports.uploadOtherDetailsDoc = async (req, res, next) => {
   try {
-    const otherDetailsImage = await uploadDocs(req.file);
-    req.body.URL = otherDetailsImage.url;
-    const otherDetails = await OtherDetails.findById(
-      req.params.progressId,
-    );
-
+    const otherDetails = await OtherDetails.findById(req.params.progressId);
     otherDetails.otherDetailsDocs.push(req.body);
     await otherDetails.save();
     const otherDetailsDoc = await OtherDetailsDoc.create(req.body);
     return successWithData(
       res,
       200,
-      "Message attachments uploaded succesfully",
-      otherDetailsDoc,
+      "Message attachments uploaded successfully",
+      otherDetailsDoc
     );
   } catch (err) {
     return tryCatchError(res, err);

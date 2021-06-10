@@ -6,16 +6,16 @@ const authorize = require("../../middleware/authorization");
 const router = express.Router();
 
 router.post(
-  "/create/:caseId",
+  "/create/:caseID",
   auth(),
   authorize(["admin", "staff"]),
-  otherDetailsController.createOtherDetails,
+  otherDetailsController.createOtherDetails
 );
 router.post(
   "/upload/:otherDetailsId",
-  auth(),
+  auth(true),
   authorize(["admin", "staff"]),
-  otherDetailsController.uploadOtherDetailsDoc,
+  otherDetailsController.uploadOtherDetailsDoc
 );
 
 module.exports = router;
