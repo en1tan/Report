@@ -23,8 +23,9 @@ const createSendToken = (user, statusCode, res, message) => {
   return successWithData(res, statusCode, message, data);
 };
 
-exports.signup = async (req, res, next) => {
+exports.signup = async (req, res) => {
   let errors = {};
+  console.log("here");
   try {
     const user = await User.findOne({ email: req.body.email });
     if (user) {
@@ -75,7 +76,12 @@ exports.editAccount = async (req, res, next) => {
     const updatedUser = await User.findByIdAndUpdate(user._id, req.body, {
       new: true,
     });
-    return successWithData(res, 200, "User records updated successfully", updatedUser);
+    return successWithData(
+      res,
+      200,
+      "User records updated successfully",
+      updatedUser
+    );
   } catch (err) {
     return tryCatchError(res, err);
   }

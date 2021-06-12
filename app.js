@@ -12,7 +12,7 @@ const queryAuth = require("./utils/queryAuth");
 const routes = require("./routes");
 
 //cors
-app.use(cors({ origin: true }));
+app.use(cors());
 
 // Development logging
 if (process.env.NODE_ENV === "development") {

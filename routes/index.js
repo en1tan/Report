@@ -22,7 +22,7 @@ const router = express.Router();
 
 router.use("/public", public);
 router.use("/user", user);
-router.use("/partner", auth(true), partner);
+router.use("/partner", partner);
 router.use("/case", auth(true), cases);
 router.use("/organization", organization);
 router.use("/progress", progress);

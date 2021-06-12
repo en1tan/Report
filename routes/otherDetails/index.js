@@ -7,14 +7,12 @@ const router = express.Router();
 
 router.post(
   "/create/:caseID",
-  auth(),
-  authorize(["admin", "staff"]),
+  auth(true),
   otherDetailsController.createOtherDetails
 );
 router.post(
   "/upload/:otherDetailsId",
   auth(true),
-  authorize(["admin", "staff"]),
   otherDetailsController.uploadOtherDetailsDoc
 );
 

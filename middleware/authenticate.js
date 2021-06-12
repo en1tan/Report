@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken");
 const PartnerUser = require("../models/partners/PartnerUser");
 const PublicUser = require("../models/PublicUser");
-const {authorizationError} = require("../utils/errorHandlers");
+const { authorizationError } = require("../utils/errorHandlers");
 
 module.exports = authenticate;
 
-function authenticate(status= false) {
+function authenticate(status = false) {
   return async (req, res, next) => {
     let token;
     try {
@@ -24,8 +24,11 @@ function authenticate(status= false) {
         } else {
           req.user = await PartnerUser.findById(decoded.id);
         }
-      } else if(!req.authorized && status===true)
-        return authorizationError(res,"Unauthorized")
+      } else if (!req.authorized && status === true)
+        return authorizationError(
+          res,
+          "Unauthorized. You need to be logged in"
+        );
       next();
     } catch (err) {
       return authorizationError(res, "Unauthorized");

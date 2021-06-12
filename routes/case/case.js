@@ -32,17 +32,9 @@ router.get(
   caseController.getCurrentCaseProgress
 );
 
-router.post(
-  "/create/:id/evidence",
-  authorize(["admin", "staff"]),
-  caseController.saveEvidence
-);
+router.post("/create/:id/evidence", caseController.saveEvidence);
 
-router.get(
-  "/:caseID/evidence",
-  authorize(["admin", "staff"]),
-  caseController.getCaseEvidence
-);
+router.get("/:caseID/evidence", caseController.getCaseEvidence);
 
 router.patch(
   "/:id/assign",

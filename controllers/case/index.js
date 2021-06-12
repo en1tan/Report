@@ -189,13 +189,13 @@ exports.getCase = async (req, res, next) => {
     }
     const data = {
       caseData: {
-        case: { categories, ...fetchedCase },
+        case: { categories, fetchedCase },
         victim,
         witness,
         suspect,
       },
     };
-    return successWithData(res, 200, "Cases fetched successfully", data);
+    return successWithData(res, 200, "Case fetched successfully", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
