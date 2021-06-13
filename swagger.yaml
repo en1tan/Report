@@ -2201,6 +2201,7 @@ paths:
       summary: Comment on a case
       tags:
         - Misc
+        - Comment
       parameters:
         - description: Case ID
           in: path
@@ -2213,6 +2214,8 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/CaseComment"
+            example:
+              comment: This is really unacceptable
       responses:
         '201':
           description: Comment added
@@ -2229,11 +2232,22 @@ paths:
                     properties:
                       comment:
                         "$ref": "#/components/schemas/CaseComment"
+              example:
+                status: success
+                message: comments fetched
+                data:
+                  - id: 60ba2d6c3ffa8060dda74314,
+                    caseID: 60b9120dc1fb0225fd342a88,
+                    avatar: https://via.placeholder.com/150
+                    userName: johnnyJan
+                    comment: May God save us
+                    dateOfComment: '2021-06-04T13:41:00.551Z'
   "/comment/{caseID}":
     get:
       description: get comments
       tags:
         - Misc
+        - Comment
       parameters:
         - description: case ID
           in: path
@@ -2267,6 +2281,84 @@ paths:
                     userName: johnnyJan
                     comment: May God save us
                     dateOfComment: '2021-06-04T13:41:00.551Z'
+  /comment/{id}:
+    patch:
+      security:
+        - bearerAuth: []
+      summary: update the case comment
+      tags:
+        - Misc
+        - Comment
+      parameters:
+        - description: comment id
+          in: path
+          required: true
+          name: id
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                caseID:
+                  $ref: "#/components/schemas/Case"
+                comment:
+                  $ref: "#/components/schemas/CaseComment"
+            example:
+              caseID: ""
+              comment: Okay, this is getting out of hand
+      responses:
+        200:
+          description: case updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  comment:
+                    $ref: "#/components/schemas/CaseComment"
+              example:
+                status: success
+                message: Comment Updated
+                comment:
+                  _id: 60ba2d6c3ffa8060dda74314
+                  caseID: 60b9120dc1fb0225fd342a88
+                  comment: Okay, this is getting out of hand
+  /comment/:id/delete:
+    delete:
+      security:
+        - bearerAuth: []
+      summary: delete case comment
+      tags:
+        - Misc
+        - Comment
+      parameters:
+        - description: comment id
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: comment deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+              example:
+                status: success
+                message: Comment Deleted
   "/contact/create":
     post:
       summary: Request contact details

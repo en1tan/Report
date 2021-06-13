@@ -137,15 +137,16 @@ exports.getAllCase = async (req, res, next) => {
     "reportType",
     "caseTypeStatus",
   ]);
-  if (req.user.userType !== "super-admin")
-    if (req.user.userType) {
-      filter.state = req.user.stateOfAssignment;
-      if (req.user.userType === "staff") {
-        filter.verificationStatus = "verified";
-        filter.assignedPartnerUserId = req.user._id;
-      } else if (req.user.userType === "verifier")
-        filter.verificationStatus = "unVerified";
-    }
+  filter.state = req.user.userType
+    ? req.user.userType !== "super-admin"
+      ? req.user.stateOfAssignment
+      : null
+    : null;
+  if (req.user.userType === "staff") {
+    filter.verificationStatus = "verified";
+    filter.assignedPartnerUserId = req.user._id;
+  } else if (req.user.userType === "verifier")
+    filter.verificationStatus = "unVerified";
   try {
     const cases = await Case.find()
       .select(
@@ -172,11 +173,7 @@ exports.getAllCase = async (req, res, next) => {
 exports.getCase = async (req, res, next) => {
   try {
     let categories = [];
-    const fetchedCase = await Case.findOne({
-      _id: req.params.id,
-    })
-      .select("-followedBy")
-      .exec();
+    const fetchedCase = await Case.findById(req.params.id);
     if (!fetchedCase) return normalError(res, 404, "Case not found");
     let witness;
     let victim;
