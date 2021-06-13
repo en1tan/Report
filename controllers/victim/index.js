@@ -1,15 +1,12 @@
 const CaseVictim = require("../../models/cases/CaseVictim");
-const Case = require('../../models/cases/Case')
+const Case = require("../../models/cases/Case");
 const {
   successWithData,
-  successNoData
+  successNoData,
 } = require("../../utils/successHandler");
-const {
-  tryCatchError,
-  normalError
-} = require("../../utils/errorHandlers");
+const { tryCatchError, normalError } = require("../../utils/errorHandlers");
 
-const _ = require('lodash');
+const _ = require("lodash");
 
 exports.createCaseVictim = async (req, res, next) => {
   try {
@@ -22,7 +19,13 @@ exports.createCaseVictim = async (req, res, next) => {
       res,
       201,
       "case victim created",
-      _.pick(newVictim, ["firstNameOfVictim", "lastNameOfVictim", "middleNameOfVictim", "_id", "__v"])
+      _.pick(newVictim, [
+        "firstNameOfVictim",
+        "lastNameOfVictim",
+        "middleNameOfVictim",
+        "_id",
+        "__v",
+      ])
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -31,35 +34,50 @@ exports.createCaseVictim = async (req, res, next) => {
 
 exports.getCaseVictims = async (req, res) => {
   try {
-    const victims = await CaseVictim.find({caseID: req.params.caseID}).select("firstName lastName middleName");
+    const victims = await CaseVictim.find({ caseID: req.params.caseID }).select(
+      "firstName lastName middleName"
+    );
     return successWithData(res, 200, "Case victims returned", victims);
   } catch (err) {
-    return tryCatchError(res, err)
+    return tryCatchError(res, err);
   }
-}
+};
 
 exports.getCaseVictim = async (req, res) => {
   try {
-    const victim = await CaseVictim.findById(req.params.id)
+    let victim;
+    if (req.user.userType) victim = await CaseVictim.findById(req.params.id);
+    else
+      victim = await CaseVictim.findById(req.params.id).where(
+        "addBy",
+        req.user._id
+      );
     if (!victim) return normalError(res, 404, "victim not found");
-    return successWithData(res
-      , 200, "fetched victim details", victim
-    )
+    return successWithData(res, 200, "fetched victim details", victim);
   } catch (err) {
-    return tryCatchError(res, err)
+    return tryCatchError(res, err);
   }
-}
+};
 
 exports.updateVictim = async (req, res) => {
   try {
     const victim = await CaseVictim.findById(req.params.id);
     if (!victim) return normalError(res, 404, "victim not found");
-    const updatedVictim = await CaseVictim.findByIdAndUpdate(victim._id, req.body, {new: true}).select("firstName lastName middleName");
-    return successWithData(res, 200, "victim updated successfully", updatedVictim);
+    const updatedVictim = await CaseVictim.findByIdAndUpdate(
+      victim._id,
+      req.body,
+      { new: true }
+    ).select("firstName lastName middleName");
+    return successWithData(
+      res,
+      200,
+      "victim updated successfully",
+      updatedVictim
+    );
   } catch (err) {
-    return tryCatchError(res, err)
+    return tryCatchError(res, err);
   }
-}
+};
 
 exports.deleteVictim = async (req, res) => {
   try {
@@ -70,4 +88,4 @@ exports.deleteVictim = async (req, res) => {
   } catch (err) {
     return tryCatchError(res, err);
   }
-}
+};
