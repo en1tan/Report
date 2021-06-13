@@ -49,7 +49,7 @@ exports.getCaseVictim = async (req, res) => {
     if (req.user.userType) victim = await CaseVictim.findById(req.params.id);
     else
       victim = await CaseVictim.findById(req.params.id).where(
-        "addBy",
+        "addedBy",
         req.user._id
       );
     if (!victim) return normalError(res, 404, "victim not found");
