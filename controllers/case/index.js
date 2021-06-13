@@ -19,7 +19,13 @@ const {
   successNoData,
 } = require("../../utils/successHandler");
 
-exports.followCase = async (req, res, next) => {
+/**
+ * FOllow a case
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Promise<*>}
+ */
+exports.followCase = async (req, res) => {
   try {
     const follow = await FollowCase.findOne({ caseID: req.params.id });
     if (req.body.followStatus === "follow") {
@@ -43,7 +49,13 @@ exports.followCase = async (req, res, next) => {
   }
 };
 
-exports.getFollowedCases = async (req, res, next) => {
+/**
+ * Get followed cases
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Promise<*>}
+ */
+exports.getFollowedCases = async (req, res) => {
   let categories = [];
   let cases = [];
   const followedCases = [];
@@ -99,6 +111,11 @@ exports.getFollowedCases = async (req, res, next) => {
   }
 };
 
+/**
+ * Get case categories
+ * @param {string} caseID
+ * @returns {Promise<[CaseTaggedCategories]>}
+ */
 const getCategories = async (caseID) => {
   let categories = [];
   const cats = await CaseTaggedCategories.find({ caseID });
@@ -109,7 +126,13 @@ const getCategories = async (caseID) => {
   return categories;
 };
 
-exports.assignPartnerToCase = async (req, res, next) => {
+/**
+ * Assign partner to case
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Promise<Case>}
+ */
+exports.assignPartnerToCase = async (req, res) => {
   try {
     const existingCase = await Case.findById(req.params.id);
     if (!existingCase) return normalError(res, 404, "Case not found", null);
@@ -127,7 +150,13 @@ exports.assignPartnerToCase = async (req, res, next) => {
   }
 };
 
-exports.getAllCase = async (req, res, next) => {
+/**
+ * Get all cases for admin users
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Promise<[Case]>}
+ */
+exports.getAllCase = async (req, res) => {
   let { page = 1, limit = 20 } = req.query;
   const filter = _.pick(req.query, [
     "resolutionStatus",
@@ -170,7 +199,13 @@ exports.getAllCase = async (req, res, next) => {
   }
 };
 
-exports.getCase = async (req, res, next) => {
+/**
+ * Get a single case for admin user
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Promise<Case>}
+ */
+exports.getCase = async (req, res) => {
   try {
     let categories = [];
     const fetchedCase = await Case.findById(req.params.id);
@@ -227,7 +262,13 @@ exports.getCase = async (req, res, next) => {
   }
 };
 
-exports.createCase = async (req, res, next) => {
+/**
+ * Create a case
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Promise<Case>}
+ */
+exports.createCase = async (req, res) => {
   try {
     const newCase = await Case.create({
       ...req.body,
@@ -254,7 +295,13 @@ exports.createCase = async (req, res, next) => {
   }
 };
 
-exports.updateExistingCase = async (req, res, next) => {
+/**
+ * Update an existing case
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Promise<Case>}
+ */
+exports.updateExistingCase = async (req, res) => {
   try {
     const existingCase = await Case.findById(req.params.id);
     if (!existingCase) return normalError(res, 404, "Case not found!");
@@ -274,7 +321,13 @@ exports.updateExistingCase = async (req, res, next) => {
   }
 };
 
-exports.createCaseWitness = async (req, res, next) => {
+/**
+ * Create a case witness
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Promise<CaseWitness>}
+ */
+exports.createCaseWitness = async (req, res) => {
   try {
     const newWitness = await CaseWitness.create({
       ...req.body,
@@ -294,7 +347,14 @@ exports.createCaseWitness = async (req, res, next) => {
   }
 };
 
-exports.createCaseOtherDetails = async (req, res, next) => {
+/**
+ * Create other details to
+ * a case
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Promise<{CaseOtherDetails}>}
+ */
+exports.createCaseOtherDetails = async (req, res) => {
   try {
     const newDetails = await CaseOtherDetails.create({
       ...req.body,
@@ -315,38 +375,6 @@ exports.createCaseOtherDetails = async (req, res, next) => {
   }
 };
 
-exports.createCaseProgress = async (req, res, next) => {
-  try {
-    const newProgress = await CaseProgress.create({
-      ...req.body,
-      caseID: req.params.caseID,
-    });
-    const data = {
-      progress: newProgress,
-    };
-    return successWithData(
-      res,
-      200,
-      "Progress report has been succesfully added to the case file",
-      data
-    );
-  } catch (err) {
-    return tryCatchError(res, err);
-  }
-};
-
-exports.getCurrentCaseProgress = async (req, res) => {
-  try {
-    const existingCase = await Case.findById(req.params.caseID);
-    if (!existingCase) return normalError(res, 404, "case not found");
-    const currentProgress = await CaseProgress.find({
-      caseID: existingCase._id,
-    });
-    return successWithData(res, 200, "current case progress", currentProgress);
-  } catch (err) {
-    return tryCatchError(res, err);
-  }
-};
 /**
  * Save case evidence
  * @param {Express.Request} req
@@ -390,7 +418,7 @@ exports.getCaseEvidence = async (req, res) => {
  * @param {*} next
  * @returns {Promise<[]>}
  */
-exports.getPersonalCases = async (req, res, next) => {
+exports.getPersonalCases = async (req, res) => {
   try {
     let { page = 1, limit = 20 } = req.query;
     let categories = [];
@@ -454,7 +482,7 @@ exports.getPersonalCases = async (req, res, next) => {
  * @param {*} next
  * @returns {Promise<{}>}
  */
-exports.verifyCase = async (req, res, next) => {
+exports.verifyCase = async (req, res) => {
   try {
     const existingCase = await Case.findById(req.params.id).select(
       "-followedBy -areYouTheVictim"
@@ -480,7 +508,7 @@ exports.verifyCase = async (req, res, next) => {
  * @param {*} next
  * @returns {Promise<{}>}
  */
-exports.publishCase = async (req, res, next) => {
+exports.publishCase = async (req, res) => {
   try {
     const existingCase = await Case.findById(req.params.id);
     if (!existingCase) return normalError(res, 404, "Case does not exist");
@@ -520,7 +548,7 @@ exports.publishCase = async (req, res, next) => {
  * @param {*} next
  * @returns {Promise<{}>}
  */
-exports.resolveCase = async (req, res, next) => {
+exports.resolveCase = async (req, res) => {
   try {
     const existingCase = await Case.findById(req.params.id);
     if (!existingCase) return normalError(res, 404, "Case does not exist");
@@ -551,7 +579,7 @@ exports.resolveCase = async (req, res, next) => {
  * @param {*} next
  * @returns {Promise<{}>}
  */
-exports.getSinglePublicCase = async (req, res, next) => {
+exports.getSinglePublicCase = async (req, res) => {
   let categories = [];
   let userFollowStatus = false;
   try {
@@ -576,7 +604,6 @@ exports.getSinglePublicCase = async (req, res, next) => {
         .in([req.params.id]);
       userFollowStatus = existingCase.followedBy.includes(f._id);
     }
-
     const data = {
       ..._.pick(existingCase, [
         "_id",
@@ -612,7 +639,7 @@ exports.getSinglePublicCase = async (req, res, next) => {
  * @param {*} next
  * @returns {Promise<[]>}
  */
-exports.getPublicCases = async (req, res, next) => {
+exports.getPublicCases = async (req, res) => {
   const publicCases = [];
   const selectedFields = req.user
     ? "_id __v caseAvatar caseTitle datePublished categoryGroupID" +

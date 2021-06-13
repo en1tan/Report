@@ -20,17 +20,6 @@ router.post(
   authorize("admin"),
   caseController.createCaseOtherDetails
 );
-router.post(
-  "/create/:caseID/caseProgress",
-  authorize(["admin", "staff"]),
-  caseController.createCaseProgress
-);
-
-router.get(
-  "/:caseID/caseProgress",
-  authorize(["admin", "staff"]),
-  caseController.getCurrentCaseProgress
-);
 
 router.post("/create/:id/evidence", caseController.saveEvidence);
 

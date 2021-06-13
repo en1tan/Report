@@ -1590,6 +1590,7 @@ paths:
                     __v: 0
   "/case/create/{caseID}/otherDetails":
     post:
+      deprecated: true
       security:
         - bearerAuth: []
       summary: Add case other details
@@ -2200,7 +2201,6 @@ paths:
         - bearerAuth: []
       summary: Comment on a case
       tags:
-        - Misc
         - Comment
       parameters:
         - description: Case ID
@@ -2246,7 +2246,6 @@ paths:
     get:
       description: get comments
       tags:
-        - Misc
         - Comment
       parameters:
         - description: case ID
@@ -2287,7 +2286,6 @@ paths:
         - bearerAuth: []
       summary: update the case comment
       tags:
-        - Misc
         - Comment
       parameters:
         - description: comment id
@@ -2335,7 +2333,6 @@ paths:
         - bearerAuth: []
       summary: delete case comment
       tags:
-        - Misc
         - Comment
       parameters:
         - description: comment id
@@ -2489,7 +2486,6 @@ paths:
       summary: Add case progress
       tags:
         - Case Progress
-        - Case
       parameters:
         - description: Case ID
           in: path
@@ -2524,7 +2520,6 @@ paths:
         - bearerAuth: []
       summary: Upload progress document
       tags:
-        - Case
         - Case Progress
       parameters:
         - description: Progress ID
@@ -2545,6 +2540,140 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/CaseProgressDoc"
+  /progress/{caseID}/:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Case Progress
+      summary: Get case progress
+      parameters:
+        - description: case ID
+          in: path
+          required: true
+          name: caseID
+          schema:
+            type: string
+      responses:
+        200:
+          description: case progress returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  progress:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/CaseProgress"
+  /progress/{id}/update:
+    patch:
+      summary: update case progress
+      security:
+        - bearerAuth: []
+      parameters:
+        - description: progress ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      tags:
+        - Case Progress
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                caseID:
+                  $ref: "#/components/schemas/Case"
+                title:
+                  type: string
+                messageContent:
+                  type: string
+                privacyStatus:
+                  type: string
+                  enum: ["private","public"]
+            example:
+              caseID: 60be14c3453bd7003ccbef58
+              title: Suspect has been found
+              messageContent: lorem ipsum lorem for everything lorem
+              privacyStatus: public
+      responses:
+        200:
+          description: case progress updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  updatedProgress:
+                    $ref: "#/components/schemas/CaseProgress"
+              example:
+                caseID: SCES78201
+                title: Suspect has been found
+                messageContent: lorem ipsum lorem for everything lorem
+                privacyStatus: public
+  /progress/{id}/delete:
+    delete:
+      summary: Delete case progress/doc
+      tags:
+        - Case Progress
+      security:
+        - bearerAuth: []
+      parameters:
+        - description: progress ID
+          in: path
+          required: true
+          name: id
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deletionType:
+                  type: string
+                  enum: ["file","normal","all"]
+            examples:
+              normal:
+                summary: delete normal progress
+                value:
+                  deletionType: normal
+              file:
+                summary: delete progress docs
+                value:
+                  deletionType: file
+              all:
+                summary: delete the progress including the file attached
+                value:
+                  deletionType: all
+      responses:
+        200:
+          description: case deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+              example:
+                status: success
+                message: Case Progress Deleted Successfully
   "/details/create/{caseID}":
     post:
       security:
@@ -2580,13 +2709,12 @@ paths:
                     properties:
                       progress:
                         "$ref": "#/components/schemas/CaseOtherDetails"
-  "/progress/upload/{otherDetailsId}":
+  "/details/upload/{otherDetailsId}":
     post:
       security:
         - bearerAuth: []
       summary: Upload other details document
       tags:
-        - Case
         - Case Other Details
       parameters:
         - description: Progress ID
