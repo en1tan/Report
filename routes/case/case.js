@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post("/create", caseController.createCase);
 router.get(
-  "/",
+  "/all",
   authorize(["super-admin", "admin", "staff", "verifier"]),
   caseController.getAllCase
 );
