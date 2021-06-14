@@ -26,7 +26,7 @@ exports.createCaseCategoryGroup = async (req, res, next) => {
     return successWithData(
       res,
       201,
-      "Case category group created succesfully",
+      "Case category group created successfully",
       data
     );
   } catch (err) {
@@ -75,18 +75,17 @@ exports.getAllCategories = async (req, res, next) => {
 
 exports.createCaseCategory = async (req, res, next) => {
   try {
-    const newCategory = await CaseCategory.create({
+    const group = await CaseCategoryGroup.findById(req.params.id);
+    if (!group) return normalError(res, 404, "group not found");
+    const category = await CaseCategory.create({
       ...req.body,
       categoryGroupID: req.params.id,
     });
-    const data = {
-      category: newCategory,
-    };
     return successWithData(
       res,
       200,
       "Case sub category added Succesfully",
-      data
+      category
     );
   } catch (err) {
     return tryCatchError(res, err);

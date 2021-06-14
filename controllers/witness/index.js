@@ -65,7 +65,7 @@ exports.updateWitness = async (req, res) => {
     await Model.findByIdAndUpdate(witness._id, req.body, {
       new: true,
     });
-    return successNoData(res, 200, "victim updated succeessfully");
+    return successNoData(res, 200, "witness updated successfully");
   } catch (err) {
     return tryCatchError(res, err);
   }

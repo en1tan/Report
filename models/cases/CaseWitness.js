@@ -47,7 +47,7 @@ const caseWitnessSchema = new Schema(
     },
 
     // Age group of witness- 0-5, 6-11, 12-17, 18 - above
-    witnessAgegroup: String,
+    witnessAgeGroup: String,
 
     // Gender of the witness
     genderOfWitness: {
@@ -111,12 +111,6 @@ const caseWitnessSchema = new Schema(
 
     // ID of who added the witness to the case Whether a user or Official
     addedBy: String,
-
-    // User type of who added the suspect to the case Whether a user or Official
-    addedByUserType: {
-      type: String,
-      enum: ["Public_User", "Partner_User"],
-    },
 
     // if the witness has any disability
     disabilityStatus: String,

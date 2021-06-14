@@ -1704,7 +1704,7 @@ paths:
       security:
         - bearerAuth: []
       summary: Add case category group
-      description: 'userTypes: [''super-admin'',''admin'']'
+      description: 'userTypes: ["super-admin","admin"]'
       tags:
         - Category Group
       requestBody:
@@ -1828,9 +1828,10 @@ paths:
           name: groupID
           schema:
             type: string
+            example: 60be1962453bd7003ccbef67
       responses:
         '200':
-          description: Category groups fetched
+          description: Categories fetched
           content:
             application/json:
               schema:
@@ -1843,6 +1844,14 @@ paths:
                     type: array
                     items:
                       "$ref": "#/components/schemas/CaseCategory"
+              example:
+                status: success
+                message: Sub Categories Fetched
+                data:
+                  - _id: 60be1b28453bd7003ccbef6f
+                    categoryName: Person with disability
+                  - _id: 60bea7b9940b6d003d857a16
+                    categoryName: Internally displaced persons
   "/case/category/group/{id}/create":
     post:
       security:
@@ -1879,8 +1888,18 @@ paths:
                   data:
                     type: object
                     properties:
-                      group:
+                      category:
                         "$ref": "#/components/schemas/CaseCategory"
+              example:
+                status: success
+                message: Case Sub Category Added Successfully
+                data:
+                  _id: 60afe8050d89140049177cb2
+                  categoryID: SCAT12643
+                  categoryName: Female Genital Mutilation
+                  categoryGroupID: 60afd6c30d89140049177caa
+                  createdAt: "2021-05-27T18:42:13.101Z"
+                  updatedAt: "2021-05-27T18:42:13.101Z"
   "/case/category/{id}/update":
     patch:
       security:
@@ -1892,6 +1911,7 @@ paths:
           required: true
           schema:
             type: string
+          example: 60afe8050d89140049177cb2
       tags:
         - Category
       requestBody:
@@ -1912,6 +1932,16 @@ paths:
                     type: string
                   data:
                     "$ref": "#/components/schemas/CaseCategory"
+              example:
+                status: success
+                message: Sub Category Updated Successfully
+                data:
+                  _id: 60afe8050d89140049177cb2
+                  categoryID: SCAT12643
+                  categoryName: Female Genital Mutilation
+                  categoryGroupID: 60afd6c30d89140049177caa
+                  createdAt: "2021-05-27T18:42:13.101Z"
+                  updatedAt: "2021-05-27T18:42:13.101Z"
   "/case/category/{id}":
     delete:
       security:
@@ -1925,6 +1955,7 @@ paths:
           required: true
           schema:
             type: string
+          example: 60afe8050d89140049177cb2
       responses:
         '200':
           description: deleted category
@@ -1936,6 +1967,9 @@ paths:
                     type: string
                   message:
                     type: string
+              example:
+                status: success
+                message: Sub Category Deleted Successfully
   "/victim/case/{id}/create":
     post:
       security:
@@ -2175,26 +2209,15 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/CaseVictim"
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
               example:
-                firstNameOfVictim: John
-                lastNameOfVictim: Doe
-                emailOfVictim: johndoe@vict.com
-                phoneNumberOfVictim: '08035468521'
-                genderOfVictim: Male
-                residentialAddressOfVictim: 12, Vitc Cl.
-                relationshipWithVictim: Friend
-                middleNameOfVictim: ''
-                addressLandmark: ''
-                lgaOfVictim: ''
-                stateOfVictim: ''
-                countryOfVictim: ''
-                victimOccupation: ''
-                victimOrganizationType: Private
-                victimOrganizationName: ''
-                otherDetailsOfVictim: ''
-                disabilityStatus: ''
-                religion: ''
+                status: success
+                message: Victim Deleted Successfully
   "/comment/create/{caseId}":
     post:
       security:
@@ -2863,6 +2886,19 @@ paths:
                     type: string
                   data:
                     "$ref": "#/components/schemas/CaseSuspect"
+              example:
+                status: success
+                message: suspect fetched
+                data:
+                  firstNameOfSuspect: Jonas
+                  lastNameOfSuspect: Phils
+                  emailOfSuspect: jonesphlias@email.com
+                  phoneNumberOfSuspect: '08035468521'
+                  genderOfSuspect: Female
+                  residentialAddressOfSuspect: 91, Sus Ln.
+                  suspectAgeGroup: ""
+                  guiltStatus: ""
+                  relationshipWithVictim: ""
   "/suspect/{id}/update":
     patch:
       summary: Edit suspect
@@ -2882,6 +2918,16 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/CaseSuspect"
+            example:
+              firstNameOfSuspect: Jonas
+              lastNameOfSuspect: Phils
+              emailOfSuspect: jonesphlias@email.com
+              phoneNumberOfSuspect: '08035468521'
+              genderOfSuspect: Female
+              residentialAddressOfSuspect: 91, Sus Ln.
+              suspectAgeGroup: ""
+              guiltStatus: ""
+              relationshipWithVictim: ""
       responses:
         '200':
           description: suspect updated successfully
@@ -2895,6 +2941,19 @@ paths:
                     type: string
                   data:
                     "$ref": "#/components/schemas/CaseSuspect"
+              example:
+                status: success
+                message: Suspect Updated Successfully
+                data:
+                  firstNameOfSuspect: Jonas
+                  lastNameOfSuspect: Phils
+                  emailOfSuspect: jonesphlias@email.com
+                  phoneNumberOfSuspect: '08035468521'
+                  genderOfSuspect: Female
+                  residentialAddressOfSuspect: 91, Sus Ln.
+                  suspectAgeGroup: ""
+                  guiltStatus: ""
+                  relationshipWithVictim: ""
   /suspect/{id}/delete:
     delete:
       summary: Delete Suspect
@@ -2923,7 +2982,270 @@ paths:
               example:
                 status: success
                 message: Suspect Deleted Successfully
-
+  /witness/{caseID}/create:
+    post:
+      summary: add case witness
+      security:
+        - bearerAuth: []
+      tags:
+        - Witness
+      parameters:
+        - description: case ID
+          in: path
+          required: true
+          name: caseID
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseWitness"
+            example:
+              firstNameOfWitness: "John"
+              middleNameOfWitness: ""
+              lastNameOfWitness: "Doe"
+              emailOfWitness: "john@doe.com"
+              phoneNumberOfWitness: "08012354678"
+              witnessAgeGroup: ""
+              genderOfWitness: Female
+              residentialAddressPfWitness: "1, John Av"
+              addressLandmark: ""
+              lgaOfWitness: ""
+              stateOfWitness: ""
+              countryOfWitness: ""
+              witnessOccupation: ""
+              witnessOrganizationType: "NGO"
+              witnessOrganizationID: ""
+              witnessOrganizationName: ""
+              otherDetailsOfWitness: ""
+              disabilityStatus: ""
+              religion: ""
+              relationshipWithVictim: ""
+      responses:
+        201:
+          description: witness added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/CaseWitness"
+              example:
+                status: success
+                message: witness created successfully
+                data:
+                  _id: ""
+                  firstNameOfWitness: ""
+                  middleNameOfWitness: ""
+                  lastNameOfWitness: ""
+                  __v: 0
+  /witness/{caseID}/all:
+    get:
+      summary: get all witnesses of a case
+      tags:
+        - Witness
+      security:
+        - bearerAuth: []
+      parameters:
+        - description: case ID
+          in: path
+          required: true
+          name: caseID
+          schema:
+            type: string
+      responses:
+        200:
+          description: fetched all witnesses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/CaseWitness"
+              example:
+                status: success
+                message: Fetched All Witnesses
+                data:
+                  - _id: ""
+                    firstNameOfWitness: ""
+                    middleNameOfWitness: ""
+                    lastNameOfWitness: ""
+                    __v: 0
+                  - _id: ""
+                    firstNameOfWitness: ""
+                    middleNameOfWitness: ""
+                    lastNameOfWitness: ""
+                    __v: 0
+  /witness/{id}:
+    get:
+      summary: fetch a single witness
+      tags:
+        - Witness
+      security:
+        - bearerAuth: []
+      parameters:
+        - description: witness ID
+          in: path
+          required: true
+          name: id
+          schema:
+            type: string
+      responses:
+        200:
+          description: returned witness data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/CaseWitness"
+              example:
+                status: success
+                message: witness fetched successfully
+                data:
+                  _id: ""
+                  caseID: ""
+                  firstNameOfWitness: "John"
+                  middleNameOfWitness: ""
+                  lastNameOfWitness: "Doe"
+                  emailOfWitness: "john@doe.com"
+                  phoneNumberOfWitness: "08012354678"
+                  witnessAgeGroup: ""
+                  genderOfWitness: Female
+                  residentialAddressPfWitness: "1, John Av"
+                  addressLandmark: ""
+                  lgaOfWitness: ""
+                  stateOfWitness: ""
+                  countryOfWitness: ""
+                  witnessOccupation: ""
+                  witnessOrganizationType: "NGO"
+                  witnessOrganizationID: ""
+                  witnessOrganizationName: ""
+                  otherDetailsOfWitness: ""
+                  disabilityStatus: ""
+                  religion: ""
+                  relationshipWithVictim: ""
+  /witness/{id}/update:
+    patch:
+      summary: update witness details
+      tags:
+        - Witness
+      security:
+        - bearerAuth: []
+      parameters:
+        - description: witness ID
+          in: path
+          required: true
+          name: id
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseWitness"
+            example:
+              firstNameOfWitness: "John"
+              middleNameOfWitness: ""
+              lastNameOfWitness: "Doe"
+              emailOfWitness: "john@doe.com"
+              phoneNumberOfWitness: "08012354678"
+              witnessAgeGroup: ""
+              genderOfWitness: Female
+              residentialAddressPfWitness: "1, John Av"
+              addressLandmark: ""
+              lgaOfWitness: ""
+              stateOfWitness: ""
+              countryOfWitness: ""
+              witnessOccupation: ""
+              witnessOrganizationType: "NGO"
+              witnessOrganizationID: ""
+              witnessOrganizationName: ""
+              otherDetailsOfWitness: ""
+              disabilityStatus: ""
+              religion: ""
+              relationshipWithVictim: ""
+      responses:
+        200:
+          description: witness updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Witness Updated Successfully
+                  data:
+                    $ref: "#/components/schemas/CaseWitness"
+                    example:
+                      firstNameOfWitness: "John"
+                      middleNameOfWitness: ""
+                      lastNameOfWitness: "Doe"
+                      emailOfWitness: "john@doe.com"
+                      phoneNumberOfWitness: "08012354678"
+                      witnessAgeGroup: ""
+                      genderOfWitness: Female
+                      residentialAddressPfWitness: "1, John Av"
+                      addressLandmark: ""
+                      lgaOfWitness: ""
+                      stateOfWitness: ""
+                      countryOfWitness: ""
+                      witnessOccupation: ""
+                      witnessOrganizationType: "NGO"
+                      witnessOrganizationID: ""
+                      witnessOrganizationName: ""
+                      otherDetailsOfWitness: ""
+                      disabilityStatus: ""
+                      religion: ""
+                      relationshipWithVictim: ""
+  /witness/{id}/delete:
+    delete:
+      tags:
+        - Witness
+      summary: delete witness data
+      parameters:
+        - description: witness ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: witness deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: witness deleted successfully
 components:
   securitySchemes:
     bearerAuth:
