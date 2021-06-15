@@ -587,12 +587,14 @@ exports.getSinglePublicCase = async (req, res) => {
     const categoryIDs = await CaseTaggedCategories.find({
       caseID: existingCase._id,
     });
-    for (let i = 0; i < categoryIDs.length; i++) {
-      const category = await CaseCategory.findById(
-        categoryIDs[i].caseCategoryID
-      );
-      categories.push(category.categoryName);
-    }
+    if (categoryIDs.length > 0)
+      for (let i = 0; i < categoryIDs.length; i++) {
+        const category = await CaseCategory.findById(
+          categoryIDs[i].caseCategoryID
+        );
+        if (category) categories.push(category.categoryName);
+        else categories.push();
+      }
     const publisher = await PartnerUser.findById(
       existingCase.publishedBy
     ).select("firstName lastName middleName");
