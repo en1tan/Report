@@ -5,7 +5,6 @@ const CaseVictim = require("../../models/cases/CaseVictim");
 const CaseSuspect = require("../../models/cases/CaseSuspect");
 const CaseWitness = require("../../models/cases/CaseWitness");
 const CaseOtherDetails = require("../../models/cases/CaseOtherDetails");
-const CaseProgress = require("../../models/cases/CaseProgress");
 const CaseEvidence = require("../../models/cases/CaseEvidence");
 const CaseCategory = require("../../models/cases/CaseCategory");
 const CaseTaggedCategories = require("../../models/cases/CaseTaggedCategories");
@@ -20,7 +19,7 @@ const {
 } = require("../../utils/successHandler");
 
 /**
- * FOllow a case
+ * Follow a case
  * @param {Express.Request} req
  * @param {Express.Response} res
  * @returns {Promise<*>}
@@ -304,7 +303,10 @@ exports.createCase = async (req, res) => {
 exports.updateExistingCase = async (req, res) => {
   try {
     const existingCase = await Case.findById(req.params.id);
-    if (!existingCase) return normalError(res, 404, "Case not found!");
+    if (!existingCase)
+      return normalError(res, 404, "Case not found!", existingCase);
+    if (existingCase.publishStatus === "published" && !req.user.userType)
+      return normalError(res, 100, "published case cannot be edited", null);
     const updatedCase = await Case.findByIdAndUpdate(
       existingCase._id,
       req.body,
@@ -404,7 +406,8 @@ exports.saveEvidence = async (req, res) => {
 exports.getCaseEvidence = async (req, res) => {
   try {
     const existingCase = await Case.findById(req.params.caseID);
-    if (!existingCase) return normalError(res, 404, "case not found");
+    if (!existingCase)
+      return normalError(res, 404, "case not found", existingCase);
     const evidence = await CaseEvidence.find({ caseID: req.params.caseID });
     return successWithData(res, 200, "evidence fetched", evidence);
   } catch (err) {
@@ -415,7 +418,6 @@ exports.getCaseEvidence = async (req, res) => {
  * Fetch personal cases
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @param {*} next
  * @returns {Promise<[]>}
  */
 exports.getPersonalCases = async (req, res) => {
@@ -479,7 +481,6 @@ exports.getPersonalCases = async (req, res) => {
  * Verify a case
  * @param {Express.Request} req
  * @param {Express.response} res
- * @param {*} next
  * @returns {Promise<{}>}
  */
 exports.verifyCase = async (req, res) => {
@@ -505,7 +506,6 @@ exports.verifyCase = async (req, res) => {
  * Publish Case
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @param {*} next
  * @returns {Promise<{}>}
  */
 exports.publishCase = async (req, res) => {
@@ -545,13 +545,13 @@ exports.publishCase = async (req, res) => {
  * Resolve a case
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @param {*} next
  * @returns {Promise<{}>}
  */
 exports.resolveCase = async (req, res) => {
   try {
     const existingCase = await Case.findById(req.params.id);
-    if (!existingCase) return normalError(res, 404, "Case does not exist");
+    if (!existingCase)
+      return normalError(res, 404, "Case does not exist", existingCase);
 
     const resolvedCase = await Case.findByIdAndUpdate(
       existingCase._id,
@@ -576,12 +576,11 @@ exports.resolveCase = async (req, res) => {
  * Also supports login status
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @param {*} next
  * @returns {Promise<{}>}
  */
 exports.getSinglePublicCase = async (req, res) => {
   let categories = [];
-  let userFollowStatus = false;
+  let userFollowStatus;
   try {
     const existingCase = await Case.findById(req.params.id);
     if (!existingCase) return normalError(res, 404, "Case not found");
@@ -628,7 +627,9 @@ exports.getSinglePublicCase = async (req, res) => {
       publisher,
     };
     return successWithData(res, 200, "Fetched case", data);
-  } catch (err) {}
+  } catch (err) {
+    return tryCatchError(res, err);
+  }
 };
 
 /**
@@ -636,7 +637,6 @@ exports.getSinglePublicCase = async (req, res) => {
  * Also supports log in status
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @param {*} next
  * @returns {Promise<[]>}
  */
 exports.getPublicCases = async (req, res) => {
@@ -684,7 +684,7 @@ exports.getPublicCases = async (req, res) => {
       total: Math.ceil(count / limit),
       page: parseInt(page),
     };
-    return successWithData(res, 200, "Cases fetched Succesfully", data);
+    return successWithData(res, 200, "Cases fetched Successfully", data);
   } catch (err) {
     return tryCatchError(res, err);
   }

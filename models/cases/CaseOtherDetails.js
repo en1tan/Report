@@ -25,19 +25,13 @@ const caseOtherDetailsSchema = new Schema(
     message: {
       type: String,
     },
-    otherDetailsDocs: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "CaseOtherDetailsDoc",
-      },
-    ],
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const CaseOtherDetails = mongoose.model(
   "CaseOtherDetails",
-  caseOtherDetailsSchema,
+  caseOtherDetailsSchema
 );
 
 module.exports = CaseOtherDetails;

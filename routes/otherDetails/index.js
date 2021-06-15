@@ -11,9 +11,23 @@ router.post(
   otherDetailsController.createOtherDetails
 );
 router.post(
-  "/upload/:otherDetailsId",
+  "/upload/:otherDetailsID",
   auth(true),
   otherDetailsController.uploadOtherDetailsDoc
 );
+
+router.get(
+  "/:caseID/conversations",
+  auth(true),
+  otherDetailsController.fetchAllConversations
+);
+
+router.get(
+  "/:id/conversation",
+  auth(true),
+  otherDetailsController.fetchConversation
+);
+
+router.delete("/:id/delete", otherDetailsController.deleteConversation);
 
 module.exports = router;

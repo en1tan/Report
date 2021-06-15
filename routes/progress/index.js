@@ -19,7 +19,12 @@ router.post(
 );
 
 router.get("/:caseID", auth(), progressController.getCurrentProgress);
-router.patch("/:id/update", auth(true), progressController.editCaseProgress);
+router.patch(
+  "/:id/update",
+  auth(true),
+  authorize(["admin", "staff"]),
+  progressController.editCaseProgress
+);
 router.delete(
   "/:id/delete",
   auth(true),
