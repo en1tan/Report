@@ -1665,6 +1665,72 @@ paths:
               example:
                 status: success
                 message: Evidence Saved Successfully
+  /case/{caseID}/:
+    get:
+      security:
+        - bearerAuth: []
+      summary: get case evidence
+      tags:
+        - Case
+      parameters:
+        - description: case ID
+          in: path
+          required: true
+          name: caseID
+          schema:
+            type: string
+      responses:
+        200:
+          description: fetched evidence
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Evidence Fetched
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/CaseEvidence"
+                    example:
+                      - _id: ""
+                        fileID: ""
+                        caseID: ""
+                        fileName: ""
+                        URL: ""
+  /case/evidence/{id}/delete:
+    delete:
+      summary: delete case evidence
+      tags:
+        - Case
+      security:
+        - bearerAuth: []
+      parameters:
+        - description: evidence ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: evidence file deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: evidence deleted successfully
   "/case/category/groups":
     get:
       security:
@@ -3246,6 +3312,7 @@ paths:
                   message:
                     type: string
                     example: witness deleted successfully
+
 components:
   securitySchemes:
     bearerAuth:

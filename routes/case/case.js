@@ -25,6 +25,8 @@ router.post("/create/:id/evidence", caseController.saveEvidence);
 
 router.get("/:caseID/evidence", caseController.getCaseEvidence);
 
+router.delete("/evidence/:id/delete", caseController.deleteCaseEvidence);
+
 router.patch(
   "/:id/assign",
   authorize(["admin"]),

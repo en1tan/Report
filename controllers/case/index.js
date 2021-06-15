@@ -408,12 +408,26 @@ exports.getCaseEvidence = async (req, res) => {
     const existingCase = await Case.findById(req.params.caseID);
     if (!existingCase)
       return normalError(res, 404, "case not found", existingCase);
+    if (!req.user !== existingCase.publicUser || !req.user.userType)
+      return normalError(res, 404, "Resource not found");
     const evidence = await CaseEvidence.find({ caseID: req.params.caseID });
     return successWithData(res, 200, "evidence fetched", evidence);
   } catch (err) {
     return tryCatchError(res, err);
   }
 };
+
+exports.deleteCaseEvidence = async (req, res) => {
+  try {
+    const evidence = await CaseEvidence.findById(req.params.id);
+    if (!evidence) return normalError(res, 404, "evidence file not found");
+    await CaseEvidence.findByIdAndDelete(evidence._id);
+    return successNoData(res, 200, "evidence deleted successfully");
+  } catch (err) {
+    return tryCatchError(res, err);
+  }
+};
+
 /**
  * Fetch personal cases
  * @param {Express.Request} req
