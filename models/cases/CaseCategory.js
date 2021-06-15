@@ -34,9 +34,11 @@ caseCategorySchema.pre("save", function (next) {
   next();
 });
 
-const CaseCategory = mongoose.model(
-  "CaseCategory",
-  caseCategorySchema
-);
+caseCategorySchema.pre("update", function (next) {
+  this.categoryID = genIDs("SCAT");
+  next();
+});
+
+const CaseCategory = mongoose.model("CaseCategory", caseCategorySchema);
 
 module.exports = CaseCategory;

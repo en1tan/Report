@@ -34,6 +34,11 @@ caseCategoryGroupSchema.pre("save", function (next) {
   next();
 });
 
+caseCategoryGroupSchema.pre("update", function (next) {
+  this.categoryGroupID = genIDs("SGRP");
+  next();
+});
+
 const CaseCategoryGroup = mongoose.model(
   "CaseCategoryGroup",
   caseCategoryGroupSchema
