@@ -173,8 +173,11 @@ exports.getAllCase = async (req, res) => {
   if (req.user.userType === "staff") {
     filter.verificationStatus = "verified";
     filter.assignedPartnerUserId = req.user._id;
-  } else if (req.user.userType === "verifier")
+  } else if (req.user.userType === "verifier") {
     filter.verificationStatus = "unVerified";
+    filter.reportType = "Standard";
+    filter.publishStatus = "unPublished";
+  }
   try {
     const cases = await Case.find()
       .select(

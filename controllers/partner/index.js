@@ -1,10 +1,7 @@
 const Partner = require("../../models/partners/Partners");
 const PartnerBranch = require("../../models/partners/PartnersBranches");
 const PartnerUser = require("../../models/partners/PartnerUser");
-const {
-  tryCatchError,
-  normalError,
-} = require("../../utils/errorHandlers");
+const { tryCatchError, normalError } = require("../../utils/errorHandlers");
 const {
   successWithData,
   successNoData,
@@ -15,11 +12,7 @@ exports.getAllStaff = async (req, res, next) => {
   filter = { partnerID: req.params.id };
   try {
     if (!(await Partner.findById(req.params.id)))
-      return normalError(
-        res,
-        404,
-        "Partner organization does not exist"
-      );
+      return normalError(res, 404, "Partner organization does not exist");
     const staffs = await PartnerUser.find(filter)
       .sort("-createdAt")
       .limit(limit * 1)
@@ -40,8 +33,7 @@ exports.getAllStaff = async (req, res, next) => {
 exports.editStaff = async (req, res, next) => {
   try {
     const staff = await PartnerUser.findById(req.params.id);
-    if (!staff)
-      return normalError(res, 404, "Partner user data not found");
+    if (!staff) return normalError(res, 404, "Partner user data not found");
     const updatedStaff = await PartnerUser.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -61,16 +53,11 @@ exports.editStaff = async (req, res, next) => {
 exports.deleteStaff = async (req, res, next) => {
   try {
     const staff = await PartnerUser.findById(req.params.id);
-    if (!staff)
-      return normalError(res, 404, "Partner user data not found");
+    if (!staff) return normalError(res, 404, "Partner user data not found");
     await PartnerUser.findByIdAndUpdate(req.params.id, {
       active: false,
     });
-    return successNoData(
-      res,
-      200,
-      "Partner user record deleted successfully."
-    );
+    return successNoData(res, 200, "Partner user record deleted successfully.");
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -90,12 +77,7 @@ exports.getAllPartners = async (req, res, next) => {
       total: Math.ceil(count / limit),
       page: parseInt(page),
     };
-    return successWithData(
-      res,
-      200,
-      "Fetched all partner organizations",
-      data
-    );
+    return successWithData(res, 200, "Fetched all partner organizations", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -117,6 +99,58 @@ exports.createPartnerOrganization = async (req, res, next) => {
   }
 };
 
+exports.getSinglePartnerOrganization = async (req, res) => {
+  try {
+    const partnerOrg = await Partner.findById(req.params.id);
+    if (!partnerOrg)
+      return normalError(res, 404, "partner organization not found");
+    return successWithData(
+      res,
+      200,
+      "partner organization fetched successfully",
+      partnerOrg
+    );
+  } catch (err) {
+    return tryCatchError(res, err);
+  }
+};
+
+exports.updatePartnerOrganization = async (req, res) => {
+  try {
+    const partnerOrg = await Partner.findById(req.params.id);
+    if (!partnerOrg)
+      return normalError(res, 404, "partner organization not found");
+    const updatedOrg = await Partner.findOneAndUpdate(
+      partnerOrg._id,
+      req.body,
+      { new: true }
+    );
+    return successWithData(
+      res,
+      200,
+      "partner organization updated successfully",
+      updatedOrg
+    );
+  } catch (err) {
+    return tryCatchError(res, err);
+  }
+};
+
+exports.deletePartnerOrganization = async (req, res) => {
+  try {
+    const partnerOrg = await Partner.findById(req.params.id);
+    if (!partnerOrg)
+      return normalError(res, 404, "partner organization not found");
+    await Partner.findByIdAndDelete(partnerOrg._id);
+    return successNoData(
+      res,
+      200,
+      "partner organizattion deleted successfully"
+    );
+  } catch (err) {
+    return tryCatchError(res, err);
+  }
+};
 exports.addBranchToPartnerOrganization = async (req, res, next) => {
   try {
     const partnerOrg = await Partner.findById(req.params.id);

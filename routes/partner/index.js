@@ -58,4 +58,25 @@ router.get(
   partnerController.getAllPartners
 );
 
+router.get(
+  "/:id",
+  auth(true),
+  authorize("super-admin"),
+  partnerController.getSinglePartnerOrganization
+);
+
+router.patch(
+  "/:id/update",
+  auth(true),
+  authorize("super-admin"),
+  partnerController.updatePartnerOrganization
+);
+
+router.delete(
+  "/:id/delete",
+  auth(true),
+  authorize("super-admin"),
+  partnerController.deletePartnerOrganization
+);
+
 module.exports = router;
