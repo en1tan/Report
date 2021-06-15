@@ -3,8 +3,8 @@ const morgan = require("morgan");
 const cors = require("cors");
 const ymljs = require("yamljs");
 const doc = ymljs.load("./swagger.yaml");
-
 const swaggerUI = require("swagger-ui-express");
+const useragent = require("express-useragent");
 
 const app = express();
 
@@ -22,6 +22,7 @@ if (process.env.NODE_ENV === "development") {
 // Body parser reading data from req.body
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(useragent.express());
 
 app.use("/api/v1/", queryAuth(), routes);
 
