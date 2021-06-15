@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const {genIDs} = require("../../utils/genID");
+const { genIDs } = require("../../utils/genID");
 const Schema = mongoose.Schema;
 
 const partnerUserSchema = new Schema(
@@ -91,6 +91,7 @@ const partnerUserSchema = new Schema(
     // State of the Resendential Address
     stateOfAssignment: {
       type: String,
+      required: true,
     },
 
     country: {
@@ -120,7 +121,7 @@ const partnerUserSchema = new Schema(
       default: true,
     },
   },
-  {timestamps: true}
+  { timestamps: true }
 );
 
 partnerUserSchema.pre("save", async function (next) {
@@ -138,11 +139,11 @@ partnerUserSchema.methods.correctPassword = async function (
 };
 
 partnerUserSchema.pre("find", function () {
-  this.where({active: true});
+  this.where({ active: true });
 });
 
 partnerUserSchema.pre("findOne", function () {
-  this.where({active: true});
+  this.where({ active: true });
 });
 
 const PartnerUser = mongoose.model("PartnerUser", partnerUserSchema);

@@ -15,6 +15,7 @@ const public = require("./public");
 const victim = require("./victim");
 const suspect = require("./suspect");
 const witness = require("./witness");
+const branch = require("./branch");
 
 const applicationError = require("../utils/applicationError");
 
@@ -32,6 +33,7 @@ router.use("/comment", comment);
 router.use("/victim", auth(true), victim);
 router.use("/suspect", auth(true), suspect);
 router.use("/witness", auth(true), witness);
+router.use("/branch", auth(true), branch);
 router.all("*", error.globalErrors);
 
 router.use(applicationError);

@@ -1,5 +1,4 @@
 const Partner = require("../../models/partners/Partners");
-const PartnerBranch = require("../../models/partners/PartnersBranches");
 const PartnerUser = require("../../models/partners/PartnerUser");
 const { tryCatchError, normalError } = require("../../utils/errorHandlers");
 const {
@@ -9,7 +8,7 @@ const {
 
 exports.getAllStaff = async (req, res, next) => {
   let { page = 1, limit = 20 } = req.query;
-  filter = { partnerID: req.params.id };
+  const filter = { partnerID: req.params.id };
   try {
     if (!(await Partner.findById(req.params.id)))
       return normalError(res, 404, "Partner organization does not exist");
@@ -142,30 +141,7 @@ exports.deletePartnerOrganization = async (req, res) => {
     if (!partnerOrg)
       return normalError(res, 404, "partner organization not found");
     await Partner.findByIdAndDelete(partnerOrg._id);
-    return successNoData(
-      res,
-      200,
-      "partner organizattion deleted successfully"
-    );
-  } catch (err) {
-    return tryCatchError(res, err);
-  }
-};
-exports.addBranchToPartnerOrganization = async (req, res, next) => {
-  try {
-    const partnerOrg = await Partner.findById(req.params.id);
-    if (!partnerOrg)
-      return normalError(res, 404, "Partner organization not found");
-    const branchData = Object.assign(req.body, {
-      partnerID: req.params.id,
-    });
-    const branch = await PartnerBranch.create(branchData);
-    return successWithData(
-      res,
-      201,
-      "Partner organization branch created successfully",
-      branch
-    );
+    return successNoData(res, 200, "partner organization deleted successfully");
   } catch (err) {
     return tryCatchError(res, err);
   }

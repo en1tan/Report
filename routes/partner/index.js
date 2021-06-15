@@ -6,6 +6,7 @@ const auth = require("../../middleware/authenticate");
 const validator = require("../../utils/validator");
 const partnerAuthController = require("../../controllers/auth/partnerUser");
 const partnerController = require("../../controllers/partner");
+const partnerUserController = require("../../controllers/partner/user");
 
 router.post(
   "/signup",
@@ -14,6 +15,13 @@ router.post(
 );
 
 router.post("/login", validator("login", "body"), partnerAuthController.signin);
+
+router.get(
+  "/user/:id",
+  auth(true),
+  authorize(["super-admin", "admin"]),
+  partnerUserController.fetchPartnerUser
+);
 
 router.get(
   "/:id/users",
@@ -39,12 +47,6 @@ router.post(
   auth(true),
   authorize(["super-admin"]),
   partnerController.createPartnerOrganization
-);
-router.post(
-  "/:id/branch/create",
-  auth(true),
-  authorize(["super-admin", "admin"]),
-  partnerController.addBranchToPartnerOrganization
 );
 
 router.get("/profile", auth(true), partnerAuthController.partnerProfile);
