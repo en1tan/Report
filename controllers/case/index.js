@@ -615,7 +615,7 @@ exports.getSinglePublicCase = async (req, res) => {
         "caseSummary",
         "datePublished",
         "dateOfIncident",
-        "publishedBy",
+        "publishStatus",
         "resolutionStatus",
         "reportType",
         "state",
