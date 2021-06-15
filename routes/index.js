@@ -25,7 +25,7 @@ router.use("/public", public);
 router.use("/user", user);
 router.use("/partner", partner);
 router.use("/case", auth(true), cases);
-router.use("/organization", organization);
+router.use("/organization", auth(true), organization);
 router.use("/progress", progress);
 router.use("/details", details);
 router.use("/contact", contact);

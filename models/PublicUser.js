@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const {genIDs} = require("../utils/genID");
+const { genIDs } = require("../utils/genID");
 const Schema = mongoose.Schema;
 
 const publicUserSchema = new Schema(
   {
     //Public User ID
-    userID:{
-      type: String
+    userID: {
+      type: String,
     },
     // First Name of the User
     firstName: {
@@ -90,6 +90,10 @@ const publicUserSchema = new Schema(
       type: String,
     },
 
+    profilePicPath: {
+      type: String,
+    },
+
     // Encrypted password of the User
     password: {
       type: String,
@@ -120,7 +124,7 @@ const publicUserSchema = new Schema(
 );
 
 publicUserSchema.pre("save", async function (next) {
-  this.userID=genIDs("SUSR");
+  this.userID = genIDs("SUSR");
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 12);
   next();
