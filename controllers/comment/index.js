@@ -41,6 +41,7 @@ exports.readComments = async (req, res, next) => {
       commenters.push({
         avatar: user.avatar,
         userName: user.userName,
+        fullName: `${user.lastName} ${user.firstName} ${user.middleName}`,
         comment: comments[i].comment,
         caseID: req.params.caseID,
         dateOfComment: comments[i].updatedAt,
