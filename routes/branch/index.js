@@ -31,3 +31,5 @@ router.get(
   authorize(["super-admin", "admin"]),
   controller.listUsers
 );
+
+module.exports = router
