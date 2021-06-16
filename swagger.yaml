@@ -2449,7 +2449,7 @@ paths:
     post:
       summary: Request contact details
       tags:
-        - Misc
+        - Contact
       requestBody:
         content:
           application/json:
@@ -2475,6 +2475,95 @@ paths:
               example:
                 status: success
                 message: Contact requested successfully
+  /contact/:
+    get:
+      summary: get all contact queries
+      tags:
+        - Contact
+      security:
+        - bearerAuth: []
+      parameters:
+        - description: page number
+          in: query
+          name: page
+          schema:
+            type: integer
+          example: 1
+        - description: limit
+          in: query
+          name: limit
+          schema:
+            type: integer
+          example: 20
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    message: Contact Details Fetched
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Contact"
+                    example:
+                      - _id: ""
+                        tickedID: ""
+                        senderName: ""
+                        phoneNumber: ""
+                        email: ""
+                        subject: ""
+                        message: ""
+                        status: ""
+                        createdAt: ""
+                        updatedAt: ""
+  /contact/{id}:
+    get:
+      summary: fetch a single contact enquiry
+      tags:
+        - Contact
+      security:
+        - bearerAuth: []
+      parameters:
+        - description: contact ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Enquiry Fetched
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    message: Enquiry Fetched
+                  data:
+                    $ref: "#/components/schemas/Contact"
+                    example:
+                      _id: ""
+                      tickedID: ""
+                      senderName: ""
+                      phoneNumber: ""
+                      email: ""
+                      subject: ""
+                      message: ""
+                      status: ""
+                      createdAt: ""
+                      updatedAt: ""
   "/partner/create":
     post:
       security:
