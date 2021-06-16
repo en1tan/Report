@@ -1,10 +1,8 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-const ymljs = require("yamljs");
-const doc = ymljs.load("./swagger.yaml");
-const swaggerUI = require("swagger-ui-express");
 const useragent = require("express-useragent");
+const redoc = require("redoc-express");
 
 const app = express();
 
@@ -26,6 +24,15 @@ app.use(useragent.express());
 
 app.use("/api/v1/", queryAuth(), routes);
 
-app.use("/docs", swaggerUI.serve, swaggerUI.setup(doc));
+app.get("/swagger.json", (req, res) => {
+  res.sendFile("/swagger.json", { root: "." });
+});
 
+app.get(
+  "/docs",
+  redoc({
+    title: "Sorosoke API",
+    specUrl: "/swagger.json",
+  })
+);
 module.exports = app;

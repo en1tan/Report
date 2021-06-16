@@ -3578,7 +3578,6 @@ paths:
                   lga: ""
                   state: ""
                   country: ""
-
   /branch/{id}/delete:
     delete:
       tags:

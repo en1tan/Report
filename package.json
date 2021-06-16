@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js",
+    "dev": "yaml2json swagger.yml > swagger.json && nodemon server.js",
     "start:prod": "NODE_ENV=production node server.js"
   },
   "author": "",
@@ -42,6 +42,7 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.2",
     "nanoid": "^3.1.20",
+    "redoc-express": "^1.0.0",
     "swagger-ui-express": "^4.1.6",
     "uuid": "^8.3.0",
     "validator": "^13.1.1",
