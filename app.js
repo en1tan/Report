@@ -2,6 +2,9 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const useragent = require("express-useragent");
+const ymljs = require("yamljs");
+const doc = ymljs.load("./swagger.yaml");
+const swaggerUI = require("swagger-ui-express");
 const redoc = require("redoc-express");
 
 const app = express();
@@ -28,8 +31,9 @@ app.get("/swagger.json", (req, res) => {
   res.sendFile("/swagger.json", { root: "." });
 });
 
+app.use("/docs", swaggerUI.serve, swaggerUI.setup(doc));
 app.get(
-  "/docs",
+  "/map",
   redoc({
     title: "Sorosoke API",
     specUrl: "/swagger.json",
