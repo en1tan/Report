@@ -3,4 +3,3 @@ node_modules/
 config.env
 .git/
 .idea
-swagger.yml

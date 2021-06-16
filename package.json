@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "yaml2json swagger.yml > swagger.json && nodemon server.js",
+    "dev": "yaml2json swagger.yaml > swagger.json && nodemon server.js",
     "start:prod": "NODE_ENV=production node server.js"
   },
   "author": "",
