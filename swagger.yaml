@@ -2497,6 +2497,7 @@ paths:
           example: 20
       responses:
         200:
+          description: contact details fetched
           content:
             application/json:
               schema:
@@ -2507,7 +2508,7 @@ paths:
                     example: success
                   message:
                     type: string
-                    message: Contact Details Fetched
+                    example: Contact Details Fetched
                   data:
                     type: array
                     items:
@@ -2550,7 +2551,7 @@ paths:
                     example: success
                   message:
                     type: string
-                    message: Enquiry Fetched
+                    example: Enquiry Fetched
                   data:
                     $ref: "#/components/schemas/Contact"
                     example:
@@ -3164,7 +3165,7 @@ paths:
               phoneNumberOfWitness: "08012354678"
               witnessAgeGroup: ""
               genderOfWitness: Female
-              residentialAddressPfWitness: "1, John Av"
+              residentialAddressOfWitness: "1, John Av"
               addressLandmark: ""
               lgaOfWitness: ""
               stateOfWitness: ""
@@ -3401,7 +3402,211 @@ paths:
                   message:
                     type: string
                     example: witness deleted successfully
+  /branch/{partnerID}/create:
+    post:
+      summary: add branch to partner organization
+      tags:
+        - Branch
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: partnerID
+          required: true
+          description: partner organization ID
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartnerBranch"
+      responses:
+        201:
+          description: branch created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/PartnerBranch"
+              example:
+                status: success
+                message: branch created
+                data:
+                  _id: ""
+                  partnerID: ""
+                  branchID: ""
+                  branchName: ""
+                  address: ""
+                  ward: ""
+                  lga: ""
+                  state: ""
+                  country: ""
+  /branch/{partnerID}/all:
+    get:
+      summary: fetch all branches
+      tags:
+        - Branch
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: partnerID
+          required: true
+          description: partner organization ID
+          schema:
+            type: string
+      responses:
+        200:
+          description: fetched all branches
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PartnerBranch"
+              example:
+                status: success
+                message: fetched all branches
+                data:
+                  - _id: ""
+                    partnerID: ""
+                    branchID: ""
+                    branchName: ""
+                    address: ""
+                    ward: ""
+                    lga: ""
+                    state: ""
+                    country: ""
+  /branch/{id}:
+    get:
+      summary: fetch branch
+      tags:
+        - Branch
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: branch ID
+          schema:
+            type: string
+      responses:
+        200:
+          description: fetched branch
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/PartnerBranch"
+              example:
+                status: success
+                message: fetched a branch
+                data:
+                  _id: ""
+                  partnerID: ""
+                  branchID: ""
+                  branchName: ""
+                  address: ""
+                  ward: ""
+                  lga: ""
+                  state: ""
+                  country: ""
+  /branch/{id}/update:
+    post:
+      summary: update branch
+      tags:
+        - Branch
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: branch ID
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartnerBranch"
+      responses:
+        201:
+          description: branch updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/PartnerBranch"
+              example:
+                status: success
+                message: branch updated
+                data:
+                  _id: ""
+                  partnerID: ""
+                  branchID: ""
+                  branchName: ""
+                  address: ""
+                  ward: ""
+                  lga: ""
+                  state: ""
+                  country: ""
 
+  /branch/{id}/delete:
+    delete:
+      tags:
+        - Branch
+      summary: delete branch
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: branch ID
+          schema:
+            type: string
+      responses:
+        200:
+          description: branch deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: branch deleted
 components:
   securitySchemes:
     bearerAuth:
