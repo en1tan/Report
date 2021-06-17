@@ -620,6 +620,7 @@ exports.getSinglePublicCase = async (req, res) => {
       const f = await FollowCase.findOne({ publicUserID: loggedInUser._id })
         .where("caseID")
         .in([req.params.id]);
+      if(!f) userFollowStatus = false;
       userFollowStatus = existingCase.followedBy.includes(f._id);
     }
     const data = {
