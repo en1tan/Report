@@ -12,7 +12,7 @@ exports.createCaseVictim = async (req, res, next) => {
   try {
     const existingCase = await Case.findById(req.params.id);
     if (!existingCase) return normalError(res, 404, "case not found");
-    req.body.caseID = req.params.caseID;
+    req.body.caseID = req.params.id;
     req.body.addedBy = req.user;
     const newVictim = await CaseVictim.create(req.body);
     return successWithData(
