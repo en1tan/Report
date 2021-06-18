@@ -34,10 +34,18 @@ exports.createCaseVictim = async (req, res, next) => {
 
 exports.getCaseVictims = async (req, res) => {
   try {
+    let { page = 1, limit = 20 } = req.query;
     const victims = await CaseVictim.find({ caseID: req.params.caseID }).select(
       "firstNameOfVictim lastNameOfVictim middleNameOfVictim"
-    );
-    return successWithData(res, 200, "Case victims returned", victims);
+    ).limit(limit * 1).skip((page - 1) * limit)
+exec();
+    const count = await CaseVictim.find({ caseID: re.params.caseID });
+    const data = {
+       victims,
+       total: Math.ceil(count / limit),
+       page: parseInt(page),
+     };
+    return successWithData(res, 200, "Case victims returned", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
