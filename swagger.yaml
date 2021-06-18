@@ -1666,7 +1666,7 @@ paths:
               example:
                 status: success
                 message: Evidence Saved Successfully
-  "/case/{caseID}/":
+  "/case/{caseID}/evidence":
     get:
       security:
         - bearerAuth: []
