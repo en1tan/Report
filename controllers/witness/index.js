@@ -10,7 +10,7 @@ const {
 
 exports.createWitness = async (req, res) => {
   try {
-    const existingCase = await Case.findById(req.params.id);
+    const existingCase = await Case.findById(req.params.caseID);
     if (!existingCase) return normalError(res, 404, "case not found");
     req.body.caseID = existingCase._id;
     req.body.addedBy = req.user._id;
@@ -37,7 +37,7 @@ exports.getWitnesses = async (req, res) => {
     const existingCase = await Case.findById(req.params.caseID);
     if (!existingCase) return normalError(res, 404, "case not found");
     const witnesses = await Model.find({ caseID: req.params.caseID }).select(
-      "firstNameOfWitness" + "middleNameOfWitness" + "lastNameOfWitness"
+      "firstNameOfWitness middleNameOfWitness lastNameOfWitness"
     );
     return successWithData(res, 200, "fetched all witnesses", witnesses);
   } catch (err) {
@@ -47,11 +47,9 @@ exports.getWitnesses = async (req, res) => {
 
 exports.getWitness = async (req, res) => {
   try {
-    const witness = await Model.findById(req.params.id).select(
-      "firstNameOfSuspect middleNameOfSuspect lastNameOfSuspect"
-    );
+    const witness = await Model.findById(req.params.id);
     if (!witness) return normalError(res, 404, "witness not found");
-    return successWithData(res, 200, "witness fetched successfully");
+    return successWithData(res, 200, "witness fetched successfully", witness);
   } catch (err) {
     return tryCatchError(res, err);
   }

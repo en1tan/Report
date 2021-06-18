@@ -37,11 +37,9 @@ exports.getSuspects = async (req, res) => {
   try {
     const existingCase = await Case.findById(req.params.caseID);
     if (!existingCase) return normalError(res, 404, "case not found");
-    const suspects = await Model.find({ caseID: req.params.id })
-      .select(
-        "firstNameOfSuspect" + " lastNameOfSuspect" + " middleNameOfSuspect"
-      )
-      .sort("lastNameOfSuspect");
+    const suspects = await Model.find({ caseID: req.params.caseID })
+      .select("firstNameOfSuspect lastNameOfSuspect middleNameOfSuspect")
+      .sort("-createdAt");
     return successWithData(res, 200, "fetched all suspects", suspects);
   } catch (err) {
     return tryCatchError(res, err);
@@ -50,11 +48,7 @@ exports.getSuspects = async (req, res) => {
 
 exports.getSuspect = async (req, res) => {
   try {
-    const existingCase = await Case.findById(req.params.caseID);
-    if (!existingCase) return normalError(res, 404, "case not found");
-    const suspect = await Model.findById(req.params.id)
-      .where("caseID")
-      .in([existingCase._id]);
+    const suspect = await Model.findById(req.params.id);
     return successWithData(res, 200, "suspect fetched", suspect);
   } catch (err) {
     return tryCatchError(res, err);
