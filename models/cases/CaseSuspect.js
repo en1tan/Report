@@ -46,7 +46,7 @@ const caseSuspectSchema = new Schema(
     },
 
     // Age group of victim- 0-5, 6-11, 12-17, 18 - above
-    suspectAgegroup: String,
+    suspectAgeGroup: String,
 
     // Gender of suspect
     genderOfSuspect: {
@@ -115,8 +115,8 @@ const caseSuspectSchema = new Schema(
     // ID of who added the suspect to the case Whether a user or Official
     addedBy: String,
 
-     // User type of who added the suspect to the case Whether a user or Official
-     addedByUserType: {
+    // User type of who added the suspect to the case Whether a user or Official
+    addedByUserType: {
       type: String,
       enum: ["Public_User", "Partner_User"],
     },

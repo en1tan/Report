@@ -29,6 +29,7 @@ const validators = {
     partnerID: Joi.string().optional(),
     branchID: Joi.string().optional(),
     firstName: Joi.string().min(2).max(30).required(),
+    middleName: Joi.string().min(2).max(30).optional(),
     lastName: Joi.string().min(2).max(30).required(),
     userName: Joi.string().min(3).max(20).required(),
     email: Joi.string().email().lowercase().required(),
@@ -42,8 +43,35 @@ const validators = {
       .valid("super-admin", "admin", "verifier", "staff")
       .required(),
   }),
+  suspect: Joi.object({
+    firstNameOfSuspect: Joi.string().min(2).max(30).required(),
+    middleNameOfSuspect: Joi.string().min(2).max(30).optional(),
+    lastNameOfSuspect: Joi.string().min(2).max(30).required(),
+    emailOfSuspect: Joi.string().email().lowercase().required(),
+    phoneNumberOfSuspect: Joi.string().optional(),
+    suspectAgeGroup: Joi.string().optional(),
+    genderOfSuspect: Joi.string().valid("Male", "Female"),
+    guiltStatus: Joi.string().optional(),
+    residentialAddressOfSuspect: Joi.string().required(),
+    lgaOfSuspect: Joi.string().optional(),
+    stateOfSuspect: Joi.string().optional(),
+    countryOfSuspect: Joi.string().optional(),
+    suspectOccupation: Joi.string().optional(),
+    suspectOrganizationType: Joi.string().optional(),
+    suspectOrganizationID: Joi.string().optional(),
+    suspectOrganizationName: Joi.string().optional(),
+    otherDetailsOfSuspect: Joi.string().optional(),
+    disabilityStatus: Joi.string().optional(),
+    relationshipWithVictim: Joi.string().optional(),
+  }),
 };
 
+/**
+ * Validate request
+ * @param {string} validator
+ * @param {string} property
+ * @returns {(function(*, *, *): Promise<*|undefined>)|*}
+ */
 module.exports = (validator, property) => async (req, res, next) => {
   const validatorFunc = validators[validator];
 
@@ -61,7 +89,7 @@ module.exports = (validator, property) => async (req, res, next) => {
     return res.status(400).send({
       status: false,
       statusCode: 400,
-      message: capitalize(message.replace(/['"]/g, "")),
+      message: message.replace(/['"]/g, ""),
       data: null,
     });
   }
