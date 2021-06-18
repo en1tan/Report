@@ -25,7 +25,6 @@ const createSendToken = (user, statusCode, res, message) => {
 
 exports.signup = async (req, res) => {
   let errors = {};
-  console.log("here");
   try {
     const user = await User.findOne({ email: req.body.email });
     if (user) {
