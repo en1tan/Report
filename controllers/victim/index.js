@@ -64,31 +64,25 @@ exports.getCaseVictims = async (req, res) => {
 exports.getCaseVictim = async (req, res) => {
   try {
     let victim;
-    let addedBy;
     if (req.user.userType) victim = await CaseVictim.findById(req.params.id);
     else
-      victim = await CaseVictim.findById(req.params.id).where(
-        "addedBy",
-        req.user._id
-      );
+      victim = await CaseVictim.findById(req.params.id)
+        .where("addedBy", req.user._id)
+        .select("-addedBy -addedByUserType");
     if (!victim) return normalError(res, 404, "victim not found");
     // Get user type
     const userType = victim.addedByUserType;
-    if (req.user.userType)
-      addedBy =
-        userType === "Public_User"
-          ? await PublicUser.findById(victim.addedBy).select(
-              "firstName middleName lastName"
-            )
-          : await PartnerUser.findById(victim.addedBy).select(
-              "firstName middleName lastName"
-            );
-    addedBy = addedBy ? addedBy : "User not found";
-    const data = {
-      victim,
-      addedBy,
-    };
-    return successWithData(res, 200, "fetched victim details", data);
+    const addedBy = req.user.userType
+      ? userType === "Public_User"
+        ? await PublicUser.findById(victim.addedBy).select(
+            "firstName middleName lastName"
+          )
+        : await PartnerUser.findById(victim.addedBy).select(
+            "firstName middleName lastName"
+          )
+      : "";
+    victim.addedBy = addedBy ? JSON.stringify(addedBy) : "User not found";
+    return successWithData(res, 200, "fetched victim details", victim);
   } catch (err) {
     return tryCatchError(res, err);
   }

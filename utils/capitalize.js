@@ -1,3 +1,8 @@
+/**
+ * Capitalize words
+ * @param {string} str
+ * @returns {string}
+ */
 const capitalize = (str) => {
   str = str.toLowerCase().split(" ");
   for (var i = 0; i < str.length; i++) {
