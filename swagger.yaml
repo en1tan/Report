@@ -2940,15 +2940,10 @@ paths:
             schema:
               "$ref": "#/components/schemas/CaseSuspect"
             example:
+              _id: 60cc9f619931463ac38b93c5
               firstNameOfSuspect: Jonas
               lastNameOfSuspect: Phils
-              emailOfSuspect: jonesphlias@email.com
-              phoneNumberOfSuspect: '08035468521'
-              genderOfSuspect: Female
-              residentialAddressOfSuspect: 91, Sus Ln.
-              suspectAgeGroup: ''
-              guiltStatus: ''
-              relationshipWithVictim: ''
+              __v: 0
       responses:
         '201':
           description: Suspect added successfully
