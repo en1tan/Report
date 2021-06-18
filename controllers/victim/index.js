@@ -1,5 +1,7 @@
 const CaseVictim = require("../../models/cases/CaseVictim");
 const Case = require("../../models/cases/Case");
+const PublicUser = require("../../models/PublicUser");
+const PartnerUser = require("../../models/partners/PartnerUser");
 const {
   successWithData,
   successNoData,
@@ -13,8 +15,12 @@ exports.createCaseVictim = async (req, res, next) => {
     const existingCase = await Case.findById(req.params.id);
     if (!existingCase) return normalError(res, 404, "case not found");
     req.body.caseID = req.params.id;
-    req.body.addedBy = req.user._id;
+    req.body.addedBy = req.user._id.toString();
+    req.body.addedByUserType = req.user.userType
+      ? "Partner_User"
+      : "Public_User";
     const newVictim = await CaseVictim.create(req.body);
+    console.log(newVictim);
     return successWithData(
       res,
       201,
@@ -35,12 +41,15 @@ exports.createCaseVictim = async (req, res, next) => {
 exports.getCaseVictims = async (req, res) => {
   try {
     let { page = 1, limit = 20 } = req.query;
-    const victims = await CaseVictim.find({ caseID: req.params.caseID })
+    const victims = await CaseVictim.find({ caseID: req.params.id })
       .select("firstNameOfVictim lastNameOfVictim middleNameOfVictim")
+      .sort("-createdAt")
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .exec();
-    const count = await CaseVictim.find({ caseID: req.params.caseID });
+    const count = await CaseVictim.countDocuments({
+      caseID: req.params.caseID,
+    }).exec();
     const data = {
       victims,
       total: Math.ceil(count / limit),
@@ -55,6 +64,7 @@ exports.getCaseVictims = async (req, res) => {
 exports.getCaseVictim = async (req, res) => {
   try {
     let victim;
+    let addedBy;
     if (req.user.userType) victim = await CaseVictim.findById(req.params.id);
     else
       victim = await CaseVictim.findById(req.params.id).where(
@@ -62,7 +72,23 @@ exports.getCaseVictim = async (req, res) => {
         req.user._id
       );
     if (!victim) return normalError(res, 404, "victim not found");
-    return successWithData(res, 200, "fetched victim details", victim);
+    // Get user type
+    const userType = victim.addedByUserType;
+    if (req.user.userType)
+      addedBy =
+        userType === "Public_User"
+          ? await PublicUser.findById(victim.addedBy).select(
+              "firstName middleName lastName"
+            )
+          : await PartnerUser.findById(victim.addedBy).select(
+              "firstName middleName lastName"
+            );
+    addedBy = addedBy ? addedBy : "User not found";
+    const data = {
+      victim,
+      addedBy,
+    };
+    return successWithData(res, 200, "fetched victim details", data);
   } catch (err) {
     return tryCatchError(res, err);
   }
