@@ -13,7 +13,7 @@ exports.createCaseVictim = async (req, res, next) => {
     const existingCase = await Case.findById(req.params.id);
     if (!existingCase) return normalError(res, 404, "case not found");
     req.body.caseID = req.params.id;
-    req.body.addedBy = req.user;
+    req.body.addedBy = req.user._id;
     const newVictim = await CaseVictim.create(req.body);
     return successWithData(
       res,
@@ -37,8 +37,7 @@ exports.getCaseVictims = async (req, res) => {
     let { page = 1, limit = 20 } = req.query;
     const victims = await CaseVictim.find({ caseID: req.params.caseID }).select(
       "firstNameOfVictim lastNameOfVictim middleNameOfVictim"
-    ).limit(limit * 1).skip((page - 1) * limit)
-exec();
+    ).limit(limit * 1).skip((page - 1) * limit).exec();
     const count = await CaseVictim.find({ caseID: re.params.caseID });
     const data = {
        victims,
