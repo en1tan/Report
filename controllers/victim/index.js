@@ -35,7 +35,7 @@ exports.createCaseVictim = async (req, res, next) => {
 exports.getCaseVictims = async (req, res) => {
   try {
     const victims = await CaseVictim.find({ caseID: req.params.caseID }).select(
-      "firstName lastName middleName"
+      "firstNameOfVictim lastNameOfVictim middleNameOfVictim"
     );
     return successWithData(res, 200, "Case victims returned", victims);
   } catch (err) {
