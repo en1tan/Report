@@ -7,7 +7,7 @@ module.exports = {
     secure:
       process.env.NODE_ENV === "production" ? process.env.MAIL_SECURE : false,
     username: process.env.MAIL_USERNAME,
-    password: process.env.MAIL_PASSWORD,
+    pass: process.env.MAIL_PASSWORD,
     sourceEmail: process.env.SOURCE_EMAIL,
   },
   clientURL: process.env.CLIENT_URL,
