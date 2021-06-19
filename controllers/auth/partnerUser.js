@@ -44,7 +44,7 @@ exports.signup = async (req, res) => {
     let token = await TokenModel.findOne({ userID: newUser._id });
     if (token) await token.deleteOne();
     let resetToken = crypto.randomBytes(32).toString("hex");
-    const hash = await bcrypt.hash(resetToken, Number(10));
+    const hash = await bcrypt.hash(resetToken, 12);
 
     await new TokenModel({
       userID: newUser._id,
@@ -123,7 +123,7 @@ exports.requestPartnerPasswordRequest = async (req, res) => {
     let token = await TokenModel.findOne({ userID: user._id });
     if (token) await token.deleteOne();
     let resetToken = crypto.randomBytes(32).toString("hex");
-    const hash = await bcrypt.hash(resetToken, Number(10));
+    const hash = await bcrypt.hash(resetToken, 12);
 
     await new TokenModel({
       userID: user._id,
