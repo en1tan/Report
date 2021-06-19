@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const {genIDs} = require("../../utils/genID");
+const { genIDs } = require("../../utils/genID");
 
 const Schema = mongoose.Schema;
 
@@ -25,24 +25,18 @@ const caseOtherDetailsDocSchema = new Schema(
     URL: {
       type: String,
     },
-
-    // Date and Time the file was uploaded
-    timestamp: {
-      type: Date,
-      default: Date.now(),
-    },
   },
-  {timestamps: true},
+  { timestamps: true }
 );
 
-caseOtherDetailsDocSchema.pre('save', function (next) {
+caseOtherDetailsDocSchema.pre("save", function (next) {
   this.docID = genIDs("SODD");
   next();
-})
+});
 
 const CaseOtherDetailsDoc = mongoose.model(
   "CaseOtherDetailsDoc",
-  caseOtherDetailsDocSchema,
+  caseOtherDetailsDocSchema
 );
 
 module.exports = CaseOtherDetailsDoc;

@@ -459,7 +459,7 @@ exports.getPersonalCases = async (req, res) => {
         const category = await CaseCategory.findById(
           categoryIDs[c].caseCategoryID
         );
-        categories.push(category.categoryName);
+        if (category) categories.push(category.categoryName);
       }
       const userFollowStatus = await FollowCase.findOne({
         caseID: cases[i]._id,
@@ -478,8 +478,7 @@ exports.getPersonalCases = async (req, res) => {
           "_id",
           "__v",
         ]),
-        userFollowStatus: !!userFollowStatus,
-        assignedPartner,
+        assignedPartner: assignedPartner ? assignedPartner : "NotYetAssigned",
         categories,
       });
     }
@@ -619,7 +618,7 @@ exports.getSinglePublicCase = async (req, res) => {
       const f = await FollowCase.findOne({ publicUserID: req.user._id })
         .where("caseID")
         .in([req.params.id]);
-      if(f) {
+      if (f) {
         userFollowStatus = true;
       } else {
         userFollowStatus = false;

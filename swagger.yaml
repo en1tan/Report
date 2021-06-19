@@ -2894,32 +2894,114 @@ paths:
                     properties:
                       progress:
                         "$ref": "#/components/schemas/CaseOtherDetails"
-  "/details/upload/{otherDetailsId}":
-    post:
-      security:
-        - bearerAuth: []
-      summary: Upload other details document
+  /details/{caseID}/conversations:
+    get:
+      summary: Fetch all conversations
       tags:
         - Case Other Details
+      security:
+        - bearerAuth: []
       parameters:
-        - description: Progress ID
-          name: otherDetailsId
+        - description: case ID
+          name: caseID
           in: path
           required: true
           schema:
             type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              "$ref": "#/components/schemas/CaseOtherDetailsDoc"
+        - name: page
+          in: query
+          description: page number
+          schema:
+            type: number
+        - name: limit
+          in: query
+          description: limit
+          schema:
+            type: number
       responses:
-        '201':
-          description: Upload successful
+        200:
+          description: fetched all cases
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/CaseOtherDetailsDoc"
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Other Details Conversation Returned
+                  data:
+                    type: object
+                    properties:
+                      conversations:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            details:
+                              $ref: "#/components/schemas/CaseOtherDetails"
+                            docs:
+                              type: array
+                              items:
+                                $ref: "#/components/schemas/CaseOtherDetailsDoc"
+                    example:
+                      conversations:
+                        - details:
+                            _id: 60cdf1ceea66830a974bd4d9
+                            caseID: 60bcd725a4c7b32d3a8f9b96
+                            from: super-admin
+                            userID: 60b29de72e54080049ff8233
+                            message: string
+                            createdAt: '2021-06-19T13:31:58.492Z'
+                            updatedAt: '2021-06-19T13:31:58.492Z'
+                            __v: 0
+                          docs:
+                            - _id: 60cdf1ceea66830a974bd4db
+                              caseOtherDetailsID: 60cdf1ceea66830a974bd4d9
+                              URL: https://via.placeholder.com
+                              docTitle: Document 1
+                              createdAt: '2021-06-19T13:31:58.719Z'
+                              updatedAt: '2021-06-19T13:31:58.719Z'
+                              docID: SODD75700
+                              __v: 0
+                            - _id: 60cdf1ceea66830a974bd4dd
+                              caseOtherDetailsID: 60cdf1ceea66830a974bd4d9
+                              URL: https://via.placeholder.com
+                              docTitle: Document 1
+                              createdAt: '2021-06-19T13:31:58.953Z'
+                              updatedAt: '2021-06-19T13:31:58.953Z'
+                              docID: SODD05235
+                              __v: 0
+  /details/{id}/delete:
+    delete:
+      summary: delete a conversation
+      security:
+        - bearerAuth: []
+      tags:
+        - Case Other Details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: conversations id
+          schema:
+            type: string
+      responses:
+        200:
+          description: deleted conversation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                   type: string
+                   example: success
+                  message:
+                    type: string
+                    example: conversation deleted successfully
   "/suspect/{caseID}/create":
     post:
       security:
