@@ -3905,6 +3905,72 @@ paths:
                   message:
                     type: string
                     example: branch deleted
+  /organization/create:
+    post:
+      summary: create organization
+      security:
+        - bearerAuth: []
+      tags:
+        - Organization
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Organization"
+            example:
+              orgName: ""
+              orgType: ""
+              description: ""
+              emails:
+                - org@example.com
+              address: ""
+              addressLandMark: ""
+              phone:
+                - '08012365478'
+              lga: ""
+              state: ""
+              country: ""
+              cacRegNo: ""
+              orgStatus: ""
+              addedBy: ""
+      responses:
+        201:
+          description: organization created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/Organization"
+              example:
+                message: Organization Profile Created Succesfully
+                status: success
+                data:
+                  emails:
+                    - string
+                  phones:
+                    - string
+                  _id: 60ce831fb3c1267d440ac9e0
+                  orgName: string
+                  orgType: Government
+                  description: string
+                  address: string
+                  addressLandmark: string
+                  lga: string
+                  state: string
+                  country: string
+                  cacRegNo: string
+                  orgStatus: HQ
+                  addedBy: string
+                  orgID: SORG32570
+                  __v: 0
+
+
 components:
   securitySchemes:
     bearerAuth:
@@ -4835,3 +4901,4 @@ components:
           type: string
           format: date-time
           readOnly: true
+

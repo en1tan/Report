@@ -17,7 +17,7 @@ exports.createOrganization = async (req, res, next) => {
       res,
       200,
       "Organization profile created succesfully",
-      data
+      newOrganization
     );
   } catch (err) {
     return tryCatchError(res, err);
