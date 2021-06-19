@@ -16,6 +16,13 @@ router.post(
 
 router.post("/login", validator("login", "body"), partnerAuthController.signin);
 
+router.post(
+  "/requestPasswordReset",
+  partnerAuthController.requestPartnerPasswordRequest
+);
+router.post("/resetPassword", partnerAuthController.resetPassword);
+
+
 router.get(
   "/user/:id",
   auth(true),
@@ -81,10 +88,5 @@ router.delete(
   partnerController.deletePartnerOrganization
 );
 
-router.post(
-  "/requestPasswordReset",
-  partnerAuthController.requestPartnerPasswordRequest
-);
-router.post("/resetPassword", partnerAuthController.resetPassword);
 
 module.exports = router;
