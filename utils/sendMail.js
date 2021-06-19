@@ -10,7 +10,7 @@ exports.sendMail = async (res, email, subject, payload, template = "") => {
   try {
     console.log("here");
     const transporter = nodemailer.createTransport({
-      jost: config.mail.host,
+      host: config.mail.host,
       port: config.mail.port,
       auth: {
         user: config.mail.username,
