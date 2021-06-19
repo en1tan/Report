@@ -15,10 +15,6 @@ const routes = require("./routes");
 //cors
 app.use(cors());
 
-require("./utils/sendMail")
-  .sendTempPassword()
-  .then((r) => console.log(r));
-
 // Development logging
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));

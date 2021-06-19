@@ -81,4 +81,10 @@ router.delete(
   partnerController.deletePartnerOrganization
 );
 
+router.post(
+  "/requestPasswordReset",
+  partnerAuthController.requestPartnerPasswordRequest
+);
+router.post("/resetPassword", partnerAuthController.resetPassword);
+
 module.exports = router;
