@@ -38,19 +38,10 @@ const caseProgressSchema = new Schema(
       enum: ["public", "private"],
       default: "private",
     },
-    progressDocs: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "CaseProgressDoc",
-      },
-    ]
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-const CaseProgress = mongoose.model(
-  "CaseProgress",
-  caseProgressSchema,
-);
+const CaseProgress = mongoose.model("CaseProgress", caseProgressSchema);
 
 module.exports = CaseProgress;

@@ -223,6 +223,82 @@ paths:
                   password: sorosokeWere@1
                   confirmPassword: sorosokeWere@1
                   userAgeGroup: 20-90
+  /user/requestPasswordRequest:
+    post:
+      summary: request password reset
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        200:
+          description: password request sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Passsword Reset Link Sent Successfully
+        404:
+          description: acount not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Account Does Not Exist
+  /user/resetPassword:
+    post:
+      summary: reset user password
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: nov039jus98fdhvcwe98fh3433433
+                token:
+                  type: string
+                  example: 98e3b398hbf92832932n29832903h929382n9v8h9rn29rnv938h299nr9283hv92hr93nbv2938hr9vn938hv92rn93283h9232...
+                password:
+                  type: string
+                  format: password
+                  example: ogbongePassword4@ver
+      responses:
+        200:
+          description: password reset sucessfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Password Reset Successfully
   "/partner/{id}/users":
     get:
       summary: Get all partner users
@@ -621,6 +697,82 @@ paths:
                   createdAt: '2021-05-29T00:55:06.510Z'
                   updatedAt: '2021-05-29T00:55:06.510Z'
                   __v: 0
+  /partner/requestPasswordRequest:
+    post:
+      summary: request password reset
+      tags:
+        - Partner User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        200:
+          description: password request sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Passsword Reset Link Sent Successfully
+        404:
+          description: acount not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Account Does Not Exist
+  /partner/resetPassword:
+    post:
+      summary: reset user password
+      tags:
+        - Partner User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: nov039jus98fdhvcwe98fh3433433
+                token:
+                  type: string
+                  example: 98e3b398hbf92832932n29832903h929382n9v8h9rn29rnv938h299nr9283hv92hr93nbv2938hr9vn938hv92rn93283h9232...
+                password:
+                  type: string
+                  format: password
+                  example: ogbongePassword4@ver
+      responses:
+        200:
+          description: password reset sucessfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Password Reset Successfully
   "/public/cases":
     get:
       summary: Get all cases
@@ -2677,7 +2829,23 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/CaseProgress"
+              type: object
+              properties:
+                title:
+                  type: string
+                messageContent:
+                  type: string
+                privacyStatus:
+                  type: string
+                  enum: ['public', 'private']
+                docs:
+                  type: array
+                  items:
+                    properties:
+                      docTitle:
+                        type: string
+                      URL:
+                        type: string
       responses:
         '201':
           description: Case Progress added
@@ -2694,32 +2862,34 @@ paths:
                     properties:
                       progress:
                         "$ref": "#/components/schemas/CaseProgress"
-  "/progress/upload/{progressId}":
-    post:
-      security:
-        - bearerAuth: []
-      summary: Upload progress document
-      tags:
-        - Case Progress
-      parameters:
-        - description: Progress ID
-          name: progressId
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              "$ref": "#/components/schemas/CaseProgressDoc"
-      responses:
-        '201':
-          description: Upload successful
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/CaseProgressDoc"
+                      docs:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/CaseProgressDoc"
+              example:
+                status: success
+                message: Progress Report Has Been Successfully Added To The Case File
+                data:
+                  progress:
+                    _id: 60ce6d559363dc6ad3a3af82
+                    privacyStatus: public
+                    caseID: 60bcd725a4c7b32d3a8f9b96
+                    publicUserID: 60b008fa9c946258111c7271
+                    partnerUserID: 60bba856e9a8580d1ecc3e53
+                    title: Progress One
+                    messageContent: This is the first progress
+                    createdAt: '2021-06-19T22:19:01.486Z'
+                    updatedAt: '2021-06-19T22:19:01.486Z'
+                    __v: 0
+                  docs:
+                    - _id: 60ce6d559363dc6ad3a3af84
+                      caseProgressID: 60ce6d559363dc6ad3a3af82
+                      docTitle: Progress Document One
+                      URL: https://via.placeholder.com
+                      createdAt: '2021-06-19T22:19:01.744Z'
+                      updatedAt: '2021-06-19T22:19:01.744Z'
+                      docID: SPGD13404
+                      __v: 0
   "/progress/{caseID}/":
     get:
       security:
@@ -2734,6 +2904,16 @@ paths:
           name: caseID
           schema:
             type: string
+        - name: page
+          in: query
+          schema:
+            type: number
+            description: page
+        - name: limit
+          in: query
+          schema:
+            type: number
+          description: limit
       responses:
         '200':
           description: case progress returned
@@ -2750,6 +2930,28 @@ paths:
                     type: array
                     items:
                       "$ref": "#/components/schemas/CaseProgress"
+              example:
+                message: Current Case Progress
+                status: success
+                data:
+                  progress:
+                    - currentProgress:
+                        privacyStatus: public
+                        _id: 60ce6d559363dc6ad3a3af82
+                        publicUserID: 60b008fa9c946258111c7271
+                        title: Progress One
+                        messageContent: This is the first progress
+                      docs:
+                        - _id: 60ce6d559363dc6ad3a3af84
+                          caseProgressID: 60ce6d559363dc6ad3a3af82
+                          docTitle: Progress Document One
+                          URL: https://via.placeholder.com
+                          createdAt: '2021-06-19T22:19:01.744Z'
+                          updatedAt: '2021-06-19T22:19:01.744Z'
+                          docID: SPGD13404
+                          __v: 0
+                  total: 1
+                  page: 1
   "/progress/{id}/update":
     patch:
       summary: update case progress
@@ -2877,7 +3079,21 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/CaseOtherDetails"
+              type: object
+              properties:
+                from:
+                  type: string
+                message:
+                  type: string
+                docs:
+                  type: array
+                  items:
+                    properties:
+                      docTitle:
+                        type: string
+                      URL:
+                        type: string
+                        format: url
       responses:
         '201':
           description: Case Other details added

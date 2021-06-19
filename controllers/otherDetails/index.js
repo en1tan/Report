@@ -34,7 +34,6 @@ exports.createOtherDetails = async (req, res) => {
     const docs = await OtherDetailsDoc.find({
       caseOtherDetailsID: newDetails._id,
     });
-    console.log(docs);
     const data = {
       conversation: newDetails,
       docs,

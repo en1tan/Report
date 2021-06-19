@@ -7,18 +7,12 @@ const router = express.Router();
 
 router.post(
   "/create/:caseID",
-  auth(),
+  auth(true),
   authorize(["admin", "staff"]),
   progressController.createProgress
 );
-router.post(
-  "/upload/:progressId",
-  auth(),
-  authorize(["admin", "staff"]),
-  progressController.uploadProgressDoc
-);
 
-router.get("/:caseID", auth(), progressController.getCurrentProgress);
+router.get("/:caseID", auth(true), progressController.getCurrentProgress);
 router.patch(
   "/:id/update",
   auth(true),
