@@ -117,7 +117,7 @@ exports.editAccount = async (req, res) => {
 
 exports.requestPartnerPasswordRequest = async (req, res) => {
   try {
-    const user = await PartnerUser.findOne({ email: req.body.email });
+    const user = await User.findOne({ email: req.body.email });
 
     if (!user) return normalError(res, 404, "account does not exist");
     let token = await TokenModel.findOne({ userID: user._id });
