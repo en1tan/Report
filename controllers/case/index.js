@@ -33,23 +33,19 @@ exports.followCase = async (req, res) => {
       publicUserID: req.user._id,
     });
     if (req.body.followStatus === "follow") {
-      if (follow)
+      if (follow.followStatus === true)
         return successNoData(res, 200, "You are following this case already");
-      const followedCase = await FollowCase.create({
+      await FollowCase.create({
         caseID: req.params.id,
         publicUserID: req.user._id,
       });
-      existingCase.followedBy.push(followedCase._id);
-      existingCase.save();
       return successNoData(res, 200, "Case followed successfully");
     } else {
-      if (!follow)
+      if (follow.followStatus === false)
         return successNoData(res, 200, "You have unfollowed this case");
       await FollowCase.findOneAndDelete({
         caseID: req.params.id,
       });
-      existingCase.followedBy.pop(follow._id);
-      existingCase.save();
       return successNoData(res, 200, "Case unfollowed successfully");
     }
   } catch (err) {
@@ -659,7 +655,7 @@ exports.getSinglePublicCase = async (req, res) => {
       userFollowStatus,
       publisher,
     };
-    return successWithData(res, 200, "Fetched case", data);
+    return successWithData(res, 200, "Fetched Public case", data);
   } catch (err) {
     return tryCatchError(res, err);
   }

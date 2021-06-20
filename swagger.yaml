@@ -4140,8 +4140,33 @@ paths:
                       addedBy: string
                       orgID: SORG44414
                       __v: 0
-
-
+  /organization/{id}/delete:
+    delete:
+      summary: delete organization
+      security:
+        - bearerAuth: []
+      tags:
+        - Organization
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: organization deleted
+          content:
+            application/json:
+              schema:
+                type: string
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Organization Deleted
 components:
   securitySchemes:
     bearerAuth:
