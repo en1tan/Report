@@ -26,14 +26,18 @@ const {
  */
 exports.followCase = async (req, res) => {
   try {
+    const existingCase = await Case.findById(req.params.id);
+    if (!existingCase) return normalError(res, 404, "case not found");
     const follow = await FollowCase.findOne({ caseID: req.params.id });
     if (req.body.followStatus === "follow") {
       if (follow)
         return successNoData(res, 200, "You are following this case already");
-      await FollowCase.create({
+      const followedCase = await FollowCase.create({
         caseID: req.params.id,
         publicUserID: req.user._id,
       });
+      existingCase.followedBy.push(followedCase._id);
+      existingCase.save();
       return successNoData(res, 200, "Case followed successfully");
     } else {
       if (!follow)
@@ -41,6 +45,8 @@ exports.followCase = async (req, res) => {
       await FollowCase.findOneAndDelete({
         caseID: req.params.id,
       });
+      existingCase.followedBy.pop(follow._id);
+      existingCase.save();
       return successNoData(res, 200, "Case unfollowed successfully");
     }
   } catch (err) {
@@ -77,15 +83,15 @@ exports.getFollowedCases = async (req, res) => {
       categories = await getCategories(cases[i]._id);
     }
 
-    cases.map(async (c) => {
-      const followStatus = c.followedBy.some(
+    for (let i = 0; i < cases.length; i++) {
+      const followStatus = cases[i].followedBy.some(
         async (cf) => cf === (await FollowCase.findOne(cf._id))
       );
-      const publisher = await PartnerUser.findById(c.publishedBy).select(
+      const publisher = await PartnerUser.findById(cases[i].publishedBy).select(
         "firstName middleName lastName"
       );
       followedCases.push({
-        ..._.pick(c, [
+        ..._.pick(cases[i], [
           "_id",
           "__v",
           "caseAvatar",
@@ -98,7 +104,7 @@ exports.getFollowedCases = async (req, res) => {
         categories,
         publisher,
       });
-    });
+    }
     const data = {
       followedCases,
       total: Math.ceil(count / limit),
@@ -120,7 +126,7 @@ const getCategories = async (caseID) => {
   const cats = await CaseTaggedCategories.find({ caseID });
   for (let i = 0; i < cats.length; i++) {
     const category = await CaseCategory.findById(cats[i].caseCategoryID);
-    categories.push(category.categoryName);
+    if (category) categories.push(category.categoryName);
   }
   return categories;
 };
