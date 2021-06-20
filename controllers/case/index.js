@@ -28,7 +28,10 @@ exports.followCase = async (req, res) => {
   try {
     const existingCase = await Case.findById(req.params.id);
     if (!existingCase) return normalError(res, 404, "case not found");
-    const follow = await FollowCase.findOne({ caseID: req.params.id });
+    const follow = await FollowCase.findOne({
+      caseID: req.params.id,
+      publicUserID: req.user._id,
+    });
     if (req.body.followStatus === "follow") {
       if (follow)
         return successNoData(res, 200, "You are following this case already");
@@ -68,15 +71,17 @@ exports.getFollowedCases = async (req, res) => {
   try {
     let { page = 1, limit = 20 } = req.query;
     const f = await FollowCase.find({ publicUserID: req.user._id });
+    const c = [];
     for (let i = 0; i < f.length; i++) {
-      cases = await Case.find({ followedBy: f[i]._id })
+      c.push(f[i].caseID);
+      cases = await Case.find()
+        .where("_id")
+        .in(c)
         .sort("-createdAt")
         .limit(limit * 1)
         .skip((page - 1) * limit)
         .exec();
-      count = await Case.countDocuments({
-        followedBy: f[i]._id,
-      }).exec();
+      count = await Case.countDocuments().where("_id").in(c).exec();
     }
 
     for (let i = 0; i < cases.length; i++) {
