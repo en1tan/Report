@@ -33,19 +33,27 @@ exports.followCase = async (req, res) => {
       publicUserID: req.user._id,
     });
     if (req.body.followStatus === "follow") {
-      if (follow.followStatus === true)
+      if (follow && follow.followStatus === true)
         return successNoData(res, 200, "You are following this case already");
-      await FollowCase.create({
-        caseID: req.params.id,
-        publicUserID: req.user._id,
-      });
+      await FollowCase.findOneAndUpdate(
+        {
+          caseID: req.params.id,
+        },
+        {
+          publicUserID: req.user._id,
+        },
+        { upsert: true }
+      );
       return successNoData(res, 200, "Case followed successfully");
     } else {
-      if (follow.followStatus === false)
+      if (follow && follow.followStatus === false)
         return successNoData(res, 200, "You have unfollowed this case");
-      await FollowCase.findOneAndDelete({
-        caseID: req.params.id,
-      });
+      await FollowCase.findOneAndUpdate(
+        {
+          caseID: req.params.id,
+        },
+        { followStatus: false }
+      );
       return successNoData(res, 200, "Case unfollowed successfully");
     }
   } catch (err) {
