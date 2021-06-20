@@ -31,11 +31,14 @@ exports.createComment = async (req, res) => {
 exports.readComments = async (req, res, next) => {
   let commenters = [];
   try {
+    let { page = 1, limit = 20 } = req.query;
     const comments = await CaseComment.find({
       caseID: req.params.caseID,
     })
       .sort("-createdAt")
-      .select("-createdAt");
+      .select("-createdAt")
+      .limit(limit * 1)
+      .skip((page - 1) * limit);
     for (let i = 0; i < comments.length; i++) {
       const user = await PublicUser.findById(comments[i].publicUserID);
       commenters.push({
@@ -49,7 +52,15 @@ exports.readComments = async (req, res, next) => {
         __v: comments[i].__v,
       });
     }
-    return successWithData(res, 200, "Comments fetched", commenters);
+    const count = await CaseComment.countDocuments({
+      caseID: req.params.caseID,
+    });
+    const data = {
+      commenters,
+      total: Math.ceil(count / limit),
+      page: parseInt(page),
+    };
+    return successWithData(res, 200, "Comments fetched", data);
   } catch (err) {
     return tryCatchError(res, err);
   }

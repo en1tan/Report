@@ -3932,7 +3932,6 @@ paths:
               country: ""
               cacRegNo: ""
               orgStatus: ""
-              addedBy: ""
       responses:
         201:
           description: organization created
@@ -3969,6 +3968,178 @@ paths:
                   addedBy: string
                   orgID: SORG32570
                   __v: 0
+  /organization:
+    get:
+      summary: fetch all organizations
+      tags:
+        - Organization
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: string
+      responses:
+        200:
+          description: fetched all organizations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Organizations Returned
+                  data:
+                    type: object
+                    properties:
+                      organizations:
+                        $ref: "#/components/schemas/Organization"
+                    example:
+                      organizations:
+                        - emails:
+                            - string
+                          phones:
+                            - string
+                          _id: 60ce820ab209297cb07a9a1b
+                          orgName: string
+                          orgType: Government
+                          description: string
+                          address: string
+                          addressLandmark: string
+                          lga: string
+                          state: string
+                          country: string
+                          cacRegNo: string
+                          orgStatus: HQ
+                          addedBy: string
+                          orgID: SORG44414
+                          __v: 0
+                      total: 1
+                      page: 1
+  /organization/{id}:
+    get:
+      summary: get one organization
+      tags:
+        - Organization
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: fetched on organization
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Organization Fetched
+                  data:
+                    $ref: "#/components/schemas/Organization"
+                    example:
+                      emails:
+                        - string
+                      phones:
+                        - string
+                      _id: 60ce820ab209297cb07a9a1b
+                      orgName: string
+                      orgType: Government
+                      description: string
+                      address: string
+                      addressLandmark: string
+                      lga: string
+                      state: string
+                      country: string
+                      cacRegNo: string
+                      orgStatus: HQ
+                      addedBy: string
+                      orgID: SORG44414
+                      __v: 0
+  /organization/{id}/update:
+    patch:
+      summary: update organization details
+      tags:
+        - Organization
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Organization"
+            example:
+                orgName: ""
+                orgType: ""
+                description: ""
+                emails:
+                  - org@example.com
+                address: ""
+                addressLandMark: ""
+                phone:
+                  - '08012365478'
+                lga: ""
+                state: ""
+                country: ""
+                cacRegNo: ""
+                orgStatus: ""
+                addedBy: ""
+      responses:
+        200:
+          description: organization updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Organization Updated
+                  data:
+                    $ref: "#/components/schemas/Organization"
+                    example:
+                      emails: string
+                      phones: string
+                      _id: 60ce820ab209297cb07a9a1b
+                      orgName: Owonikoko Micro Finance
+                      orgType: Government
+                      description: string
+                      address: string
+                      addressLandmark: string
+                      lga: string
+                      state: string
+                      country: string
+                      cacRegNo: string
+                      orgStatus: HQ
+                      addedBy: string
+                      orgID: SORG44414
+                      __v: 0
 
 
 components:
