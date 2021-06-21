@@ -32,6 +32,7 @@ exports.addBranchToPartnerOrganization = async (req, res) => {
 
 exports.listBranches = async (req, res) => {
   try {
+    let { page = 1, limit = 20 } = req.query;
     const partner = await Partner.findById(req.params.partnerID);
     if (!partner)
       return normalError(res, 404, "partner organization not found");
@@ -42,7 +43,11 @@ exports.listBranches = async (req, res) => {
         "branches fetched successfully",
         await PartnerBranch.find({
           partnerID: req.params.partnerID,
-        }).where("state", req.user.stateOfAssignment)
+          state: req.user.stateOfAssignment,
+        })
+          .limit(limit * 1)
+          .skip(((page < 1 ? 1 : page) - 1) * limit)
+          .exec()
       );
     return successWithData(
       res,

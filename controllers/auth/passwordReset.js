@@ -2,8 +2,10 @@ const PublicUser = require("../../models/PublicUser");
 const TokenModel = require("../../models/Token");
 const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
-const { clientURL } = require("../../config");
+const { clientURL, accountSid, authToken, devPhone } = require("../../config");
 const { sendMail } = require("../../utils/sendMail");
+const client = require("twilio")(accountSid, authToken);
+const phoneNumberParser = require("libphonenumber-js");
 
 const { normalError, tryCatchError } = require("../../utils/errorHandlers");
 const { successNoData } = require("../../utils/successHandler");
@@ -17,7 +19,6 @@ exports.requestPasswordRequest = async (req, res) => {
     if (token) await token.deleteOne();
     let resetToken = crypto.randomBytes(32).toString("hex");
     const hash = await bcrypt.hash(resetToken, 12);
-
     await new TokenModel({
       userID: user._id,
       token: hash,
@@ -41,6 +42,41 @@ exports.requestPasswordRequest = async (req, res) => {
   }
 };
 
+exports.verifyOtp = async (req, res) => {
+  try {
+    const token = await TokenModel.findOne({ otp: req.body.otp });
+    if (!token) return normalError(res, 400, "invalid otp code");
+    await TokenModel.findByIdAndUpdate(token._id, { otpVerified: true });
+    return successNoData(res, 200, "otp verified successfully");
+  } catch (err) {
+    return tryCatchError(res, err);
+  }
+};
+
+exports.sendOtp = async (req, res) => {
+  try {
+    const token = await TokenModel.findOne({ userID: req.body.userID });
+    if (!token) {
+      return normalError(
+        res,
+        400,
+        "invalid request password session. please try again"
+      );
+    }
+    const otp = parseInt(Math.random().toString(8).substr(2, 5));
+    await TokenModel.findByIdAndUpdate(token._id, { otp }, { new: true });
+    const user = await PublicUser.findById(token.userID);
+    await sendSms(user.phoneNumber, otp);
+    return successNoData(
+      res,
+      200,
+      "otp sent to your phone number. please be patient, the message may take a few minutes"
+    );
+  } catch (err) {
+    return tryCatchError(res, err);
+  }
+};
+
 exports.resetPassword = async (req, res) => {
   try {
     let passwordResetToken = await TokenModel.findOne({
@@ -49,6 +85,8 @@ exports.resetPassword = async (req, res) => {
     if (!passwordResetToken)
       return normalError(res, 400, "Invalid or expired password reset token");
 
+    if (passwordResetToken.otpVerified === false)
+      return normalError(res, 400, "otp not verified. please try again");
     const isValid = await bcrypt.compare(
       req.body.token,
       passwordResetToken.token
@@ -75,4 +113,12 @@ exports.resetPassword = async (req, res) => {
   } catch (err) {
     return tryCatchError(res, err);
   }
+};
+
+const sendSms = async (to, message) => {
+  await client.messages.create({
+    from: devPhone,
+    to: phoneNumberParser(to, "NG").format("E.164"),
+    body: message,
+  });
 };

@@ -64,6 +64,13 @@ const validators = {
     disabilityStatus: Joi.string().optional(),
     relationshipWithVictim: Joi.string().optional(),
   }),
+  contact: Joi.object({
+    senderName: Joi.string().min(2).max(50).optional(),
+    phoneNumber: Joi.string().optional(),
+    email: Joi.string().email().required(),
+    subject: Joi.string().required(),
+    message: Joi.string().required(),
+  }),
 };
 
 /**

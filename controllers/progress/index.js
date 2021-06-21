@@ -86,7 +86,7 @@ exports.getCurrentProgress = async (req, res) => {
       .in(privacyStatus)
       .select(selectedFields)
       .limit(limit * 1)
-      .skip((page - 1) * limit)
+      .skip(((page < 1 ? 1 : page) - 1) * limit)
       .exec();
     for (let i = 0; i < currentProgress.length; i++) {
       const docs = await CaseProgressDoc.find({

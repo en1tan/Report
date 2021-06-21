@@ -44,7 +44,7 @@ exports.getCaseVictims = async (req, res) => {
       .select("firstNameOfVictim lastNameOfVictim middleNameOfVictim")
       .sort("-createdAt")
       .limit(limit * 1)
-      .skip((page - 1) * limit)
+      .skip(((page < 1 ? 1 : page) - 1) * limit)
       .exec();
     const count = await CaseVictim.countDocuments({
       caseID: req.params.caseID,

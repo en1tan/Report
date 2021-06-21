@@ -38,7 +38,7 @@ exports.readComments = async (req, res, next) => {
       .sort("-createdAt")
       .select("-createdAt")
       .limit(limit * 1)
-      .skip((page - 1) * limit);
+      .skip(((page < 1 ? 1 : page) - 1) * limit);
     for (let i = 0; i < comments.length; i++) {
       const user = await PublicUser.findById(comments[i].publicUserID);
       commenters.push({

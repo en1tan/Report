@@ -8,7 +8,6 @@ const { successNoData } = require("../utils/successHandler");
 
 exports.sendMail = async (res, email, subject, payload, template = "") => {
   try {
-    console.log("here");
     const transporter = nodemailer.createTransport({
       host: config.mail.host,
       port: config.mail.port,
@@ -31,12 +30,9 @@ exports.sendMail = async (res, email, subject, payload, template = "") => {
 
     // Send email
     transporter.sendMail(options(), (error, info) => {
-      console.log(error);
-      console.log(info);
       if (error) {
         return normalError(res, 400, "An error occurred. Please try again");
       } else {
-        console.info(info);
         return successNoData(res, 200, "mail sent successfully");
       }
     });

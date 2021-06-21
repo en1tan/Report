@@ -30,7 +30,7 @@ exports.getAllOrganizations = async (req, res) => {
     const organizations = await Organization.find()
       .sort("-createdAt")
       .limit(limit * 1)
-      .skip((page - 1) * limit);
+      .skip(((page < 1 ? 1 : page) - 1) * limit);
     const count = await Organization.countDocuments();
     const data = {
       organizations,

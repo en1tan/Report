@@ -6,10 +6,15 @@ const {
   successWithData,
 } = require("../../utils/successHandler");
 
-exports.createContact = async (req, res, next) => {
+exports.createContact = async (req, res) => {
   try {
-    await ContactUs.create(req.body);
-    return successNoData(res, 200, "Contact enquiry submitted successfully");
+    const contact = await ContactUs.create(req.body);
+    return successWithData(
+      res,
+      200,
+      "Contact enquiry submitted successfully",
+      contact
+    );
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -21,7 +26,7 @@ exports.listAllContactRequests = async (req, res) => {
     const contacts = await ContactUs.find()
       .sort("-createdAt")
       .limit(limit * 1)
-      .skip((page - 1) * limit);
+      .skip(((page < 1 ? 1 : page) - 1) * limit);
     const count = await ContactUs.countDocuments();
     const data = {
       contacts,

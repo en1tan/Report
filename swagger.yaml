@@ -223,7 +223,7 @@ paths:
                   password: sorosokeWere@1
                   confirmPassword: sorosokeWere@1
                   userAgeGroup: 20-90
-  /user/requestPasswordRequest:
+  /user/requestPasswordReset:
     post:
       summary: request password reset
       tags:
@@ -264,6 +264,61 @@ paths:
                   message:
                     type: string
                     example: Account Does Not Exist
+  /user/sendOtp:
+    post:
+      summary: send otp to user phone number
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+      responses:
+        200:
+          description: otp sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Otp Sent To Your Phone Number. Please Be Patient, The Message May Take A Few Minutes
+  /user/verifyOtp:
+    post:
+      summary: verify otp sent to user phone number
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                otp:
+                  type: number
+                  example: 595675
+      responses:
+        200:
+          description: otp verified
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Otp Verified Successfully
   /user/resetPassword:
     post:
       summary: reset user password

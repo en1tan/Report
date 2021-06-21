@@ -67,7 +67,7 @@ exports.getAllPartners = async (req, res, next) => {
   try {
     const partners = await Partner.find()
       .limit(limit * 1)
-      .skip((page - 1) * limit)
+      .skip(((page < 1 ? 1 : page) - 1) * limit)
       .sort("-createdAt")
       .exec();
     const count = await Partner.countDocuments();

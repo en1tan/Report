@@ -83,7 +83,7 @@ exports.getFollowedCases = async (req, res) => {
         .in(c)
         .sort("-createdAt")
         .limit(limit * 1)
-        .skip((page - 1) * limit)
+        .skip(((page < 1 ? 1 : page) - 1) * limit)
         .exec();
       count = await Case.countDocuments().where("_id").in(c).exec();
     }
@@ -202,7 +202,7 @@ exports.getAllCase = async (req, res) => {
       )
       .sort("-createdAt")
       .limit(limit * 1)
-      .skip((page - 1) * limit)
+      .skip(((page < 1 ? 1 : page) - 1) * limit)
       .exec();
     const count = await Case.countDocuments(filter).exec();
     const data = {
@@ -347,25 +347,6 @@ exports.updateExistingCase = async (req, res) => {
  * @param {Express.Response} res
  * @returns {Promise<CaseWitness>}
  */
-exports.createCaseWitness = async (req, res) => {
-  try {
-    const newWitness = await CaseWitness.create({
-      ...req.body,
-      caseID: req.params.caseID,
-    });
-    const data = {
-      witness: newWitness,
-    };
-    return successWithData(
-      res,
-      200,
-      "Witness has been successfully added to the case file",
-      data
-    );
-  } catch (err) {
-    return tryCatchError(res, err);
-  }
-};
 
 /**
  * Create other details to
@@ -460,7 +441,7 @@ exports.getPersonalCases = async (req, res) => {
     const user = req.user ? req.user._id : "";
     const cases = await Case.find({ publicUserID: user })
       .limit(limit * 1)
-      .skip((page - 1) * limit)
+      .skip(((page < 1 ? 1 : page) - 1) * limit)
       .sort("-createdAt")
       .exec();
     const count = await Case.countDocuments({
@@ -476,11 +457,6 @@ exports.getPersonalCases = async (req, res) => {
         );
         if (category) categories.push(category.categoryName);
       }
-      const userFollowStatus = await FollowCase.findOne({
-        caseID: cases[i]._id,
-      })
-        .where("publicUserID")
-        .in([user]);
       const assignedPartner = await PartnerUser.findById(
         cases[i].assignedPartnerUserId
       ).select("firstName middleName lastName");
@@ -697,7 +673,7 @@ exports.getPublicCases = async (req, res) => {
     const cases = await Case.find(filter)
       .sort("-createdAt")
       .limit(limit * 1)
-      .skip((page - 1) * limit)
+      .skip(((page < 1 ? 1 : page) - 1) * limit)
       .exec();
     const count = await Case.countDocuments(filter).exec();
     for (let i = 0; i < cases.length; i++) {

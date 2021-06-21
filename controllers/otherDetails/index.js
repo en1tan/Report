@@ -59,7 +59,7 @@ exports.fetchAllConversations = async (req, res) => {
     const otherDetails = await OtherDetails.find({ caseID: existingCase._id })
       .sort("-createdAt")
       .limit(limit * 1)
-      .skip((page - 1) * limit);
+      .skip(((page > 1 ? 1 : page) - 1) * limit);
     for (let i = 0; i < otherDetails.length; i++) {
       const docs = await OtherDetailsDoc.find({
         caseOtherDetailsID: otherDetails[i]._id,
