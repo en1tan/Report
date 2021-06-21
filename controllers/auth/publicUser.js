@@ -6,7 +6,7 @@ const {
   tryCatchError,
   normalError,
   authorizationError,
-  validationError
+  validationError,
 } = require("../../utils/errorHandlers");
 const { successWithData } = require("../../utils/successHandler");
 
@@ -25,14 +25,19 @@ const createSendToken = (user, statusCode, res, message) => {
   return successWithData(res, statusCode, message, data);
 };
 
-exports.signup = async function (req, res, next) {
-  const { email, userName } = req.body;
+exports.signup = async function (req, res) {
+  const { email, userName, phoneNumber } = req.body;
   userName.toLowerCase();
   try {
+    const errors = {};
     const user = await User.findOne({ email }).select("-password");
     if (user || (await User.findOne({ userName }))) {
-      const error = "User already exists";
-      return normalError(res, 400, "Unable to create user", error);
+      errors.email = email === user.email ? "email already exists" : null;
+      errors.username =
+        userName === user.userName ? "username already in use" : null;
+      errors.phoneNumber =
+        phoneNumber === user.phoneNumber ? "phone number already in use" : null;
+      return normalError(res, 400, "Unable to create user", { errors });
     }
     const newUser = await User.create({
       ...req.body,
@@ -45,9 +50,9 @@ exports.signup = async function (req, res, next) {
   }
 };
 
-exports.signin = async (req, res, next) => {
+exports.signin = async (req, res) => {
   const { userName, password } = req.body;
-  userName.toLowerCase()
+  userName.toLowerCase();
   try {
     const user = await User.findOne({ userName }).select("+password");
     if (!user || !(await user.correctPassword(password, user.password))) {
@@ -65,20 +70,25 @@ exports.signin = async (req, res, next) => {
   }
 };
 
-exports.profile = async (req, res, next) => {
+exports.profile = async (req, res) => {
   if (!req.user) return authorizationError(res, "User unauthorized");
   const data = _.omit(req.user.toObject(), "password");
   return successWithData(res, 200, "User details", data);
 };
 
-exports.editAccount = async (req, res, next) => {
+exports.editAccount = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     if (!user) return validationError(res, "Authentication error");
     const updatedUser = await User.findByIdAndUpdate(user._id, req.body, {
       new: true,
     });
-    return successWithData(res, 200, "User records updated successfully", updatedUser);
+    return successWithData(
+      res,
+      200,
+      "User records updated successfully",
+      updatedUser
+    );
   } catch (err) {
     return tryCatchError(res, err);
   }

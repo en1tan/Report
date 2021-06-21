@@ -20,7 +20,6 @@ exports.createCaseVictim = async (req, res, next) => {
       ? "Partner_User"
       : "Public_User";
     const newVictim = await CaseVictim.create(req.body);
-    console.log(newVictim);
     return successWithData(
       res,
       201,

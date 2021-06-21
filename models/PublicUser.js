@@ -45,6 +45,7 @@ const publicUserSchema = new Schema(
     // Phone contact of the user: used to recieve notificationa and retrieve password via OTP
     phoneNumber: {
       type: String,
+      unique: true,
       required: [true, "Please provide your phone number"],
     },
 
