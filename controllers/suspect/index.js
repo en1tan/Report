@@ -1,6 +1,6 @@
 const _ = require("lodash");
 
-const Model = require("../../models/cases/CaseSuspect");
+const CaseSuspect = require("../../models/cases/CaseSuspect");
 const Case = require("../../models/cases/Case");
 
 const { tryCatchError, normalError } = require("../../utils/errorHandlers");
@@ -15,7 +15,10 @@ exports.createSuspect = async (req, res) => {
     if (!existingCase) return normalError(res, 404, "case not found");
     req.body.caseID = existingCase._id;
     req.body.addedBy = req.user._id;
-    const suspect = await Model.create(req.body);
+    req.body.addedByUserType = req.user.userType
+      ? "Partner_User"
+      : "Public_User";
+    const suspect = await CaseSuspect.create(req.body);
     return successWithData(
       res,
       201,
@@ -37,7 +40,7 @@ exports.getSuspects = async (req, res) => {
   try {
     const existingCase = await Case.findById(req.params.caseID);
     if (!existingCase) return normalError(res, 404, "case not found");
-    const suspects = await Model.find({ caseID: req.params.caseID })
+    const suspects = await CaseSuspect.find({ caseID: req.params.caseID })
       .select("firstNameOfSuspect lastNameOfSuspect middleNameOfSuspect")
       .sort("-createdAt");
     return successWithData(res, 200, "fetched all suspects", suspects);
@@ -48,7 +51,7 @@ exports.getSuspects = async (req, res) => {
 
 exports.getSuspect = async (req, res) => {
   try {
-    const suspect = await Model.findById(req.params.id);
+    const suspect = await CaseSuspect.findById(req.params.id);
     return successWithData(res, 200, "suspect fetched", suspect);
   } catch (err) {
     return tryCatchError(res, err);
@@ -57,9 +60,9 @@ exports.getSuspect = async (req, res) => {
 
 exports.editSuspect = async (req, res) => {
   try {
-    const suspect = await Model.findById(req.params.id);
+    const suspect = await CaseSuspect.findById(req.params.id);
     if (!suspect) return normalError(res, 404, "suspect not found");
-    await Model.findByIdAndUpdate(suspect._id, req.body, { new: true });
+    await CaseSuspect.findByIdAndUpdate(suspect._id, req.body, { new: true });
     return successNoData(res, 200, "suspect updated successfully");
   } catch (err) {
     return tryCatchError(res, err);
@@ -68,9 +71,9 @@ exports.editSuspect = async (req, res) => {
 
 exports.deleteSuspect = async (req, res) => {
   try {
-    const suspect = await Model.findById(req.params.id);
+    const suspect = await CaseSuspect.findById(req.params.id);
     if (!suspect) return normalError(res, 404, "suspect not found");
-    await Model.findByIdAndDelete(suspect._id);
+    await CaseSuspect.findByIdAndDelete(suspect._id);
     return successNoData(res, 200, "suspect deleted successfully");
   } catch (err) {
     return tryCatchError(res, err);

@@ -42,11 +42,10 @@ const caseVictimSchema = new Schema(
     // mobile number of victim
     phoneNumberOfVictim: {
       type: String,
-      required: [true, "Please provide the Phone Number"],
     },
 
     // Age group of victim- 0-5, 6-11, 12-17, 18 - above
-    victimAgegroup: String,
+    victimAgeGroup: String,
 
     // Gender of victim
     genderOfVictim: {

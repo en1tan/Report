@@ -47,7 +47,7 @@ const validators = {
     firstNameOfSuspect: Joi.string().min(2).max(30).required(),
     middleNameOfSuspect: Joi.string().min(2).max(30).optional(),
     lastNameOfSuspect: Joi.string().min(2).max(30).required(),
-    emailOfSuspect: Joi.string().email().lowercase().required(),
+    emailOfSuspect: Joi.string().email().lowercase().optional(),
     phoneNumberOfSuspect: Joi.string().optional(),
     suspectAgeGroup: Joi.string().optional(),
     genderOfSuspect: Joi.string().valid("Male", "Female"),

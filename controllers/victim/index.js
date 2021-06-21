@@ -64,11 +64,13 @@ exports.getCaseVictims = async (req, res) => {
 exports.getCaseVictim = async (req, res) => {
   try {
     let victim;
-    if (req.user.userType) victim = await CaseVictim.findById(req.params.id);
+    if (req.user && req.user.userType)
+      victim = await CaseVictim.findById(req.params.id);
     else
-      victim = await CaseVictim.findById(req.params.id)
-        .where("addedBy", req.user._id)
-        .select("-addedBy -addedByUserType");
+      victim = await CaseVictim.findById({
+        _id: req.params.id,
+        addedBy: req.user._id,
+      }).select("-addedBy -addedByUserType");
     if (!victim) return normalError(res, 404, "victim not found");
     // Get user type
     const userType = victim.addedByUserType;

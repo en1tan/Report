@@ -14,6 +14,9 @@ exports.createWitness = async (req, res) => {
     if (!existingCase) return normalError(res, 404, "case not found");
     req.body.caseID = existingCase._id;
     req.body.addedBy = req.user._id;
+    req.body.addedByUserType = req.user.userType
+      ? "Partner_User"
+      : "Public_User";
     const witness = await Model.create(req.body);
     return successWithData(
       res,

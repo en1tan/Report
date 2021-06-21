@@ -21,8 +21,18 @@ function authenticate(status = false) {
           return authorizationError(res, "Invalid token");
         if (!decoded.userType) {
           req.user = await PublicUser.findById(decoded.id);
+          if (!req.user)
+            return authorizationError(
+              res,
+              "unauthorized. your account does not exist"
+            );
         } else {
           req.user = await PartnerUser.findById(decoded.id);
+          if (!req.user)
+            return authorizationError(
+              res,
+              "unauthorized. your account does not exist"
+            );
         }
       } else if (!req.authorized && status === true)
         return authorizationError(

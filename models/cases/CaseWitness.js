@@ -43,7 +43,6 @@ const caseWitnessSchema = new Schema(
     // Phone number of witness
     phoneNumberOfWitness: {
       type: String,
-      required: [true, "Please provide the Phone Number"],
     },
 
     // Age group of witness- 0-5, 6-11, 12-17, 18 - above
