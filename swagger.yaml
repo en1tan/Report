@@ -1494,6 +1494,41 @@ paths:
                 updatedAt: '2021-05-29T21:27:33.145Z'
                 caseID: SCSE44766
                 __v: 0
+  /case/{id}/published:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Case
+      summary: get details of a published case
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: details fetched
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Published Case Details
+                  data:
+                    $ref: "#/components/schemas/Case"
+                    example:
+                      _id: ""
+                      caseAvatar: ""
+                      caseTitle: ""
+                      caseSummary: ""
+                      publishStatus: ""
   "/case/{id}/resolve":
     patch:
       security:

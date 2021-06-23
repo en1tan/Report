@@ -36,7 +36,6 @@ const caseWitnessSchema = new Schema(
     // Email address of Witness
     emailOfWitness: {
       type: String,
-      unique: true,
       lowercase: true,
     },
 

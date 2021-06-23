@@ -50,4 +50,10 @@ router.patch(
 );
 router.patch("/:id/follow", caseController.followCase);
 
+router.get(
+  "/:id/published",
+  authorize(["admin", "staff"]),
+  caseController.getPublishedCase
+);
+
 module.exports = router;

@@ -63,7 +63,6 @@ const caseSuspectSchema = new Schema(
     // residential address of suspect
     residentialAddressOfSuspect: {
       type: String,
-      required: true,
     },
 
     // LGA of suspect

@@ -20,7 +20,7 @@ exports.createWitness = async (req, res) => {
     const witness = await Model.create(req.body);
     return successWithData(
       res,
-      201,
+      200,
       "witness created successfully",
       _.pick(witness, [
         "firstNameOfWitness",

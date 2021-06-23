@@ -9,7 +9,6 @@ const CaseEvidence = require("../../models/cases/CaseEvidence");
 const CaseGroupCategory = require("../../models/cases/CaseCategoryGroup");
 const CaseCategory = require("../../models/cases/CaseCategory");
 const CaseTaggedCategories = require("../../models/cases/CaseTaggedCategories");
-const PublicUser = require("../../models/PublicUser");
 const PartnerUser = require("../../models/partners/PartnerUser");
 const FollowCase = require("../../models/cases/FollowCase");
 
@@ -98,8 +97,8 @@ exports.getFollowedCases = async (req, res) => {
           "caseTitle",
           "caseSummary",
           "datePublished",
+          "caseTypeStatus",
         ]),
-        totalCases: count,
         followStatus,
         categories,
         publisher,
@@ -108,6 +107,7 @@ exports.getFollowedCases = async (req, res) => {
     }
     const data = {
       followedCases,
+      totalCases: count,
       total: Math.ceil(count / limit),
       page: parseInt(page),
     };
@@ -190,7 +190,8 @@ exports.getAllCase = async (req, res) => {
       .select(
         "caseID categoryGroupID descriptionOfIncident" +
           " dateOfIncident verificationStatus reportType" +
-          " platformOfReort state lga resolutionStatus createdAt"
+          " platformOfReort state lga resolutionStatus createdAt" +
+          " caseTypeStatus"
       )
       .sort("-createdAt")
       .limit(limit * 1)
@@ -224,9 +225,15 @@ exports.getCase = async (req, res) => {
     let victim;
     let suspect;
     if (fetchedCase) {
-      witness = await CaseWitness.findOne({ caseID: req.params.id }).select("firstNameOfWitness middleNameOfWitness lastNameOfWitness");
-      victim = await CaseVictim.findOne({ caseID: req.params.id }).select("firstNameOfVictim middleNameOfVictim lastNameOfVictim");
-      suspect = await CaseSuspect.findOne({ caseID: req.params.id }).select("firstNameOfSuspect middleNameOfSuspect lastNameOfSuspect");
+      witness = await CaseWitness.findOne({ caseID: req.params.id }).select(
+        "firstNameOfWitness middleNameOfWitness lastNameOfWitness"
+      );
+      victim = await CaseVictim.findOne({ caseID: req.params.id }).select(
+        "firstNameOfVictim middleNameOfVictim lastNameOfVictim"
+      );
+      suspect = await CaseSuspect.findOne({ caseID: req.params.id }).select(
+        "firstNameOfSuspect middleNameOfSuspect lastNameOfSuspect"
+      );
       group = await CaseGroupCategory.findById(fetchedCase.categoryGroupID);
       categories = await getCategories(fetchedCase._id);
     }
@@ -281,10 +288,14 @@ exports.getCase = async (req, res) => {
  */
 exports.createCase = async (req, res) => {
   try {
-    const newCase = await Case.create({
-      ...req.body,
-      publicUserID: req.user,
-    });
+    req.body.publicUserID = req.user._id;
+    req.body.caseTypeStatus =
+      req.body.reportType === "QuickReport" ? req.body.reportType : "Incidence";
+    req.body.resolutionStatus =
+      req.body.reportType === "QuickReport" ? "onlyReport" : "unResolved";
+    req.body.verificationStatus =
+      req.body.reportType === "QuickReport" ? "onlyReport" : "unVerified";
+    const newCase = await Case.create(req.body);
     const categories = req.body.categories.split(",");
     for (let i = 0; i < categories.length; i++) {
       await CaseTaggedCategories.create({
@@ -452,6 +463,8 @@ exports.getPersonalCases = async (req, res) => {
           "caseAvatar",
           "caseID",
           "descriptionOfIncident",
+          "caseTypeStatus",
+          "publishStatus",
           "_id",
           "__v",
         ]),
@@ -462,6 +475,7 @@ exports.getPersonalCases = async (req, res) => {
     }
     const data = {
       personalCases,
+      totalCases: count,
       total: Math.ceil(count / limit),
       page: parseInt(page),
     };
@@ -497,6 +511,27 @@ exports.verifyCase = async (req, res) => {
 };
 
 /**
+ * Get details of a published case
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Promise<Case>}
+ */
+exports.getPublishedCase = async (req, res) => {
+  try {
+    const existingCase = await Case.findById(req.params.id)
+      .where("publishStatus")
+      .in(["published"]);
+    if (!existingCase) return normalError(res, 404, "Case does not exist");
+    const publishedCase = await Case.findById(existingCase._id).select(
+      "caseSummary caseTitle caseAvatar publishStatus"
+    );
+    return successWithData(res, 200, "published case details", publishedCase);
+  } catch (err) {
+    return tryCatchError(res, err);
+  }
+};
+
+/**
  * Publish Case
  * @param {Express.Request} req
  * @param {Express.Response} res
@@ -517,7 +552,10 @@ exports.publishCase = async (req, res) => {
       {
         ...req.body,
         publishedBy: req.user,
-        datePublished: new Date(Date.now()).toISOString(),
+        datePublished:
+          existingCase.publishStatus === "published"
+            ? existingCase.datePublished
+            : new Date(Date.now()).toISOString(),
       },
       { new: true }
     ).select(
@@ -630,9 +668,9 @@ exports.getSinglePublicCase = async (req, res) => {
 exports.getPublicCases = async (req, res) => {
   const publicCases = [];
   const selectedFields = req.user
-    ? "_id __v caseAvatar caseTitle datePublished categoryGroupID" +
+    ? "_id __v caseAvatar caseTitle caseTypeStatus datePublished categoryGroupID" +
       " caseSummary"
-    : "_id __v caseAvatar caseTitle datePublished categoryGroupID" +
+    : "_id __v caseAvatar caseTitle caseTypeStatus datePublished categoryGroupID" +
       " caseSummary";
   let { page = 1, limit = 20 } = req.query;
   const filter = _.pick(req.query, [

@@ -57,7 +57,6 @@ exports.fetchAllConversations = async (req, res) => {
     const existingCase = await Case.findById(req.params.caseID);
     if (!existingCase) return normalError(res, 404, "case not found");
     const otherDetails = await OtherDetails.find({ caseID: existingCase._id })
-      .sort("-createdAt")
       .limit(limit * 1)
       .skip(((page > 1 ? 1 : page) - 1) * limit);
     for (let i = 0; i < otherDetails.length; i++) {
