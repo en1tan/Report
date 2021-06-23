@@ -224,10 +224,10 @@ exports.getCase = async (req, res) => {
     let victim;
     let suspect;
     if (fetchedCase) {
-      witness = await CaseWitness.findOne({ caseID: req.params.id });
-      victim = await CaseVictim.findOne({ caseID: req.params.id });
-      suspect = await CaseSuspect.findOne({ caseID: req.params.id });
-      group = await CaseGroupCategory.findById(cases[i].categoryGroupID);
+      witness = await CaseWitness.findOne({ caseID: req.params.id }).select("firstNameOfWitness middleNameOfWitness lastNameOfWitness");
+      victim = await CaseVictim.findOne({ caseID: req.params.id }).select("firstNameOfVictim middleNameOfVictim lastNameOfVictim");
+      suspect = await CaseSuspect.findOne({ caseID: req.params.id }).select("firstNameOfSuspect middleNameOfSuspect lastNameOfSuspect");
+      group = await CaseGroupCategory.findById(fetchedCase.categoryGroupID);
       categories = await getCategories(fetchedCase._id);
     }
     const data = {
@@ -260,7 +260,7 @@ exports.getCase = async (req, res) => {
             "caseID",
           ]),
           categories,
-          groupName: group.groupName,
+          groupName: group ? group.groupName : "",
         },
         victim,
         witness,
