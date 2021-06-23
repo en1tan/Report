@@ -6,6 +6,7 @@ const CaseSuspect = require("../../models/cases/CaseSuspect");
 const CaseWitness = require("../../models/cases/CaseWitness");
 const CaseOtherDetails = require("../../models/cases/CaseOtherDetails");
 const CaseEvidence = require("../../models/cases/CaseEvidence");
+const CaseGroupCategory = require("../../models/cases/CaseCategoryGroup");
 const CaseCategory = require("../../models/cases/CaseCategory");
 const CaseTaggedCategories = require("../../models/cases/CaseTaggedCategories");
 const PublicUser = require("../../models/PublicUser");
@@ -33,27 +34,19 @@ exports.followCase = async (req, res) => {
       publicUserID: req.user._id,
     });
     if (req.body.followStatus === "follow") {
-      if (follow && follow.followStatus === true)
+      if (follow)
         return successNoData(res, 200, "You are following this case already");
-      await FollowCase.findOneAndUpdate(
-        {
-          caseID: req.params.id,
-        },
-        {
-          publicUserID: req.user._id,
-        },
-        { upsert: true }
-      );
+      await FollowCase.create({
+        caseID: req.params.id,
+        publicUserID: req.user._id,
+      });
       return successNoData(res, 200, "Case followed successfully");
     } else {
-      if (follow && follow.followStatus === false)
+      if (follow)
         return successNoData(res, 200, "You have unfollowed this case");
-      await FollowCase.findOneAndUpdate(
-        {
-          caseID: req.params.id,
-        },
-        { followStatus: false }
-      );
+      await FollowCase.findOneAndDelete({
+        caseID: req.params.id,
+      });
       return successNoData(res, 200, "Case unfollowed successfully");
     }
   } catch (err) {
@@ -90,28 +83,27 @@ exports.getFollowedCases = async (req, res) => {
 
     for (let i = 0; i < cases.length; i++) {
       categories = await getCategories(cases[i]._id);
-    }
-
-    for (let i = 0; i < cases.length; i++) {
       const followStatus = cases[i].followedBy.some(
         async (cf) => cf === (await FollowCase.findOne(cf._id))
       );
       const publisher = await PartnerUser.findById(cases[i].publishedBy).select(
         "firstName middleName lastName"
       );
+      const group = await CaseGroupCategory.findById(cases[i].categoryGroupID);
       followedCases.push({
         ..._.pick(cases[i], [
           "_id",
           "__v",
           "caseAvatar",
           "caseTitle",
-          "categoryGroupID",
           "caseSummary",
           "datePublished",
         ]),
+        totalCases: count,
         followStatus,
         categories,
         publisher,
+        groupName: group ? group.groupName : "",
       });
     }
     const data = {
@@ -225,6 +217,7 @@ exports.getAllCase = async (req, res) => {
 exports.getCase = async (req, res) => {
   try {
     let categories = [];
+    let group;
     const fetchedCase = await Case.findById(req.params.id);
     if (!fetchedCase) return normalError(res, 404, "Case not found");
     let witness;
@@ -234,6 +227,7 @@ exports.getCase = async (req, res) => {
       witness = await CaseWitness.findOne({ caseID: req.params.id });
       victim = await CaseVictim.findOne({ caseID: req.params.id });
       suspect = await CaseSuspect.findOne({ caseID: req.params.id });
+      group = await CaseGroupCategory.findById(cases[i].categoryGroupID);
       categories = await getCategories(fetchedCase._id);
     }
     const data = {
@@ -261,12 +255,12 @@ exports.getCase = async (req, res) => {
             "addressLandmark",
             "addressOfIncident",
             "assignedPartnerUserId",
-            "categoryGroupID",
             "caseAvatar",
             "publicUserID",
             "caseID",
           ]),
           categories,
+          groupName: group.groupName,
         },
         victim,
         witness,
@@ -448,15 +442,8 @@ exports.getPersonalCases = async (req, res) => {
       publicUserID: req.user.id,
     });
     for (let i = 0; i < cases.length; i++) {
-      const categoryIDs = await CaseTaggedCategories.find({
-        caseID: cases[i]._id,
-      });
-      for (let c = 0; c < categoryIDs.length; c++) {
-        const category = await CaseCategory.findById(
-          categoryIDs[c].caseCategoryID
-        );
-        if (category) categories.push(category.categoryName);
-      }
+      categories = await getCategories(cases[i]._id);
+      const group = await CaseGroupCategory.findById(cases[i].categoryGroupID);
       const assignedPartner = await PartnerUser.findById(
         cases[i].assignedPartnerUserId
       ).select("firstName middleName lastName");
@@ -465,10 +452,10 @@ exports.getPersonalCases = async (req, res) => {
           "caseAvatar",
           "caseID",
           "descriptionOfIncident",
-          "categoryGroupID",
           "_id",
           "__v",
         ]),
+        groupName: group ? group.groupName : "",
         assignedPartner: assignedPartner ? assignedPartner : "NotYetAssigned",
         categories,
       });
@@ -591,17 +578,9 @@ exports.getSinglePublicCase = async (req, res) => {
   try {
     const existingCase = await Case.findById(req.params.id);
     if (!existingCase) return normalError(res, 404, "Case not found");
-    const categoryIDs = await CaseTaggedCategories.find({
-      caseID: existingCase._id,
-    });
-    if (categoryIDs.length > 0)
-      for (let i = 0; i < categoryIDs.length; i++) {
-        const category = await CaseCategory.findById(
-          categoryIDs[i].caseCategoryID
-        );
-        if (category) categories.push(category.categoryName);
-        else categories.push();
-      }
+    const group = await CaseGroupCategory.findById(
+      existingCase.categoryGroupID
+    );
     const publisher = await PartnerUser.findById(
       existingCase.publishedBy
     ).select("firstName lastName middleName");
@@ -610,11 +589,7 @@ exports.getSinglePublicCase = async (req, res) => {
         publicUserID: req.user._id,
         caseID: req.params.id,
       });
-      if (f) {
-        userFollowStatus = true;
-      } else {
-        userFollowStatus = false;
-      }
+      userFollowStatus = !!f;
     }
     const data = {
       ..._.pick(existingCase, [
@@ -622,7 +597,6 @@ exports.getSinglePublicCase = async (req, res) => {
         "__v",
         "caseAvatar",
         "caseTitle",
-        "categoryGroupID",
         "caseSummary",
         "datePublished",
         "dateOfIncident",
@@ -635,6 +609,7 @@ exports.getSinglePublicCase = async (req, res) => {
         "caseTypeStatus",
         "hourOfIncident",
       ]),
+      groupName: group ? group.groupName : "",
       categories,
       userFollowStatus,
       publisher,
@@ -683,12 +658,14 @@ exports.getPublicCases = async (req, res) => {
       })
         .where("publicUserID")
         .in([user]);
+      const group = await CaseGroupCategory.findById(cases[i].categoryGroupID);
       const publicCase = {
         ..._.pick(cases[i], selectedFields.split(" ")),
         publisher: await PartnerUser.findById(cases[i].publishedBy).select(
           "firstName lastName middleName"
         ),
         followStatus: !!userFollowStatus,
+        groupName: group ? group.groupName : "",
       };
       publicCases.push(publicCase);
     }
