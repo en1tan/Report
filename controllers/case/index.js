@@ -465,6 +465,7 @@ exports.getPersonalCases = async (req, res) => {
           "descriptionOfIncident",
           "caseTypeStatus",
           "publishStatus",
+          "reportType",
           "_id",
           "__v",
         ]),
