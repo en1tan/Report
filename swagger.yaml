@@ -72,6 +72,36 @@ paths:
                   createdAt: '2021-05-27T21:02:50.182Z'
                   updatedAt: '2021-05-27T21:02:50.182Z'
                   __v: 0
+  /user/activate:
+    post:
+      tags:
+        - User
+      summary: activate account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: user ID
+                token:
+                  type: string
+      responses:
+        200:
+          description: user activated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Account Activated Successfully
   "/user/login":
     post:
       summary: Login user

@@ -31,7 +31,6 @@ const publicUserSchema = new Schema(
       type: String,
       required: true,
       unique: true,
-      immutable: true,
     },
 
     // Email Address of the User
@@ -112,7 +111,7 @@ const publicUserSchema = new Schema(
     // Account active or disabled
     active: {
       type: Boolean,
-      default: true,
+      default: false,
     },
 
     // If the user has any disabilities

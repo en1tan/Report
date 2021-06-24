@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const _ = require("lodash");
-
+const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
 const User = require("../../models/PublicUser");
 const {
   tryCatchError,
@@ -8,7 +9,13 @@ const {
   authorizationError,
   validationError,
 } = require("../../utils/errorHandlers");
-const { successWithData } = require("../../utils/successHandler");
+const {
+  successWithData,
+  successNoData,
+} = require("../../utils/successHandler");
+const { sendMail } = require("../../utils/sendMail");
+const TokenModel = require("../../models/Token");
+const { clientURL } = require("../../config");
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -27,24 +34,41 @@ const createSendToken = (user, statusCode, res, message) => {
 
 exports.signup = async function (req, res) {
   const { email, userName, phoneNumber } = req.body;
-  userName.toLowerCase();
   try {
     const errors = {};
-    const user = await User.findOne({ email }).select("-password");
-    if (user || (await User.findOne({ userName }))) {
-      errors.email = email === user.email ? "email already exists" : null;
-      errors.username =
-        userName === user.userName ? "username already in use" : null;
-      errors.phoneNumber =
-        phoneNumber === user.phoneNumber ? "phone number already in use" : null;
+    if (await User.findOne({ email })) errors.email = "email already exists";
+    if (await User.findOne({ userName: userName.toLowerCase() }))
+      errors.username = "username already in use";
+    if (await User.findOne({ phoneNumber }))
+      errors.phoneNumber = "phone number already in use";
+    if (!_.isEmpty(errors))
       return normalError(res, 400, "Unable to create user", { errors });
+
+    req.body.userName = req.body.userName.toLowerCase();
+    const newUser = await User.create(req.body);
+    if (newUser) {
+      const token = await TokenModel.findOne({ userID: newUser._id });
+      if (token) await token.deleteOne();
+      const activateToken = crypto.randomBytes(32).toString("hex");
+      const hash = await bcrypt.hash(activateToken, 12);
+      await TokenModel.create({
+        userID: newUser._id,
+        token: hash,
+        createdAt: Date.now(),
+      });
+      const activateLink = `${clientURL}/activate?token=${activateToken}&id=${newUser._id}`;
+      sendMail(
+        res,
+        newUser.email,
+        "Activate Your Account",
+        {
+          name: `${newUser.lastName} ${newUser.firstName}`,
+          link: activateLink,
+        },
+        "../controllers/auth/template/activateAccount.handlebars"
+      );
     }
-    const newUser = await User.create({
-      ...req.body,
-    });
-    return successWithData(res, 201, "User created succesfully", {
-      user: newUser,
-    });
+    return successNoData(res, 201, "User created successfully");
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -89,6 +113,35 @@ exports.editAccount = async (req, res) => {
       "User records updated successfully",
       updatedUser
     );
+  } catch (err) {
+    return tryCatchError(res, err);
+  }
+};
+
+exports.activateAccount = async (req, res) => {
+  try {
+    const activateToken = await TokenModel.findOne({ userID: req.body.id });
+    if (!activateToken)
+      return normalError(
+        res,
+        400,
+        "Account does not exist. Please register your account"
+      );
+    if (activateToken && activateToken.otpVerified === false)
+      return normalError(
+        res,
+        400,
+        "otp not verified. please try again or contact support",
+        null
+      );
+    if (!(await bcrypt.compare(req.body.token, activateToken.token)))
+      return normalError(
+        res,
+        400,
+        "invalid or expired token. please contact support"
+      );
+    await User.findByIdAndUpdate(req.body.id, { activate: true });
+    return successNoData(res, 200, "account activated successfully");
   } catch (err) {
     return tryCatchError(res, err);
   }

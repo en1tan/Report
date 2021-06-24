@@ -13,7 +13,6 @@ const { successNoData } = require("../../utils/successHandler");
 exports.requestPasswordRequest = async (req, res) => {
   try {
     const user = await PublicUser.findOne({ email: req.body.email });
-
     if (!user) return normalError(res, 404, "account does not exist");
     let token = await TokenModel.findOne({ userID: user._id });
     if (token) await token.deleteOne();
@@ -42,6 +41,7 @@ exports.requestPasswordRequest = async (req, res) => {
   }
 };
 
+// TODO: to move to utils later
 exports.verifyOtp = async (req, res) => {
   try {
     const token = await TokenModel.findOne({ otp: req.body.otp });
@@ -53,6 +53,7 @@ exports.verifyOtp = async (req, res) => {
   }
 };
 
+// TODO: to move to utils later
 exports.sendOtp = async (req, res) => {
   try {
     const token = await TokenModel.findOne({ userID: req.body.userID });
@@ -115,6 +116,7 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
+// TODO: to move to utils later
 const sendSms = async (to, message) => {
   await client.messages.create({
     from: devPhone,

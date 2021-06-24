@@ -13,7 +13,7 @@ const tokenSchema = new Schema({
   otp: {
     type: Number,
     required: true,
-    default: 0,
+    default: Math.random(),
   },
   otpVerified: {
     type: Boolean,
