@@ -60,13 +60,13 @@ exports.signup = async (req, res) => {
         name: newUser.firstName,
         link: resetLink,
       },
-      "../controllers/auth/template/newAccount.handlebars"
+      "../controllers/auth/template/newAccount.handlebars",
     );
     return successWithData(
       res,
       201,
       "Admin user created successfully",
-      newUser
+      newUser,
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -77,14 +77,17 @@ exports.signin = async (req, res, next) => {
   const { userName, password } = req.body;
   try {
     const user = await User.findOne({ userName }).select("+password");
-    if (!user || !(await user.correctPassword(password, user.password))) {
+    if (
+      !user ||
+      !(await user.correctPassword(password, user.password))
+    ) {
       return validationError(res, "Authentication error");
     }
 
     await User.findByIdAndUpdate(
       user._id,
       { onlineStatus: "online" },
-      { new: true }
+      { new: true },
     );
 
     createSendToken(user, 200, res, "User authorized");
@@ -101,16 +104,21 @@ exports.editAccount = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     if (!user) return validationError(res, "Authentication error");
-    const updatedUser = await User.findByIdAndUpdate(user._id, req.body, {
-      new: true,
-    });
+    const updatedUser = await User.findByIdAndUpdate(
+      user._id,
+      req.body,
+      {
+        new: true,
+      },
+    );
     return successWithData(
       res,
       200,
       "User records updated successfully",
-      updatedUser
+      updatedUser,
     );
   } catch (err) {
+    n;
     return tryCatchError(res, err);
   }
 };
@@ -140,9 +148,13 @@ exports.requestPartnerPasswordRequest = async (req, res) => {
         name: user.name,
         link: resetLink,
       },
-      "../controllers/auth/template/requestResetPassword.handlebars"
+      "../controllers/auth/template/requestResetPassword.handlebars",
     );
-    return successNoData(res, 200, "password reset link sent successfully.");
+    return successNoData(
+      res,
+      200,
+      "password reset link sent successfully.",
+    );
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -154,18 +166,26 @@ exports.resetPassword = async (req, res) => {
       userID: req.body.id,
     });
     if (!passwordResetToken)
-      return normalError(res, 400, "Invalid or expired password reset token");
+      return normalError(
+        res,
+        400,
+        "Invalid or expired password reset token",
+      );
     const isValid = await bcrypt.compare(
       req.body.token,
-      passwordResetToken.token
+      passwordResetToken.token,
     );
     if (!isValid)
-      return normalError(res, 400, "Invalid or expired password reset token.");
+      return normalError(
+        res,
+        400,
+        "Invalid or expired password reset token.",
+      );
     const hash = await bcrypt.hash(req.body.password, Number(10));
     await User.findByIdAndUpdate(
       req.body.id,
       { $set: { password: hash } },
-      { new: true }
+      { new: true },
     );
     const user = await User.findById(req.body.id);
     sendMail(
@@ -173,7 +193,7 @@ exports.resetPassword = async (req, res) => {
       user.email,
       "Password Reset Successfully",
       { name: user.firstName },
-      "../controllers/auth/template/resetPasswordSuccessful.handlebars"
+      "../controllers/auth/template/resetPasswordSuccessful.handlebars",
     );
     await passwordResetToken.deleteOne();
     return successNoData(res, 200, "password reset successfully");

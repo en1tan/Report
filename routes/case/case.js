@@ -2,8 +2,9 @@ const express = require("express");
 const caseController = require("../../controllers/case");
 const authorize = require("../../middleware/authorization");
 const router = express.Router();
+const validate = require("../../utils/validator");
 
-router.post("/create", caseController.createCase);
+router.post("/create", validate("case", "body"), caseController.createCase);
 router.get(
   "/all",
   authorize(["super-admin", "admin", "staff", "verifier"]),

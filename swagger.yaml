@@ -1141,7 +1141,6 @@ paths:
               descriptionOfIncident: A friend got swatted
               lga: ''
               casePleas: ''
-              tags: ''
               hourOfIncident: ''
               caseAvatar: https://via.placeholder.com/150
       responses:
