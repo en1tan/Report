@@ -543,7 +543,7 @@ exports.publishCase = async (req, res) => {
     const existingCase = await Case.findById(req.params.id);
     if (!existingCase) return normalError(res, 404, "Case does not exist");
     if (existingCase.publishStatus === req.body.publishStatus)
-      return successWithData(
+      return successNoData(
         res,
         200,
         "Case already has status: " + req.body.publishStatus

@@ -50,10 +50,9 @@ exports.signup = async function (req, res) {
       const token = await TokenModel.findOne({ userID: newUser._id });
       if (token) await token.deleteOne();
       const activateToken = crypto.randomBytes(32).toString("hex");
-      const hash = await bcrypt.hash(activateToken, 12);
       await TokenModel.create({
         userID: newUser._id,
-        token: hash,
+        token: activateToken,
         createdAt: Date.now(),
       });
       const activateLink = `${clientURL}/activate?token=${activateToken}&id=${newUser._id}`;
@@ -134,13 +133,14 @@ exports.activateAccount = async (req, res) => {
         "otp not verified. please try again or contact support",
         null
       );
-    if (!(await bcrypt.compare(req.body.token, activateToken.token)))
+    if (req.body.token !== activateToken.token)
       return normalError(
         res,
         400,
         "invalid or expired token. please contact support"
       );
-    await User.findByIdAndUpdate(req.body.id, { activate: true });
+    await User.findByIdAndUpdate(req.body.id, { active: true });
+    activateToken.deleteOne();
     return successNoData(res, 200, "account activated successfully");
   } catch (err) {
     return tryCatchError(res, err);

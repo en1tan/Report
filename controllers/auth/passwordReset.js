@@ -8,34 +8,34 @@ const client = require("twilio")(accountSid, authToken);
 const phoneNumberParser = require("libphonenumber-js");
 
 const { normalError, tryCatchError } = require("../../utils/errorHandlers");
-const { successNoData } = require("../../utils/successHandler");
+const {
+  successNoData,
+  successWithData,
+} = require("../../utils/successHandler");
 
-exports.requestPasswordRequest = async (req, res) => {
+exports.requestPasswordReset = async (req, res) => {
   try {
-    const user = await PublicUser.findOne({ email: req.body.email });
+    const user = await PublicUser.findOne({
+      phoneNumber: req.body.phoneNumber,
+    });
     if (!user) return normalError(res, 404, "account does not exist");
     let token = await TokenModel.findOne({ userID: user._id });
     if (token) await token.deleteOne();
     let resetToken = crypto.randomBytes(32).toString("hex");
-    const hash = await bcrypt.hash(resetToken, 12);
-    await new TokenModel({
+    const otp = parseInt(Math.random().toString(8).substr(2, 5));
+    const newToken = await new TokenModel({
       userID: user._id,
-      token: hash,
+      token: resetToken,
+      otp,
       createdAt: Date.now(),
     }).save();
-
-    const resetLink = `${clientURL}/passwordReset?token=${resetToken}&id=${user._id}`;
-    sendMail(
+    await sendSms(user.phoneNumber, otp);
+    return successWithData(
       res,
-      user.email,
-      "Password Reset Request",
-      {
-        name: user.name,
-        link: resetLink,
-      },
-      "../controllers/auth/template/requestResetPassword.handlebars"
+      200,
+      "otp sent to your phone number. please be patient, the message may take a few minutes",
+      { tokenID: newToken._id }
     );
-    return successNoData(res, 200, "password reset link sent successfully.");
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -53,10 +53,36 @@ exports.verifyOtp = async (req, res) => {
   }
 };
 
-// TODO: to move to utils later
 exports.sendOtp = async (req, res) => {
   try {
-    const token = await TokenModel.findOne({ userID: req.body.userID });
+    const token = await TokenModel.findById(req.body.tokenID);
+    if (!token)
+      return normalError(res, 400, "invalid session. please contact support");
+    const user = await PublicUser.findById(token.userID);
+    if (!user) return normalError(res, 404, "account does not exist");
+    const otp = parseInt(Math.random().toString(8).substr(2, 5));
+    const newToken = await TokenModel.findByIdAndUpdate(
+      token._id,
+      { otp },
+      { new: true }
+    );
+    sendSms(user.phoneNumber, `Your OTP code is: ${newToken.otp}.`);
+    return successWithData(
+      res,
+      200,
+      "otp sent to your phone number. please be patient, the message may take a few minutes",
+      { tokenID: newToken._id }
+    );
+  } catch (err) {
+    return tryCatchError(res, err);
+  }
+};
+
+// TODO: to move to utils later
+exports.resendOtp = async (req, res) => {
+  try {
+    const token = await TokenModel.findById(req.token.tokenID);
+    const user = await PublicUser.findById(token.userID);
     if (!token) {
       return normalError(
         res,
@@ -64,10 +90,20 @@ exports.sendOtp = async (req, res) => {
         "invalid request password session. please try again"
       );
     }
+    if (token && !user) {
+      return normalError(
+        res,
+        400,
+        "no account is attached to this session. please try again"
+      );
+    }
     const otp = parseInt(Math.random().toString(8).substr(2, 5));
-    await TokenModel.findByIdAndUpdate(token._id, { otp }, { new: true });
-    const user = await PublicUser.findById(token.userID);
-    await sendSms(user.phoneNumber, otp);
+    const newToken = await TokenModel.findByIdAndUpdate(
+      token._id,
+      { otp, otpVerified: false },
+      { new: true }
+    );
+    await sendSms(user.phoneNumber, newToken.otp);
     return successNoData(
       res,
       200,
@@ -80,35 +116,17 @@ exports.sendOtp = async (req, res) => {
 
 exports.resetPassword = async (req, res) => {
   try {
-    let passwordResetToken = await TokenModel.findOne({
-      userID: req.body.id,
-    });
+    let passwordResetToken = await TokenModel.findById(req.body.TokenID);
     if (!passwordResetToken)
       return normalError(res, 400, "Invalid or expired password reset token");
 
     if (passwordResetToken.otpVerified === false)
       return normalError(res, 400, "otp not verified. please try again");
-    const isValid = await bcrypt.compare(
-      req.body.token,
-      passwordResetToken.token
-    );
-    if (!isValid)
-      return normalError(res, 400, "Invalid or expired password reset token.");
 
     const hash = await bcrypt.hash(req.body.password, 12);
-    await PublicUser.updateOne(
-      { _id: req.body.id },
-      { $set: { password: hash } },
-      { new: true }
-    );
-    const user = await PublicUser.findById(req.body.id);
-    sendMail(
-      res,
-      user.email,
-      "Password Reset Successfully",
-      { name: user.firstName },
-      "../controllers/auth/template/resetPasswordSuccessful.handlebars"
-    );
+    await PublicUser.findByIdAndUpdate(passwordResetToken.userID, {
+      password: hash,
+    });
     await passwordResetToken.deleteOne();
     return successNoData(res, 200, "password reset successfully");
   } catch (err) {

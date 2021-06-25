@@ -74,9 +74,9 @@ exports.getCurrentProgress = async (req, res) => {
     const selectedFields = req.user
       ? !req.user.userType &&
         !(await CaseProgress.findOne({ publicUserID: req.user._id }))
-        ? "title messageContent"
-        : "title messageContent publicUserID privacyStatus"
-      : "title messageContent";
+        ? "title messageContent updatedAt"
+        : "title messageContent publicUserID privacyStatus updatedAt"
+      : "title messageContent updatedAt";
     const existingCase = await Case.findById(req.params.caseID);
     if (!existingCase) return normalError(res, 404, "case not found");
     const currentProgress = await CaseProgress.find({
@@ -92,7 +92,9 @@ exports.getCurrentProgress = async (req, res) => {
       const docs = await CaseProgressDoc.find({
         caseProgressID: currentProgress[i]._id,
       });
-      progress.push({ currentProgress: currentProgress[i], docs });
+      const p = await PartnerUser.findById(existingCase.assignedPartnerUserID);
+
+      progress.push({ currentProgress: currentProgress[i], docs, partner });
     }
     const count = await CaseProgress.countDocuments({
       caseID: existingCase._id,
