@@ -3,7 +3,7 @@ openapi: 3.0.0
 info:
   version: 1.0.0
   title: SorosokeAPI Server
-  description: API Server for SorosokeAPI
+  description: API Server for SorosokeAPI. <a href="https://github.com/kuantarium/SorosokeAPI" target="_blank">Source Link</a>
 servers:
   - url: https://sorosokeapi.onrender.com/api/v1
     description: Production Server
