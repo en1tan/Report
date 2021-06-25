@@ -92,8 +92,9 @@ exports.getCurrentProgress = async (req, res) => {
       const docs = await CaseProgressDoc.find({
         caseProgressID: currentProgress[i]._id,
       });
-      const p = await PartnerUser.findById(existingCase.assignedPartnerUserID);
-
+      const partner = await PartnerUser.findById(
+        existingCase.assignedPartnerUserID
+      ).select("avatar userName");
       progress.push({ currentProgress: currentProgress[i], docs, partner });
     }
     const count = await CaseProgress.countDocuments({
