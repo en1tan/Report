@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const capitalize = require("../utils/capitalize");
 
 const validators = {
   signup: Joi.object({
@@ -116,10 +115,14 @@ const validators = {
     state: Joi.string().optional(),
     lga: Joi.string().optional(),
     descriptionOfIncident: Joi.string().optional(),
-    areYouTheVictim: Joi.string().valid("Yes","No").required(),
-    reportType: Joi.string().valid("Standard","QuickReport").required(),
+    areYouTheVictim: Joi.string().valid("Yes", "No").required(),
+    reportType: Joi.string()
+      .valid("Standard", "QuickReport")
+      .required(),
     casePleas: Joi.string().optional(),
-    platformOfReport: Joi.string().valid("mobile","web","sms").optional()
+    platformOfReport: Joi.string()
+      .valid("mobile", "web", "sms")
+      .optional(),
   }),
   contact: Joi.object({
     senderName: Joi.string().min(2).max(50).optional(),

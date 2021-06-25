@@ -118,10 +118,10 @@ const partnerUserSchema = new Schema(
     // Account active or disabled
     active: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 partnerUserSchema.pre("save", async function (next) {
@@ -133,7 +133,7 @@ partnerUserSchema.pre("save", async function (next) {
 
 partnerUserSchema.methods.correctPassword = async function (
   incomingPassword,
-  userPassword
+  userPassword,
 ) {
   return await bcrypt.compare(incomingPassword, userPassword);
 };

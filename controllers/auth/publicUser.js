@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const crypto = require("crypto");
-const bcrypt = require("bcryptjs");
 const User = require("../../models/PublicUser");
 const {
   tryCatchError,
@@ -36,13 +35,16 @@ exports.signup = async function (req, res) {
   const { email, userName, phoneNumber } = req.body;
   try {
     const errors = {};
-    if (await User.findOne({ email })) errors.email = "email already exists";
+    if (await User.findOne({ email }))
+      errors.email = "email already exists";
     if (await User.findOne({ userName: userName.toLowerCase() }))
       errors.username = "username already in use";
     if (await User.findOne({ phoneNumber }))
       errors.phoneNumber = "phone number already in use";
     if (!_.isEmpty(errors))
-      return normalError(res, 400, "Unable to create user", { errors });
+      return normalError(res, 400, "Unable to create user", {
+        errors,
+      });
 
     req.body.userName = req.body.userName.toLowerCase();
     const newUser = await User.create(req.body);
@@ -50,12 +52,12 @@ exports.signup = async function (req, res) {
       const token = await TokenModel.findOne({ userID: newUser._id });
       if (token) await token.deleteOne();
       const activateToken = crypto.randomBytes(32).toString("hex");
-      await TokenModel.create({
+      const newToken = await TokenModel.create({
         userID: newUser._id,
         token: activateToken,
         createdAt: Date.now(),
       });
-      const activateLink = `${clientURL}/activate?token=${activateToken}&id=${newUser._id}`;
+      const activateLink = `${clientURL}/activate?token=${newToken._id}`;
       sendMail(
         res,
         newUser.email,
@@ -64,10 +66,16 @@ exports.signup = async function (req, res) {
           name: `${newUser.lastName} ${newUser.firstName}`,
           link: activateLink,
         },
-        "../controllers/auth/template/activateAccount.handlebars"
+        "../controllers/auth/template/activateAccount.handlebars",
+      );
+      return successNoData(res, 201, "User created successfully");
+    } else {
+      return normalError(
+        res,
+        400,
+        "an error occured. please try again",
       );
     }
-    return successNoData(res, 201, "User created successfully");
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -78,13 +86,19 @@ exports.signin = async (req, res) => {
   userName.toLowerCase();
   try {
     const user = await User.findOne({ userName }).select("+password");
-    if (!user || !(await user.correctPassword(password, user.password))) {
-      return authorizationError(res, "Username or password is incorrrect");
+    if (
+      !user ||
+      !(await user.correctPassword(password, user.password))
+    ) {
+      return authorizationError(
+        res,
+        "Username or password is incorrrect",
+      );
     }
     await User.findByIdAndUpdate(
       user._id,
       { onlineStatus: "online" },
-      { new: true }
+      { new: true },
     );
     const data = _.omit(user.toObject(), "password");
     createSendToken(data, 200, res, "User authorized");
@@ -103,14 +117,18 @@ exports.editAccount = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     if (!user) return validationError(res, "Authentication error");
-    const updatedUser = await User.findByIdAndUpdate(user._id, req.body, {
-      new: true,
-    });
+    const updatedUser = await User.findByIdAndUpdate(
+      user._id,
+      req.body,
+      {
+        new: true,
+      },
+    );
     return successWithData(
       res,
       200,
       "User records updated successfully",
-      updatedUser
+      updatedUser,
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -119,25 +137,27 @@ exports.editAccount = async (req, res) => {
 
 exports.activateAccount = async (req, res) => {
   try {
-    const activateToken = await TokenModel.findOne({ userID: req.body.id });
+    const activateToken = await TokenModel.findOne({
+      userID: req.body.id,
+    });
     if (!activateToken)
       return normalError(
         res,
         400,
-        "Account does not exist. Please register your account"
+        "Account does not exist. Please register your account",
       );
     if (activateToken && activateToken.otpVerified === false)
       return normalError(
         res,
         400,
         "otp not verified. please try again or contact support",
-        null
+        null,
       );
     if (req.body.token !== activateToken.token)
       return normalError(
         res,
         400,
-        "invalid or expired token. please contact support"
+        "invalid or expired token. please contact support",
       );
     await User.findByIdAndUpdate(req.body.id, { active: true });
     activateToken.deleteOne();

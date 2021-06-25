@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const _ = require("lodash");
 
 const User = require("../../models/partners/PartnerUser");
 const TokenModel = require("../../models/Token");
@@ -32,13 +33,20 @@ const createSendToken = (user, statusCode, res, message) => {
 };
 
 exports.signup = async (req, res) => {
-  let errors = {};
+  const { email, userName, phoneNumber } = req.body;
+  const errors = {};
   try {
-    const user = await User.findOne({ email: req.body.email });
-    if (user) {
-      errors.email = "Email already exists";
-      return normalError(res, 400, "Unable to create user", errors);
-    }
+    if (await User.findOne({ email }))
+      errors.email = "email already exists";
+    if (await User.findOne({ userName: userName.toLowerCase() }))
+      errors.username = "username already in use";
+    if (await User.findOne({ phoneNumber }))
+      errors.phoneNumber = "phone number already in use";
+    if (!_.isEmpty(errors))
+      return normalError(res, 400, "Unable to create user", {
+        errors,
+      });
+    req.body.userName = req.body.userName.toLowerCase();
     const newUser = await User.create(req.body);
     newUser.password = null;
     let token = await TokenModel.findOne({ userID: newUser._id });
