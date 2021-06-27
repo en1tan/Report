@@ -12,7 +12,10 @@ const CaseTaggedCategories = require("../../models/cases/CaseTaggedCategories");
 const PartnerUser = require("../../models/partners/PartnerUser");
 const FollowCase = require("../../models/cases/FollowCase");
 
-const { tryCatchError, normalError } = require("../../utils/errorHandlers");
+const {
+  tryCatchError,
+  normalError,
+} = require("../../utils/errorHandlers");
 const {
   successWithData,
   successNoData,
@@ -34,7 +37,11 @@ exports.followCase = async (req, res) => {
     });
     if (req.body.followStatus === "follow") {
       if (follow)
-        return successNoData(res, 200, "You are following this case already");
+        return successNoData(
+          res,
+          200,
+          "You are following this case already",
+        );
       await FollowCase.create({
         caseID: req.params.id,
         publicUserID: req.user._id,
@@ -42,7 +49,11 @@ exports.followCase = async (req, res) => {
       return successNoData(res, 200, "Case followed successfully");
     } else {
       if (follow)
-        return successNoData(res, 200, "You have unfollowed this case");
+        return successNoData(
+          res,
+          200,
+          "You have unfollowed this case",
+        );
       await FollowCase.findOneAndDelete({
         caseID: req.params.id,
       });
@@ -83,12 +94,14 @@ exports.getFollowedCases = async (req, res) => {
     for (let i = 0; i < cases.length; i++) {
       categories = await getCategories(cases[i]._id);
       const followStatus = cases[i].followedBy.some(
-        async (cf) => cf === (await FollowCase.findOne(cf._id))
+        async (cf) => cf === (await FollowCase.findOne(cf._id)),
       );
-      const publisher = await PartnerUser.findById(cases[i].publishedBy).select(
-        "firstName middleName lastName"
+      const publisher = await PartnerUser.findById(
+        cases[i].publishedBy,
+      ).select("firstName middleName lastName");
+      const group = await CaseGroupCategory.findById(
+        cases[i].categoryGroupID,
       );
-      const group = await CaseGroupCategory.findById(cases[i].categoryGroupID);
       followedCases.push({
         ..._.pick(cases[i], [
           "_id",
@@ -111,7 +124,12 @@ exports.getFollowedCases = async (req, res) => {
       total: Math.ceil(count / limit),
       page: parseInt(page),
     };
-    return successWithData(res, 200, "Case Fetched Succesfully", data);
+    return successWithData(
+      res,
+      200,
+      "Case Fetched Succesfully",
+      data,
+    );
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -126,7 +144,9 @@ const getCategories = async (caseID) => {
   let categories = [];
   const cats = await CaseTaggedCategories.find({ caseID });
   for (let i = 0; i < cats.length; i++) {
-    const category = await CaseCategory.findById(cats[i].caseCategoryID);
+    const category = await CaseCategory.findById(
+      cats[i].caseCategoryID,
+    );
     if (category) categories.push(category.categoryName);
   }
   return categories;
@@ -141,14 +161,15 @@ const getCategories = async (caseID) => {
 exports.assignPartnerToCase = async (req, res) => {
   try {
     const existingCase = await Case.findById(req.params.id);
-    if (!existingCase) return normalError(res, 404, "Case not found", null);
+    if (!existingCase)
+      return normalError(res, 404, "Case not found", null);
     await Case.findByIdAndUpdate(
       existingCase._id,
       {
         assignedPartnerUserId: req.body.assignedPartnerUserId,
         caseTypeStatus: req.body.caseTypeStatus,
       },
-      { new: true }
+      { new: true },
     );
     return successNoData(res, 200, "Admin assigned successfully");
   } catch (err) {
@@ -191,7 +212,7 @@ exports.getAllCase = async (req, res) => {
         "caseID categoryGroupID descriptionOfIncident" +
           " dateOfIncident verificationStatus reportType" +
           " platformOfReort state lga resolutionStatus createdAt" +
-          " caseTypeStatus"
+          " caseTypeStatus",
       )
       .sort("-createdAt")
       .limit(limit * 1)
@@ -203,7 +224,12 @@ exports.getAllCase = async (req, res) => {
       total: Math.ceil(count / limit),
       page: parseInt(page),
     };
-    return successWithData(res, 200, "Cases fetched successfully", data);
+    return successWithData(
+      res,
+      200,
+      "Cases fetched successfully",
+      data,
+    );
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -225,16 +251,24 @@ exports.getCase = async (req, res) => {
     let victim;
     let suspect;
     if (fetchedCase) {
-      witness = await CaseWitness.findOne({ caseID: req.params.id }).select(
-        "firstNameOfWitness middleNameOfWitness lastNameOfWitness"
+      witness = await CaseWitness.findOne({
+        caseID: req.params.id,
+      }).select(
+        "firstNameOfWitness middleNameOfWitness lastNameOfWitness",
       );
-      victim = await CaseVictim.findOne({ caseID: req.params.id }).select(
-        "firstNameOfVictim middleNameOfVictim lastNameOfVictim"
+      victim = await CaseVictim.findOne({
+        caseID: req.params.id,
+      }).select(
+        "firstNameOfVictim middleNameOfVictim lastNameOfVictim",
       );
-      suspect = await CaseSuspect.findOne({ caseID: req.params.id }).select(
-        "firstNameOfSuspect middleNameOfSuspect lastNameOfSuspect"
+      suspect = await CaseSuspect.findOne({
+        caseID: req.params.id,
+      }).select(
+        "firstNameOfSuspect middleNameOfSuspect lastNameOfSuspect",
       );
-      group = await CaseGroupCategory.findById(fetchedCase.categoryGroupID);
+      group = await CaseGroupCategory.findById(
+        fetchedCase.categoryGroupID,
+      );
       categories = await getCategories(fetchedCase._id);
     }
     const data = {
@@ -274,7 +308,12 @@ exports.getCase = async (req, res) => {
         suspect,
       },
     };
-    return successWithData(res, 200, "Case fetched successfully", data);
+    return successWithData(
+      res,
+      200,
+      "Case fetched successfully",
+      data,
+    );
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -290,11 +329,17 @@ exports.createCase = async (req, res) => {
   try {
     req.body.publicUserID = req.user._id;
     req.body.caseTypeStatus =
-      req.body.reportType === "QuickReport" ? req.body.reportType : "Incidence";
+      req.body.reportType === "QuickReport"
+        ? req.body.reportType
+        : "Incidence";
     req.body.resolutionStatus =
-      req.body.reportType === "QuickReport" ? "onlyReport" : "unResolved";
+      req.body.reportType === "QuickReport"
+        ? "onlyReport"
+        : "unResolved";
     req.body.verificationStatus =
-      req.body.reportType === "QuickReport" ? "onlyReport" : "unVerified";
+      req.body.reportType === "QuickReport"
+        ? "onlyReport"
+        : "unVerified";
     const newCase = await Case.create(req.body);
     const categories = req.body.categories.split(",");
     for (let i = 0; i < categories.length; i++) {
@@ -310,7 +355,7 @@ exports.createCase = async (req, res) => {
       res,
       200,
       "Case file has been created successfully",
-      data
+      data,
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -328,18 +373,26 @@ exports.updateExistingCase = async (req, res) => {
     const existingCase = await Case.findById(req.params.id);
     if (!existingCase)
       return normalError(res, 404, "Case not found!", existingCase);
-    if (existingCase.publishStatus === "published" && !req.user.userType)
-      return normalError(res, 100, "published case cannot be edited", null);
+    if (
+      existingCase.publishStatus === "published" &&
+      !req.user.userType
+    )
+      return normalError(
+        res,
+        100,
+        "published case cannot be edited",
+        null,
+      );
     const updatedCase = await Case.findByIdAndUpdate(
       existingCase._id,
       req.body,
-      { new: true }
+      { new: true },
     );
     return successWithData(
       res,
       200,
       "Case file updated successfully",
-      updatedCase
+      updatedCase,
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -374,7 +427,7 @@ exports.createCaseOtherDetails = async (req, res) => {
       res,
       200,
       "Case conversation updated succesfully",
-      data
+      data,
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -394,7 +447,7 @@ exports.saveEvidence = async (req, res) => {
     return successNoData(
       res,
       201,
-      "Case evidence attached to case file successfully"
+      "Case evidence attached to case file successfully",
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -414,7 +467,9 @@ exports.getCaseEvidence = async (req, res) => {
       return normalError(res, 404, "case not found", existingCase);
     if (!req.user !== existingCase.publicUser || !req.user.userType)
       return normalError(res, 404, "Resource not found");
-    const evidence = await CaseEvidence.find({ caseID: req.params.caseID });
+    const evidence = await CaseEvidence.find({
+      caseID: req.params.caseID,
+    });
     return successWithData(res, 200, "evidence fetched", evidence);
   } catch (err) {
     return tryCatchError(res, err);
@@ -424,7 +479,8 @@ exports.getCaseEvidence = async (req, res) => {
 exports.deleteCaseEvidence = async (req, res) => {
   try {
     const evidence = await CaseEvidence.findById(req.params.id);
-    if (!evidence) return normalError(res, 404, "evidence file not found");
+    if (!evidence)
+      return normalError(res, 404, "evidence file not found");
     await CaseEvidence.findByIdAndDelete(evidence._id);
     return successNoData(res, 200, "evidence deleted successfully");
   } catch (err) {
@@ -454,9 +510,11 @@ exports.getPersonalCases = async (req, res) => {
     });
     for (let i = 0; i < cases.length; i++) {
       categories = await getCategories(cases[i]._id);
-      const group = await CaseGroupCategory.findById(cases[i].categoryGroupID);
+      const group = await CaseGroupCategory.findById(
+        cases[i].categoryGroupID,
+      );
       const assignedPartner = await PartnerUser.findById(
-        cases[i].assignedPartnerUserId
+        cases[i].assignedPartnerUserId,
       ).select("firstName middleName lastName");
       personalCases.push({
         ..._.pick(cases[i], [
@@ -470,7 +528,9 @@ exports.getPersonalCases = async (req, res) => {
           "__v",
         ]),
         groupName: group ? group.groupName : "",
-        assignedPartner: assignedPartner ? assignedPartner : "NotYetAssigned",
+        assignedPartner: assignedPartner
+          ? assignedPartner
+          : "NotYetAssigned",
         categories,
       });
     }
@@ -495,17 +555,26 @@ exports.getPersonalCases = async (req, res) => {
 exports.verifyCase = async (req, res) => {
   try {
     const existingCase = await Case.findById(req.params.id).select(
-      "-followedBy -areYouTheVictim"
+      "-followedBy -areYouTheVictim",
     );
-    if (!existingCase) return normalError(res, 404, "Case does not exist");
+    if (!existingCase)
+      return normalError(res, 404, "Case does not exist");
     if (existingCase.verificationStatus === "verified")
-      return successNoData(res, 200, "Case has already been verified");
+      return successNoData(
+        res,
+        200,
+        "Case has already been verified",
+      );
     await Case.findByIdAndUpdate(
       req.params.id,
       { verificationStatus: req.body.verificationStatus },
-      { new: true }
+      { new: true },
     );
-    return successNoData(res, 200, "Case has been verified successfully");
+    return successNoData(
+      res,
+      200,
+      "Case has been verified successfully",
+    );
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -522,11 +591,17 @@ exports.getPublishedCase = async (req, res) => {
     const existingCase = await Case.findById(req.params.id)
       .where("publishStatus")
       .in(["published"]);
-    if (!existingCase) return normalError(res, 404, "Case does not exist");
-    const publishedCase = await Case.findById(existingCase._id).select(
-      "caseSummary caseTitle caseAvatar publishStatus"
+    if (!existingCase)
+      return normalError(res, 404, "Case does not exist");
+    const publishedCase = await Case.findById(
+      existingCase._id,
+    ).select("caseSummary caseTitle caseAvatar publishStatus");
+    return successWithData(
+      res,
+      200,
+      "published case details",
+      publishedCase,
     );
-    return successWithData(res, 200, "published case details", publishedCase);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -541,12 +616,13 @@ exports.getPublishedCase = async (req, res) => {
 exports.publishCase = async (req, res) => {
   try {
     const existingCase = await Case.findById(req.params.id);
-    if (!existingCase) return normalError(res, 404, "Case does not exist");
+    if (!existingCase)
+      return normalError(res, 404, "Case does not exist");
     if (existingCase.publishStatus === req.body.publishStatus)
       return successNoData(
         res,
         200,
-        "Case already has status: " + req.body.publishStatus
+        "Case already has status: " + req.body.publishStatus,
       );
     const publishedCase = await Case.findByIdAndUpdate(
       existingCase._id,
@@ -558,16 +634,16 @@ exports.publishCase = async (req, res) => {
             ? existingCase.datePublished
             : new Date(Date.now()).toISOString(),
       },
-      { new: true }
+      { new: true },
     ).select(
       "-followedBy -verificationStatus -resolutionStatus" +
-        " -areYouTheVictim -assignedPartnerUserId"
+        " -areYouTheVictim -assignedPartnerUserId",
     );
     return successWithData(
       res,
       200,
       "Case " + req.body.publishStatus + " successfully",
-      publishedCase
+      publishedCase,
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -584,20 +660,25 @@ exports.resolveCase = async (req, res) => {
   try {
     const existingCase = await Case.findById(req.params.id);
     if (!existingCase)
-      return normalError(res, 404, "Case does not exist", existingCase);
+      return normalError(
+        res,
+        404,
+        "Case does not exist",
+        existingCase,
+      );
 
     const resolvedCase = await Case.findByIdAndUpdate(
       existingCase._id,
       {
         resolutionStatus: req.body.resolutionStatus,
       },
-      { new: true }
+      { new: true },
     );
     return successWithData(
       res,
       200,
       "This case has been resolved and closed successfully",
-      resolvedCase
+      resolvedCase,
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -618,10 +699,10 @@ exports.getSinglePublicCase = async (req, res) => {
     const existingCase = await Case.findById(req.params.id);
     if (!existingCase) return normalError(res, 404, "Case not found");
     const group = await CaseGroupCategory.findById(
-      existingCase.categoryGroupID
+      existingCase.categoryGroupID,
     );
     const publisher = await PartnerUser.findById(
-      existingCase.publishedBy
+      existingCase.publishedBy,
     ).select("firstName lastName middleName");
     if (req.authorized) {
       const f = await FollowCase.findOne({
@@ -684,7 +765,10 @@ exports.getPublicCases = async (req, res) => {
   filter.verificationStatus = "verified";
   filter.publishStatus = "published";
   try {
-    const cases = await Case.find(filter)
+    const cases = await Case.find({
+      caseTitle: { $regex: new RegExp(req.query.search, "i") },
+      ...filter,
+    })
       .sort("-createdAt")
       .limit(limit * 1)
       .skip(((page < 1 ? 1 : page) - 1) * limit)
@@ -697,12 +781,14 @@ exports.getPublicCases = async (req, res) => {
       })
         .where("publicUserID")
         .in([user]);
-      const group = await CaseGroupCategory.findById(cases[i].categoryGroupID);
+      const group = await CaseGroupCategory.findById(
+        cases[i].categoryGroupID,
+      );
       const publicCase = {
         ..._.pick(cases[i], selectedFields.split(" ")),
-        publisher: await PartnerUser.findById(cases[i].publishedBy).select(
-          "firstName lastName middleName"
-        ),
+        publisher: await PartnerUser.findById(
+          cases[i].publishedBy,
+        ).select("firstName lastName middleName"),
         followStatus: !!userFollowStatus,
         groupName: group ? group.groupName : "",
       };
@@ -713,7 +799,12 @@ exports.getPublicCases = async (req, res) => {
       total: Math.ceil(count / limit),
       page: parseInt(page),
     };
-    return successWithData(res, 200, "Cases fetched Successfully", data);
+    return successWithData(
+      res,
+      200,
+      "Cases fetched Successfully",
+      data,
+    );
   } catch (err) {
     return tryCatchError(res, err);
   }

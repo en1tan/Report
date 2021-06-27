@@ -10,12 +10,12 @@ servers:
   - url: http://localhost:5000/api/v1
     description: Local Server
 paths:
-  "/user/signup":
+  /user/signup:
     post:
       summary: Register new user
       tags:
         - User
-      description: ''
+      description: ""
       requestBody:
         content:
           application/json:
@@ -23,24 +23,24 @@ paths:
               "$ref": "#/components/schemas/PublicUser"
             example:
               firstName: Soroke
-              middleName: ''
+              middleName: ""
               lastName: User
               userName: sorosoke
               email: user@sorosoke.com
-              phoneNumber: '08012345678'
+              phoneNumber: "08012345678"
               gender: Female
               address: 1, Sorosoke Av.
-              addressLandmark: ''
+              addressLandmark: ""
               password: sorosokeWere@1
               userAgeGroup: 20-90
-              lga: ''
-              state: ''
-              country: ''
-              avatar: ''
-              disabilityStatus: ''
-              religion: ''
+              lga: ""
+              state: ""
+              country: ""
+              avatar: ""
+              disabilityStatus: ""
+              religion: ""
       responses:
-        '201':
+        "201":
           description: user created
           content:
             application/json:
@@ -83,12 +83,12 @@ paths:
                   message:
                     type: string
                     example: Account Activated Successfully
-  "/user/login":
+  /user/login:
     post:
       summary: Login user
       tags:
         - User
-      description: ''
+      description: ""
       requestBody:
         content:
           application/json:
@@ -103,8 +103,8 @@ paths:
                 userName: sorosoke
                 password: sorosokeWere@1
       responses:
-        '201':
-          description: ''
+        "201":
+          description: ""
           content:
             application/json:
               schema:
@@ -133,24 +133,24 @@ paths:
                       lastName: User
                       userName: sorosoke
                       email: user1@sorosoke.com
-                      phoneNumber: '08012345678'
+                      phoneNumber: "08012345678"
                       gender: Female
                       address: 1, Sorosoke Av.
                       userAgeGroup: 20-90
-                      userID: '9044502255'
-                      createdAt: '2021-05-27T21:02:50.182Z'
-                      updatedAt: '2021-05-27T21:29:27.976Z'
+                      userID: "9044502255"
+                      createdAt: "2021-05-27T21:02:50.182Z"
+                      updatedAt: "2021-05-27T21:29:27.976Z"
                       __v: 0
-  "/user/profile":
+  /user/profile:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: User profile
       tags:
         - User
-      description: ''
+      description: ""
       responses:
-        '200':
+        "200":
           description: User details
           content:
             application/json:
@@ -173,22 +173,22 @@ paths:
                     lastName: User
                     userName: sorosoke
                     email: user1@sorosoke.com
-                    phoneNumber: '08012345678'
+                    phoneNumber: "08012345678"
                     gender: Female
                     address: 1, Sorosoke Av.
                     userAgeGroup: 20-90
-                    userID: '9044502255'
-                    createdAt: '2021-05-27T21:02:50.182Z'
-                    updatedAt: '2021-05-27T21:29:27.976Z'
+                    userID: "9044502255"
+                    createdAt: "2021-05-27T21:02:50.182Z"
+                    updatedAt: "2021-05-27T21:29:27.976Z"
                     __v: 0
-  "/user/account":
+  /user/account:
     patch:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Update user details
       tags:
         - User
-      description: ''
+      description: ""
       requestBody:
         content:
           application/json:
@@ -211,7 +211,7 @@ paths:
               disabilityStatus: string
               religion: string
       responses:
-        '200':
+        "200":
           description: Updated user details
           content:
             application/json:
@@ -228,7 +228,7 @@ paths:
                   lastName: User
                   userName: sorosoke
                   email: user@sorosoke.com
-                  phoneNumber: '08012345678'
+                  phoneNumber: "08012345678"
                   gender: Female
                   address: 1, Sorosoke Av.
                   password: sorosokeWere@1
@@ -408,7 +408,7 @@ paths:
       tags:
         - Partner Organization
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - description: The partner organization id
           in: path
@@ -418,8 +418,8 @@ paths:
             type: string
           example: 60b01f6b669e34779cd05ab5
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -449,7 +449,7 @@ paths:
                     lastName: Sorosoke
                     gender: Male
                     email: verifier@sorosoke.com
-                    phoneNumber: '07032165498'
+                    phoneNumber: "07032165498"
                     userType: verifier
                     address: 12, Verifier Ar.
                     stateOfAssignment: Abuja
@@ -461,7 +461,7 @@ paths:
   "/partner/user/{id}/update":
     patch:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Update partner user details
       tags:
         - Partner Organization
@@ -481,10 +481,10 @@ paths:
               "$ref": "#/components/schemas/PartnerUser"
             example:
               userType: verifier
-              stateOfAssignment: ''
+              stateOfAssignment: ""
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -506,7 +506,7 @@ paths:
                   userName: verifier
                   gender: Male
                   email: verifier@sorosoke.com
-                  phoneNumber: '07032165498'
+                  phoneNumber: "07032165498"
                   userType: verifier
                   address: 12, Verifier Ar.
                   stateOfAssignment: Abuja
@@ -514,15 +514,15 @@ paths:
                   onlineStatus: online
                   active: true
                   userID: yXp5efQVTF
-                  createdAt: '2021-05-29T00:55:06.510Z'
-                  updatedAt: '2021-05-29T00:55:06.510Z'
+                  createdAt: "2021-05-29T00:55:06.510Z"
+                  updatedAt: "2021-05-29T00:55:06.510Z"
                   __v: 0
   "/partner/user/{id}":
     delete:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: delete partner user
-      description: 'userTypes: [super-admin,admin]'
+      description: "userTypes: [super-admin,admin]"
       tags:
         - Partner Organization
         - Super Admin
@@ -535,8 +535,8 @@ paths:
             type: string
           example: 60b190ea4cf0765bb8369faa
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -553,7 +553,7 @@ paths:
       summary: Add partner account
       tags:
         - Partner User
-      description: ''
+      description: ""
       requestBody:
         content:
           application/json:
@@ -566,14 +566,14 @@ paths:
               userName: verifier
               gender: Male
               email: verifier@sorosoke.com
-              phoneNumber: '07032165498'
+              phoneNumber: "07032165498"
               userType: verifier
               address: 12, Verifier Ar.
               stateOfAssignment: Abuja
               password: verifierWere@2
               confirmPassword: verifierWere@2
       responses:
-        '201':
+        "201":
           description: Partner user added
           content:
             application/json:
@@ -603,7 +603,7 @@ paths:
                     userName: verifier
                     gender: Male
                     email: verifier@sorosoke.com
-                    phoneNumber: '07032165498'
+                    phoneNumber: "07032165498"
                     userType: verifier
                     address: 12, Verifier Ar.
                     stateOfAssignment: Abuja
@@ -611,15 +611,15 @@ paths:
                     onlineStatus: offline
                     active: true
                     userID: yXp5efQVTF
-                    createdAt: '2021-05-29T00:55:06.510Z'
-                    updatedAt: '2021-05-29T00:55:06.510Z'
+                    createdAt: "2021-05-29T00:55:06.510Z"
+                    updatedAt: "2021-05-29T00:55:06.510Z"
                     __v: 0
   "/partner/login":
     post:
       summary: Login partner user
       tags:
         - Partner User
-      description: ''
+      description: ""
       requestBody:
         content:
           application/json:
@@ -652,7 +652,7 @@ paths:
                   userName: verifier
                   password: verifierWere@2
       responses:
-        '200':
+        "200":
           description: User authorized
           content:
             application/json:
@@ -682,7 +682,7 @@ paths:
                     userName: verifier
                     gender: Male
                     email: verifier@sorosoke.com
-                    phoneNumber: '07032165498'
+                    phoneNumber: "07032165498"
                     userType: verifier
                     address: 12, Verifier Ar.
                     stateOfAssignment: Abuja
@@ -690,19 +690,19 @@ paths:
                     onlineStatus: online
                     active: true
                     userID: yXp5efQVTF
-                    createdAt: '2021-05-29T00:55:06.510Z'
-                    updatedAt: '2021-05-29T00:55:06.510Z'
+                    createdAt: "2021-05-29T00:55:06.510Z"
+                    updatedAt: "2021-05-29T00:55:06.510Z"
                     __v: 0
   "/partner/profile":
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Get partner profile
       tags:
         - Partner User
-      description: ''
+      description: ""
       responses:
-        '200':
+        "200":
           description: Partner user details
           content:
             application/json:
@@ -725,7 +725,7 @@ paths:
                   userName: verifier
                   gender: Male
                   email: verifier@sorosoke.com
-                  phoneNumber: '07032165498'
+                  phoneNumber: "07032165498"
                   userType: verifier
                   address: 12, Verifier Ar.
                   stateOfAssignment: Abuja
@@ -733,39 +733,39 @@ paths:
                   onlineStatus: online
                   active: true
                   userID: yXp5efQVTF
-                  createdAt: '2021-05-29T00:55:06.510Z'
-                  updatedAt: '2021-05-29T00:55:06.510Z'
+                  createdAt: "2021-05-29T00:55:06.510Z"
+                  updatedAt: "2021-05-29T00:55:06.510Z"
                   __v: 0
   "/partner/account":
     patch:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Update partner user details
       tags:
         - Partner User
-      description: ''
+      description: ""
       requestBody:
         content:
           application/json:
             schema:
               "$ref": "#/components/schemas/PartnerUser"
             example:
-              phoneNumber: '09064558523'
-              firstName: ''
-              lastName: ''
-              middleName: ''
-              dob: ''
-              gender: ''
-              address: ''
-              lga: ''
-              state: ''
-              country: ''
-              avatar: ''
-              password: ''
-              disabilityStatus: ''
-              religion: ''
+              phoneNumber: "09064558523"
+              firstName: ""
+              lastName: ""
+              middleName: ""
+              dob: ""
+              gender: ""
+              address: ""
+              lga: ""
+              state: ""
+              country: ""
+              avatar: ""
+              password: ""
+              disabilityStatus: ""
+              religion: ""
       responses:
-        '200':
+        "200":
           description: Updated partner user details
           content:
             application/json:
@@ -788,7 +788,7 @@ paths:
                   userName: verifier
                   gender: Male
                   email: verifier@sorosoke.com
-                  phoneNumber: '07032165498'
+                  phoneNumber: "07032165498"
                   userType: verifier
                   address: 12, Verifier Ar.
                   stateOfAssignment: Abuja
@@ -796,8 +796,8 @@ paths:
                   onlineStatus: online
                   active: true
                   userID: yXp5efQVTF
-                  createdAt: '2021-05-29T00:55:06.510Z'
-                  updatedAt: '2021-05-29T00:55:06.510Z'
+                  createdAt: "2021-05-29T00:55:06.510Z"
+                  updatedAt: "2021-05-29T00:55:06.510Z"
                   __v: 0
   /partner/requestPasswordRequest:
     post:
@@ -881,7 +881,7 @@ paths:
       tags:
         - Public
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - description: Filter by Resolution Status
           in: query
@@ -930,8 +930,13 @@ paths:
             enum:
               - QuickReport
               - Case
+        - description: Filter by search
+          in: query
+          name: search
+          schema:
+            type: string
       responses:
-        '200':
+        "200":
           description: All cases fetched
           content:
             application/json:
@@ -962,7 +967,7 @@ paths:
                       caseSummary: Swatted...
                       categoryGroupID: 60b2b051f4ff133eeaaaca1a
                       publishedBy: 60b190ea4cf0765bb8369faa
-                      datePublished: '2021-05-29T21:27:33.145Z'
+                      datePublished: "2021-05-29T21:27:33.145Z"
                       caseAvatar: https://api.placeholder.com/150
                       __v: 0
                       publisher:
@@ -975,7 +980,7 @@ paths:
   "/public/cases/{id}":
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Get single public case
       tags:
         - Public
@@ -987,8 +992,8 @@ paths:
           schema:
             type: string
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -1015,11 +1020,11 @@ paths:
                       categories:
                         - Assault
                         - Abuse
-                      datePublished: '2021-05-29T00:55:06.510Z'
-                      dateOfIncident: '2021-05-29T00:55:06.510Z'
-                      hourOfIncident: '00:55:06'
+                      datePublished: "2021-05-29T00:55:06.510Z"
+                      dateOfIncident: "2021-05-29T00:55:06.510Z"
+                      hourOfIncident: "00:55:06"
                       address: 12, Owonikoko St.
-                      lga: ''
+                      lga: ""
                       state: Ondo
                       resolutionStatus: resolved
                       reportType: Standard
@@ -1043,11 +1048,11 @@ paths:
                       categories:
                         - Assault
                         - Abuse
-                      datePublished: '2021-05-29T00:55:06.510Z'
-                      dateOfIncident: '2021-05-29T00:55:06.510Z'
-                      hourOfIncident: '00:55:06'
+                      datePublished: "2021-05-29T00:55:06.510Z"
+                      dateOfIncident: "2021-05-29T00:55:06.510Z"
+                      hourOfIncident: "00:55:06"
                       address: 12, Owonikoko St.
-                      lga: ''
+                      lga: ""
                       state: Ondo
                       resolutionStatus: resolved
                       reportType: Standard
@@ -1063,7 +1068,7 @@ paths:
       tags:
         - Public
       responses:
-        '200':
+        "200":
           description: Category groups fetched
           content:
             application/json:
@@ -1099,7 +1104,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Category groups fetched
           content:
             application/json:
@@ -1119,32 +1124,32 @@ paths:
   "/case/create":
     post:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Create a case report
       tags:
         - Case
-      description: ''
+      description: ""
       requestBody:
         content:
           application/json:
             schema:
               "$ref": "#/components/schemas/Case"
             example:
-              dateOfIncident: '2021-05-29T21:21:57.922Z'
+              dateOfIncident: "2021-05-29T21:21:57.922Z"
               categoryGroupID: 60b2b051f4ff133eeaaaca1a
               categories: 60b6d4e8a76ede328c15c85b,60b6d4f7a76ede328c15c85c
               state: Abuja
               addressOfIncident: Gatara
-              areYouTheVictim: 'Yes'
+              areYouTheVictim: "Yes"
               reportType: Standard
               country: Nigeria
               descriptionOfIncident: A friend got swatted
-              lga: ''
-              casePleas: ''
-              hourOfIncident: ''
+              lga: ""
+              casePleas: ""
+              hourOfIncident: ""
               caseAvatar: https://via.placeholder.com/150
       responses:
-        '201':
+        "201":
           description: Case reported successfully
           content:
             application/json:
@@ -1167,7 +1172,7 @@ paths:
   "/case/all":
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Get all cases
       tags:
         - Case
@@ -1235,8 +1240,9 @@ paths:
           example: 20
           schema:
             type: integer
+
       responses:
-        '200':
+        "200":
           description: All cases fetched
           content:
             application/json:
@@ -1265,7 +1271,7 @@ paths:
                     - _id: 60b2b1c551929b3f8b7a7e83
                       caseID: SCSE44766
                       caseTitle: NotYetAssigned
-                      dateOfIncident: '2021-05-29T21:21:57.922Z'
+                      dateOfIncident: "2021-05-29T21:21:57.922Z"
                       caseTypeStatus: Incidence
                       publishStatus: unPublished
                       resolutionStatus: unResolved
@@ -1277,14 +1283,14 @@ paths:
                       reportType: Standard
                       publicUserID: 60b0050a1416ba54d2af818b
                       createdAt: 202a1-05-29T21:27:33.145Z
-                      updatedAt: '2021-05-29T21:27:33.145Z'
+                      updatedAt: "2021-05-29T21:27:33.145Z"
                       __v: 0
                   total: 1
                   page: 1
   "/case/{id}":
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Get a case
       tags:
         - Case
@@ -1297,7 +1303,7 @@ paths:
             type: string
           example: 60b2b1c551929b3f8b7a7e83
       responses:
-        '200':
+        "200":
           description: Case fetched
           content:
             application/json:
@@ -1315,19 +1321,19 @@ paths:
                 case:
                   _id: 60b2b1c551929b3f8b7a7e83
                   caseID: SCSE44766
-                  dateOfIncident: '2021-05-29T21:21:57.922Z'
+                  dateOfIncident: "2021-05-29T21:21:57.922Z"
                   resolutionStatus: unResolved
                   verificationStatus: unVerified
                   platformOfReport: web
                   categoryID: 60b2b051f4ff133eeaaaca1a
                   state: Abuja
                   reportType: Standard
-                  createdAt: '2021-05-29T21:27:33.145Z'
+                  createdAt: "2021-05-29T21:27:33.145Z"
                   __v: 0
   "/case/{id}/update":
     patch:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Update an existing case
       tags:
         - Case
@@ -1348,7 +1354,7 @@ paths:
               casePleas: Please help me
               addressLandmarK: Owonikoko
       responses:
-        '200':
+        "200":
           description: Case updated
           content:
             application/json:
@@ -1367,15 +1373,15 @@ paths:
                   _id: 60b8f1390df63e6153510c9c
                   casePleas: Please help me
                   addressLandmark: Owonikoko
-                  caseAvatar: ''
-                  lga: ''
-                  state: ''
-                  country: ''
-                  categoryGroupID: ''
+                  caseAvatar: ""
+                  lga: ""
+                  state: ""
+                  country: ""
+                  categoryGroupID: ""
   "/case/{id}/verify":
     patch:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Verify a case
       tags:
         - Case
@@ -1397,7 +1403,7 @@ paths:
             example:
               verificationStatus: verified
       responses:
-        '200':
+        "200":
           description: Case verified
           content:
             application/json:
@@ -1415,7 +1421,7 @@ paths:
                 case:
                   _id: 60b2b1c551929b3f8b7a7e83
                   caseTitle: NotYetAssigned
-                  dateOfIncident: '2021-05-29T21:21:57.922Z'
+                  dateOfIncident: "2021-05-29T21:21:57.922Z"
                   caseTypeStatus: Incidence
                   publishStatus: unPublished
                   resolutionStatus: unResolved
@@ -1426,14 +1432,14 @@ paths:
                   state: Abuja
                   reportType: Standard
                   publicUserID: 60b0050a1416ba54d2af818b
-                  createdAt: '2021-05-29T21:27:33.145Z'
-                  updatedAt: '2021-05-29T21:27:33.145Z'
+                  createdAt: "2021-05-29T21:27:33.145Z"
+                  updatedAt: "2021-05-29T21:27:33.145Z"
                   caseID: SCSE44766
                   __v: 0
   "/case/{id}/assign":
     patch:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Assign a case to a partner
       tags:
         - Case
@@ -1453,7 +1459,7 @@ paths:
             example:
               assignedPartnerUserId: 60b180282525d74ce37cbd84
       responses:
-        '200':
+        "200":
           description: Case assigned
           content:
             application/json:
@@ -1468,7 +1474,7 @@ paths:
               example:
                 _id: 60b2b1c551929b3f8b7a7e83
                 caseTitle: NotYetAssigned
-                dateOfIncident: '2021-05-29T21:21:57.922Z'
+                dateOfIncident: "2021-05-29T21:21:57.922Z"
                 caseTypeStatus: Incidence
                 publishStatus: unPublished
                 resolutionStatus: unResolved
@@ -1480,14 +1486,14 @@ paths:
                 reportType: Standard
                 publicUserID: 60b0050a1416ba54d2af818b
                 assignedPartnerUserId: 60b180282525d74ce37cbd84
-                createdAt: '2021-05-29T21:27:33.145Z'
-                updatedAt: '2021-05-29T21:27:33.145Z'
+                createdAt: "2021-05-29T21:27:33.145Z"
+                updatedAt: "2021-05-29T21:27:33.145Z"
                 caseID: SCSE44766
                 __v: 0
   "/case/{id}/publish":
     patch:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Publish case
       tags:
         - Case
@@ -1509,7 +1515,7 @@ paths:
             example:
               publishStatus: published
       responses:
-        '200':
+        "200":
           description: Case published
           content:
             application/json:
@@ -1524,7 +1530,7 @@ paths:
               example:
                 _id: 60b2b1c551929b3f8b7a7e83
                 caseTitle: NotYetAssigned
-                dateOfIncident: '2021-05-29T21:21:57.922Z'
+                dateOfIncident: "2021-05-29T21:21:57.922Z"
                 caseTypeStatus: Incidence
                 publishStatus: published
                 resolutionStatus: unResolved
@@ -1536,14 +1542,14 @@ paths:
                 state: Abuja
                 reportType: Standard
                 publicUserID: 60b0050a1416ba54d2af818b
-                createdAt: '2021-05-29T21:27:33.145Z'
-                updatedAt: '2021-05-29T21:27:33.145Z'
+                createdAt: "2021-05-29T21:27:33.145Z"
+                updatedAt: "2021-05-29T21:27:33.145Z"
                 caseID: SCSE44766
                 __v: 0
   /case/{id}/published:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Case
       summary: get details of a published case
@@ -1583,7 +1589,7 @@ paths:
   "/case/{id}/resolve":
     patch:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Resolve case
       tags:
         - Case
@@ -1608,7 +1614,7 @@ paths:
                 value:
                   resolutionStatus: resolved
       responses:
-        '200':
+        "200":
           description: Case resolved/unresolved
           content:
             application/json:
@@ -1623,7 +1629,7 @@ paths:
               example:
                 _id: 60b2b1c551929b3f8b7a7e83
                 caseTitle: NotYetAssigned
-                dateOfIncident: '2021-05-29T21:21:57.922Z'
+                dateOfIncident: "2021-05-29T21:21:57.922Z"
                 caseTypeStatus: Incidence
                 publishStatus: published
                 resolutionStatus: resolved
@@ -1635,20 +1641,20 @@ paths:
                 state: Abuja
                 reportType: Standard
                 publicUserID: 60b0050a1416ba54d2af818b
-                createdAt: '2021-05-29T21:27:33.145Z'
-                updatedAt: '2021-05-29T21:27:33.145Z'
+                createdAt: "2021-05-29T21:27:33.145Z"
+                updatedAt: "2021-05-29T21:27:33.145Z"
                 caseID: SCSE44766
                 __v: 0
   "/case/personal":
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Fetch all personal cases
       tags:
         - Case
         - User
       responses:
-        '200':
+        "200":
           description: Case fetched
           content:
             application/json:
@@ -1713,7 +1719,7 @@ paths:
   "/case/{id}/follow":
     patch:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Follow/Unfollow Case case
       tags:
         - Case
@@ -1745,7 +1751,7 @@ paths:
                 value:
                   followStatus: unfollow
       responses:
-        '200':
+        "200":
           description: Case Followed/Unfollowed
           content:
             application/json:
@@ -1761,7 +1767,7 @@ paths:
   "/case/followed":
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Get all followed cases
       tags:
         - Case
@@ -1780,7 +1786,7 @@ paths:
             type: integer
           example: 20
       responses:
-        '200':
+        "200":
           description: Cases fetched
           content:
             application/json:
@@ -1812,11 +1818,11 @@ paths:
                       country: Nigeria
                       caseTypeStatus: Incidence
                       userFollowStatus: true
-                      caseSummary: ''
-                      lga: ''
-                      hourOfIncident: ''
-                      datePublished: ''
-                      publishedBy: ''
+                      caseSummary: ""
+                      lga: ""
+                      hourOfIncident: ""
+                      datePublished: ""
+                      publishedBy: ""
                       categories:
                         - Assault
                         - Abuse
@@ -1826,7 +1832,7 @@ paths:
   "/case/create/{caseID}/caseWitness":
     post:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Add case witness
       tags:
         - Case
@@ -1850,7 +1856,7 @@ paths:
               genderOfWitness: Female
               residentialAddressOfWitness: Witty Cr.
       responses:
-        '201':
+        "201":
           description: Witness added successfully
           content:
             application/json:
@@ -1878,15 +1884,15 @@ paths:
                     genderOfWitness: Female
                     residentialAddressOfWitness: Witty Cr.
                     caseID: 60b2b1c551929b3f8b7a7e83
-                    createdAt: '2021-05-30T23:38:40.155Z'
-                    updatedAt: '2021-05-30T23:38:40.155Z'
+                    createdAt: "2021-05-30T23:38:40.155Z"
+                    updatedAt: "2021-05-30T23:38:40.155Z"
                     caseWitnessID: SCEW46404
                     __v: 0
   "/case/create/{caseID}/otherDetails":
     post:
       deprecated: true
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Add case other details
       tags:
         - Case
@@ -1903,7 +1909,7 @@ paths:
             schema:
               "$ref": "#/components/schemas/CaseOtherDetails"
       responses:
-        '201':
+        "201":
           description: Other details added successfully
           content:
             application/json:
@@ -1921,7 +1927,7 @@ paths:
   "/case/create/{id}/evidence":
     post:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Add case evidence
       tags:
         - Case
@@ -1946,7 +1952,7 @@ paths:
               fileName: Evidence 1
               URL: https://via.placeholder.com/150
       responses:
-        '201':
+        "201":
           description: Case evidence added successfully
           content:
             application/json:
@@ -1962,7 +1968,7 @@ paths:
   "/case/{caseID}/evidence":
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: get case evidence
       tags:
         - Case
@@ -1974,7 +1980,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: fetched evidence
           content:
             application/json:
@@ -1992,18 +1998,18 @@ paths:
                     items:
                       "$ref": "#/components/schemas/CaseEvidence"
                     example:
-                      - _id: ''
-                        fileID: ''
-                        caseID: ''
-                        fileName: ''
-                        URL: ''
+                      - _id: ""
+                        fileID: ""
+                        caseID: ""
+                        fileName: ""
+                        URL: ""
   "/case/evidence/{id}/delete":
     delete:
       summary: delete case evidence
       tags:
         - Case
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - description: evidence ID
           in: path
@@ -2012,7 +2018,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: evidence file deleted
           content:
             application/json:
@@ -2028,12 +2034,12 @@ paths:
   "/case/category/groups":
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Get all category groups
       tags:
         - Category Group
       responses:
-        '200':
+        "200":
           description: Category groups fetched
           content:
             application/json:
@@ -2055,14 +2061,14 @@ paths:
                     groupName: Human Rights
                     description: Human Rights
                     imageIcon: https://api.placeholder.com
-                    createdAt: '2021-05-27T20:04:58.743Z'
-                    updatedAt: '2021-05-27T20:04:58.743Z'
+                    createdAt: "2021-05-27T20:04:58.743Z"
+                    updatedAt: "2021-05-27T20:04:58.743Z"
                     categoryGroupID: SGRP72360
                     __v: 0
   "/case/category/group/create":
     post:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Add case category group
       description: 'userTypes: ["super-admin","admin"]'
       tags:
@@ -2080,8 +2086,8 @@ paths:
                 description:
                   type: string
       responses:
-        '201':
-          description: ''
+        "201":
+          description: ""
           content:
             application/json:
               schema:
@@ -2103,14 +2109,14 @@ paths:
                     _id: 60affb6a3dc1114794a4cb64
                     groupName: Human Rights
                     description: Human Rights
-                    createdAt: '2021-05-27T20:04:58.743Z'
-                    updatedAt: '2021-05-27T20:04:58.743Z'
+                    createdAt: "2021-05-27T20:04:58.743Z"
+                    updatedAt: "2021-05-27T20:04:58.743Z"
                     categoryGroupID: SGRP72360
                     _v: 0
   "/case/category/group/{id}/update":
     patch:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - description: Group ID
           in: path
@@ -2126,8 +2132,8 @@ paths:
             schema:
               "$ref": "#/components/schemas/CaseCategoryGroup"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -2146,14 +2152,14 @@ paths:
                       _id: 60affb6a3dc1114794a4cb64
                       groupName: Human Rights
                       description: Human Rights
-                      createdAt: '2021-05-27T20:04:58.743Z'
-                      updatedAt: '2021-05-27T20:04:58.743Z'
+                      createdAt: "2021-05-27T20:04:58.743Z"
+                      updatedAt: "2021-05-27T20:04:58.743Z"
                       categoryGroupID: SGRP72360
   "/case/category/group/{id}":
     delete:
       summary: delete category group
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Category Group
       parameters:
@@ -2164,7 +2170,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Group deleted
           content:
             application/json:
@@ -2177,7 +2183,7 @@ paths:
   "/case/category/{groupID}/categories":
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Get all categories
       tags:
         - Category
@@ -2190,7 +2196,7 @@ paths:
             type: string
             example: 60be1962453bd7003ccbef67
       responses:
-        '200':
+        "200":
           description: Categories fetched
           content:
             application/json:
@@ -2215,7 +2221,7 @@ paths:
   "/case/category/group/{id}/create":
     post:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Add case category
       tags:
         - Category
@@ -2233,9 +2239,9 @@ paths:
               "$ref": "#/components/schemas/CaseCategory"
             example:
               categoryName: Assault
-              description: ''
+              description: ""
       responses:
-        '201':
+        "201":
           description: Category created
           content:
             application/json:
@@ -2258,12 +2264,12 @@ paths:
                   categoryID: SCAT12643
                   categoryName: Female Genital Mutilation
                   categoryGroupID: 60afd6c30d89140049177caa
-                  createdAt: '2021-05-27T18:42:13.101Z'
-                  updatedAt: '2021-05-27T18:42:13.101Z'
+                  createdAt: "2021-05-27T18:42:13.101Z"
+                  updatedAt: "2021-05-27T18:42:13.101Z"
   "/case/category/{id}/update":
     patch:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - description: Category ID
           in: path
@@ -2280,7 +2286,7 @@ paths:
             schema:
               "$ref": "#/components/schemas/CaseCategory"
       responses:
-        '200':
+        "200":
           description: Category edited
           content:
             application/json:
@@ -2300,12 +2306,12 @@ paths:
                   categoryID: SCAT12643
                   categoryName: Female Genital Mutilation
                   categoryGroupID: 60afd6c30d89140049177caa
-                  createdAt: '2021-05-27T18:42:13.101Z'
-                  updatedAt: '2021-05-27T18:42:13.101Z'
+                  createdAt: "2021-05-27T18:42:13.101Z"
+                  updatedAt: "2021-05-27T18:42:13.101Z"
   "/case/category/{id}":
     delete:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Category
       parameters:
@@ -2317,7 +2323,7 @@ paths:
             type: string
           example: 60afe8050d89140049177cb2
       responses:
-        '200':
+        "200":
           description: deleted category
           content:
             application/json:
@@ -2333,7 +2339,7 @@ paths:
   "/victim/case/{id}/create":
     post:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Create case victim
       tags:
         - Victim
@@ -2353,23 +2359,23 @@ paths:
               firstNameOfVictim: John
               lastNameOfVictim: Doe
               emailOfVictim: johndoe@vict.com
-              phoneNumberOfVictim: '08035468521'
+              phoneNumberOfVictim: "08035468521"
               genderOfVictim: Male
               residentialAddressOfVictim: 12, Vitc Cl.
               relationshipWithVictim: Friend
-              middleNameOfVictim: ''
-              addressLandmark: ''
-              lgaOfVictim: ''
-              stateOfVictim: ''
-              countryOfVictim: ''
-              victimOccupation: ''
+              middleNameOfVictim: ""
+              addressLandmark: ""
+              lgaOfVictim: ""
+              stateOfVictim: ""
+              countryOfVictim: ""
+              victimOccupation: ""
               victimOrganizationType: Private
-              victimOrganizationName: ''
-              otherDetailsOfVictim: ''
-              disabilityStatus: ''
-              religion: ''
+              victimOrganizationName: ""
+              otherDetailsOfVictim: ""
+              disabilityStatus: ""
+              religion: ""
       responses:
-        '201':
+        "201":
           description: Victim created
           content:
             application/json:
@@ -2387,14 +2393,14 @@ paths:
                 data:
                   firstNameOfVictim: John
                   lastNameOfVictim: Doe
-                  middleNameOfVictim: ''
+                  middleNameOfVictim: ""
                   _id: 60be5ee9f599125afcee9267
                   __v: 0
   "/victim/{id}/all":
     get:
       summary: Get all victims
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - description: Case ID
           in: path
@@ -2405,7 +2411,7 @@ paths:
       tags:
         - Victim
       responses:
-        '201':
+        "201":
           description: Fetched victims
           content:
             application/json:
@@ -2425,12 +2431,12 @@ paths:
                 data:
                   - firstNameOfVictim: John
                     lastNameOfVictim: Doe
-                    middleNameOfVictim: ''
+                    middleNameOfVictim: ""
                     _id: 60be5ee9f599125afcee9267
                     __v: 0
                   - firstNameOfVictim: John
                     lastNameOfVictim: Doe
-                    middleNameOfVictim: ''
+                    middleNameOfVictim: ""
                     _id: 60be5ee9f599125afcee9267
                     __v: 0
   "/victim/{id}":
@@ -2439,7 +2445,7 @@ paths:
         - Victim
       summary: Get a victim
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - description: Victim ID
           in: path
@@ -2448,7 +2454,7 @@ paths:
           schema:
             type: string
       responses:
-        '201':
+        "201":
           description: Victim returned
           content:
             application/json:
@@ -2464,25 +2470,25 @@ paths:
                 firstNameOfVictim: John
                 lastNameOfVictim: Doe
                 emailOfVictim: johndoe@vict.com
-                phoneNumberOfVictim: '08035468521'
+                phoneNumberOfVictim: "08035468521"
                 genderOfVictim: Male
                 residentialAddressOfVictim: 12, Vitc Cl.
                 relationshipWithVictim: Friend
-                middleNameOfVictim: ''
-                addressLandmark: ''
-                lgaOfVictim: ''
-                stateOfVictim: ''
-                countryOfVictim: ''
-                victimOccupation: ''
+                middleNameOfVictim: ""
+                addressLandmark: ""
+                lgaOfVictim: ""
+                stateOfVictim: ""
+                countryOfVictim: ""
+                victimOccupation: ""
                 victimOrganizationType: Private
-                victimOrganizationName: ''
-                otherDetailsOfVictim: ''
-                disabilityStatus: ''
-                religion: ''
+                victimOrganizationName: ""
+                otherDetailsOfVictim: ""
+                disabilityStatus: ""
+                religion: ""
   "/victim/{id}/update":
     patch:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Update victim details
       tags:
         - Victim
@@ -2502,23 +2508,23 @@ paths:
               firstNameOfVictim: John
               lastNameOfVictim: Doe
               emailOfVictim: johndoe@vict.com
-              phoneNumberOfVictim: '08035468521'
+              phoneNumberOfVictim: "08035468521"
               genderOfVictim: Male
               residentialAddressOfVictim: 12, Vitc Cl.
               relationshipWithVictim: Friend
-              middleNameOfVictim: ''
-              addressLandmark: ''
-              lgaOfVictim: ''
-              stateOfVictim: ''
-              countryOfVictim: ''
-              victimOccupation: ''
+              middleNameOfVictim: ""
+              addressLandmark: ""
+              lgaOfVictim: ""
+              stateOfVictim: ""
+              countryOfVictim: ""
+              victimOccupation: ""
               victimOrganizationType: Private
-              victimOrganizationName: ''
-              otherDetailsOfVictim: ''
-              disabilityStatus: ''
-              religion: ''
+              victimOrganizationName: ""
+              otherDetailsOfVictim: ""
+              disabilityStatus: ""
+              religion: ""
       responses:
-        '200':
+        "200":
           description: Victim updated
           content:
             application/json:
@@ -2534,25 +2540,25 @@ paths:
                 firstNameOfVictim: John
                 lastNameOfVictim: Doe
                 emailOfVictim: johndoe@vict.com
-                phoneNumberOfVictim: '08035468521'
+                phoneNumberOfVictim: "08035468521"
                 genderOfVictim: Male
                 residentialAddressOfVictim: 12, Vitc Cl.
                 relationshipWithVictim: Friend
-                middleNameOfVictim: ''
-                addressLandmark: ''
-                lgaOfVictim: ''
-                stateOfVictim: ''
-                countryOfVictim: ''
-                victimOccupation: ''
+                middleNameOfVictim: ""
+                addressLandmark: ""
+                lgaOfVictim: ""
+                stateOfVictim: ""
+                countryOfVictim: ""
+                victimOccupation: ""
                 victimOrganizationType: Private
-                victimOrganizationName: ''
-                otherDetailsOfVictim: ''
-                disabilityStatus: ''
-                religion: ''
+                victimOrganizationName: ""
+                otherDetailsOfVictim: ""
+                disabilityStatus: ""
+                religion: ""
   "/victim/{id}/delete":
     delete:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Delete case victim
       tags:
         - Victim
@@ -2564,7 +2570,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Victim deleted
           content:
             application/json:
@@ -2581,7 +2587,7 @@ paths:
   "/comment/create/{caseId}":
     post:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Comment on a case
       tags:
         - Comment
@@ -2600,7 +2606,7 @@ paths:
             example:
               comment: This is really unacceptable
       responses:
-        '201':
+        "201":
           description: Comment added
           content:
             application/json:
@@ -2624,7 +2630,7 @@ paths:
                     avatar: https://via.placeholder.com/150
                     userName: johnnyJan
                     comment: May God save us
-                    dateOfComment: '2021-06-04T13:41:00.551Z'
+                    dateOfComment: "2021-06-04T13:41:00.551Z"
   "/comment/{caseID}":
     get:
       description: get comments
@@ -2649,7 +2655,7 @@ paths:
           schema:
             type: number
       responses:
-        '200':
+        "200":
           description: case read
           content:
             application/json:
@@ -2672,11 +2678,11 @@ paths:
                     avatar: https://via.placeholder.com/150
                     userName: johnnyJan
                     comment: May God save us
-                    dateOfComment: '2021-06-04T13:41:00.551Z'
+                    dateOfComment: "2021-06-04T13:41:00.551Z"
   "/comment/{id}":
     patch:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: update the case comment
       tags:
         - Comment
@@ -2697,10 +2703,10 @@ paths:
                 comment:
                   "$ref": "#/components/schemas/CaseComment"
             example:
-              caseID: ''
+              caseID: ""
               comment: Okay, this is getting out of hand
       responses:
-        '200':
+        "200":
           description: case updated
           content:
             application/json:
@@ -2723,7 +2729,7 @@ paths:
   "/comment/:id/delete":
     delete:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: delete case comment
       tags:
         - Comment
@@ -2735,7 +2741,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: comment deleted successfully
           content:
             application/json:
@@ -2760,13 +2766,13 @@ paths:
             schema:
               "$ref": "#/components/schemas/Contact"
             example:
-              phoneNumber: '08012345678'
+              phoneNumber: "08012345678"
               email: sorsoke@example.com
               subject: Help!
               message: egami ooooo
               senderName: Tunde Udo Muhammed
       responses:
-        '201':
+        "201":
           description: Contact details requested
           content:
             application/json:
@@ -2785,7 +2791,7 @@ paths:
       tags:
         - Contact
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - description: page number
           in: query
@@ -2800,7 +2806,7 @@ paths:
             type: integer
           example: 20
       responses:
-        '200':
+        "200":
           description: contact details fetched
           content:
             application/json:
@@ -2818,23 +2824,23 @@ paths:
                     items:
                       "$ref": "#/components/schemas/Contact"
                     example:
-                      - _id: ''
-                        tickedID: ''
-                        senderName: ''
-                        phoneNumber: ''
-                        email: ''
-                        subject: ''
-                        message: ''
-                        status: ''
-                        createdAt: ''
-                        updatedAt: ''
+                      - _id: ""
+                        tickedID: ""
+                        senderName: ""
+                        phoneNumber: ""
+                        email: ""
+                        subject: ""
+                        message: ""
+                        status: ""
+                        createdAt: ""
+                        updatedAt: ""
   "/contact/{id}":
     get:
       summary: fetch a single contact enquiry
       tags:
         - Contact
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - description: contact ID
           in: path
@@ -2843,7 +2849,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Enquiry Fetched
           content:
             application/json:
@@ -2859,20 +2865,20 @@ paths:
                   data:
                     "$ref": "#/components/schemas/Contact"
                     example:
-                      _id: ''
-                      tickedID: ''
-                      senderName: ''
-                      phoneNumber: ''
-                      email: ''
-                      subject: ''
-                      message: ''
-                      status: ''
-                      createdAt: ''
-                      updatedAt: ''
+                      _id: ""
+                      tickedID: ""
+                      senderName: ""
+                      phoneNumber: ""
+                      email: ""
+                      subject: ""
+                      message: ""
+                      status: ""
+                      createdAt: ""
+                      updatedAt: ""
   "/partner/create":
     post:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: create partner details
       tags:
         - Super Admin
@@ -2887,12 +2893,12 @@ paths:
               email: admin@sorosoke.com
               address: 1, Sorosoke Av.
               addressLandmark: Abuja
-              phoneNumber: '07032165498'
+              phoneNumber: "07032165498"
               state: Abuja
               regNumber: 9MDWI89DKVNW90REVN
       responses:
-        '201':
-          description: ''
+        "201":
+          description: ""
           content:
             application/json:
               schema:
@@ -2907,19 +2913,19 @@ paths:
                     organizationType: NGO
                     email: admin@sorosoke.com
                     address: 1, Sorosoke Av.
-                    phoneNumber: '07032165498'
+                    phoneNumber: "07032165498"
                     state: Abuja
                     regNumber: 9MDWI89DKVNW90REVN
                     partnerID: xFirObp4P6
-                    createdAt: '2021-05-28T23:44:59.568Z'
-                    updatedAt: '2021-05-28T23:44:59.568Z'
+                    createdAt: "2021-05-28T23:44:59.568Z"
+                    updatedAt: "2021-05-28T23:44:59.568Z"
                     __v: 0
   "/partner/{id}/branch/create":
     post:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: create a branch of an organization
-      description: 'userTypes: [super-admin,admin]'
+      description: "userTypes: [super-admin,admin]"
       tags:
         - Partner Organization
       parameters:
@@ -2939,8 +2945,8 @@ paths:
               branchName: Buff Up Branch
               address: 2, Sorosoke Branch
       responses:
-        '201':
-          description: ''
+        "201":
+          description: ""
           content:
             application/json:
               schema:
@@ -2959,13 +2965,13 @@ paths:
                   branchName: Buff Up Branch
                   partnerID: 60b1807b2525d74ce37cbd85
                   branchID: uGBVrYxOVH
-                  createdAt: '2021-05-29T00:26:33.445Z'
-                  updatedAt: '2021-05-29T00:26:33.445Z'
+                  createdAt: "2021-05-29T00:26:33.445Z"
+                  updatedAt: "2021-05-29T00:26:33.445Z"
                   __v: 0
   "/progress/create/{caseID}":
     post:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Add case progress
       tags:
         - Case Progress
@@ -2988,7 +2994,7 @@ paths:
                   type: string
                 privacyStatus:
                   type: string
-                  enum: [ 'public', 'private' ]
+                  enum: ["public", "private"]
                 docs:
                   type: array
                   items:
@@ -2998,7 +3004,7 @@ paths:
                       URL:
                         type: string
       responses:
-        '201':
+        "201":
           description: Case Progress added
           content:
             application/json:
@@ -3029,22 +3035,22 @@ paths:
                     partnerUserID: 60bba856e9a8580d1ecc3e53
                     title: Progress One
                     messageContent: This is the first progress
-                    createdAt: '2021-06-19T22:19:01.486Z'
-                    updatedAt: '2021-06-19T22:19:01.486Z'
+                    createdAt: "2021-06-19T22:19:01.486Z"
+                    updatedAt: "2021-06-19T22:19:01.486Z"
                     __v: 0
                   docs:
                     - _id: 60ce6d559363dc6ad3a3af84
                       caseProgressID: 60ce6d559363dc6ad3a3af82
                       docTitle: Progress Document One
                       URL: https://via.placeholder.com
-                      createdAt: '2021-06-19T22:19:01.744Z'
-                      updatedAt: '2021-06-19T22:19:01.744Z'
+                      createdAt: "2021-06-19T22:19:01.744Z"
+                      updatedAt: "2021-06-19T22:19:01.744Z"
                       docID: SPGD13404
                       __v: 0
   "/progress/{caseID}/":
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Case Progress
       summary: Get case progress
@@ -3066,7 +3072,7 @@ paths:
             type: number
           description: limit
       responses:
-        '200':
+        "200":
           description: case progress returned
           content:
             application/json:
@@ -3097,8 +3103,8 @@ paths:
                           caseProgressID: 60ce6d559363dc6ad3a3af82
                           docTitle: Progress Document One
                           URL: https://via.placeholder.com
-                          createdAt: '2021-06-19T22:19:01.744Z'
-                          updatedAt: '2021-06-19T22:19:01.744Z'
+                          createdAt: "2021-06-19T22:19:01.744Z"
+                          updatedAt: "2021-06-19T22:19:01.744Z"
                           docID: SPGD13404
                           __v: 0
                   total: 1
@@ -3107,7 +3113,7 @@ paths:
     patch:
       summary: update case progress
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - description: progress ID
           in: path
@@ -3140,7 +3146,7 @@ paths:
               messageContent: lorem ipsum lorem for everything lorem
               privacyStatus: public
       responses:
-        '200':
+        "200":
           description: case progress updated
           content:
             application/json:
@@ -3164,7 +3170,7 @@ paths:
       tags:
         - Case Progress
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - description: progress ID
           in: path
@@ -3198,7 +3204,7 @@ paths:
                 value:
                   deletionType: all
       responses:
-        '200':
+        "200":
           description: case deleted
           content:
             application/json:
@@ -3215,7 +3221,7 @@ paths:
   "/details/create/{caseID}":
     post:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Add case other details
       tags:
         - Case Other Details
@@ -3246,7 +3252,7 @@ paths:
                         type: string
                         format: url
       responses:
-        '201':
+        "201":
           description: Case Other details added
           content:
             application/json:
@@ -3267,7 +3273,7 @@ paths:
       tags:
         - Case Other Details
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - description: case ID
           name: caseID
@@ -3321,31 +3327,31 @@ paths:
                             from: super-admin
                             userID: 60b29de72e54080049ff8233
                             message: string
-                            createdAt: '2021-06-19T13:31:58.492Z'
-                            updatedAt: '2021-06-19T13:31:58.492Z'
+                            createdAt: "2021-06-19T13:31:58.492Z"
+                            updatedAt: "2021-06-19T13:31:58.492Z"
                             __v: 0
                           docs:
                             - _id: 60cdf1ceea66830a974bd4db
                               caseOtherDetailsID: 60cdf1ceea66830a974bd4d9
                               URL: https://via.placeholder.com
                               docTitle: Document 1
-                              createdAt: '2021-06-19T13:31:58.719Z'
-                              updatedAt: '2021-06-19T13:31:58.719Z'
+                              createdAt: "2021-06-19T13:31:58.719Z"
+                              updatedAt: "2021-06-19T13:31:58.719Z"
                               docID: SODD75700
                               __v: 0
                             - _id: 60cdf1ceea66830a974bd4dd
                               caseOtherDetailsID: 60cdf1ceea66830a974bd4d9
                               URL: https://via.placeholder.com
                               docTitle: Document 1
-                              createdAt: '2021-06-19T13:31:58.953Z'
-                              updatedAt: '2021-06-19T13:31:58.953Z'
+                              createdAt: "2021-06-19T13:31:58.953Z"
+                              updatedAt: "2021-06-19T13:31:58.953Z"
                               docID: SODD05235
                               __v: 0
   /details/{id}/delete:
     delete:
       summary: delete a conversation
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Case Other Details
       parameters:
@@ -3372,7 +3378,7 @@ paths:
   "/suspect/{caseID}/create":
     post:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       summary: Add case suspect
       tags:
         - Suspect
@@ -3394,7 +3400,7 @@ paths:
               lastNameOfSuspect: Phils
               __v: 0
       responses:
-        '201':
+        "201":
           description: Suspect added successfully
           content:
             application/json:
@@ -3419,19 +3425,19 @@ paths:
                     firstNameOfSuspect: Jonas
                     lastNameOfSuspect: Phils
                     emailOfSuspect: jonesphlias@email.com
-                    phoneNumberOfSuspect: '08035468521'
+                    phoneNumberOfSuspect: "08035468521"
                     genderOfSuspect: Female
                     residentialAddressOfSuspect: 91, Sus Ln.
                     caseID: 60b417a0ed9c8c3106ecc3f9
-                    createdAt: '2021-05-30T23:20:22.559Z'
-                    updatedAt: '2021-05-30T23:20:22.559Z'
+                    createdAt: "2021-05-30T23:20:22.559Z"
+                    updatedAt: "2021-05-30T23:20:22.559Z"
                     caseSuspectID: SCES10220
                     __v: 0
   "/suspect/{caseID}/all":
     get:
       summary: Get all suspects
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Suspect
       parameters:
@@ -3442,7 +3448,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Returned all suspects
           content:
             application/json:
@@ -3460,16 +3466,16 @@ paths:
                 status: success
                 message: Fetched All Suspects
                 data:
-                  - _id: ''
-                    firstNameOfSuspect: ''
-                    lastNameOfSuspect: ''
-                    middleNameOfSuspect: ''
+                  - _id: ""
+                    firstNameOfSuspect: ""
+                    lastNameOfSuspect: ""
+                    middleNameOfSuspect: ""
                     __v: 0
   "/suspect/{id}":
     get:
       summary: Get one suspect
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - description: Suspect ID
           in: path
@@ -3480,7 +3486,7 @@ paths:
       tags:
         - Suspect
       responses:
-        '200':
+        "200":
           description: Fetched suspect
           content:
             application/json:
@@ -3499,17 +3505,17 @@ paths:
                   firstNameOfSuspect: Jonas
                   lastNameOfSuspect: Phils
                   emailOfSuspect: jonesphlias@email.com
-                  phoneNumberOfSuspect: '08035468521'
+                  phoneNumberOfSuspect: "08035468521"
                   genderOfSuspect: Female
                   residentialAddressOfSuspect: 91, Sus Ln.
-                  suspectAgeGroup: ''
-                  guiltStatus: ''
-                  relationshipWithVictim: ''
+                  suspectAgeGroup: ""
+                  guiltStatus: ""
+                  relationshipWithVictim: ""
   "/suspect/{id}/update":
     patch:
       summary: Edit suspect
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Suspect
       parameters:
@@ -3528,14 +3534,14 @@ paths:
               firstNameOfSuspect: Jonas
               lastNameOfSuspect: Phils
               emailOfSuspect: jonesphlias@email.com
-              phoneNumberOfSuspect: '08035468521'
+              phoneNumberOfSuspect: "08035468521"
               genderOfSuspect: Female
               residentialAddressOfSuspect: 91, Sus Ln.
-              suspectAgeGroup: ''
-              guiltStatus: ''
-              relationshipWithVictim: ''
+              suspectAgeGroup: ""
+              guiltStatus: ""
+              relationshipWithVictim: ""
       responses:
-        '200':
+        "200":
           description: suspect updated successfully
           content:
             application/json:
@@ -3554,17 +3560,17 @@ paths:
                   firstNameOfSuspect: Jonas
                   lastNameOfSuspect: Phils
                   emailOfSuspect: jonesphlias@email.com
-                  phoneNumberOfSuspect: '08035468521'
+                  phoneNumberOfSuspect: "08035468521"
                   genderOfSuspect: Female
                   residentialAddressOfSuspect: 91, Sus Ln.
-                  suspectAgeGroup: ''
-                  guiltStatus: ''
-                  relationshipWithVictim: ''
+                  suspectAgeGroup: ""
+                  guiltStatus: ""
+                  relationshipWithVictim: ""
   "/suspect/{id}/delete":
     delete:
       summary: Delete Suspect
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - description: Suspect ID
           in: path
@@ -3575,7 +3581,7 @@ paths:
       tags:
         - Suspect
       responses:
-        '200':
+        "200":
           description: Suspect deleted
           content:
             application/json:
@@ -3592,7 +3598,7 @@ paths:
     post:
       summary: add case witness
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Witness
       parameters:
@@ -3609,27 +3615,27 @@ paths:
               "$ref": "#/components/schemas/CaseWitness"
             example:
               firstNameOfWitness: John
-              middleNameOfWitness: ''
+              middleNameOfWitness: ""
               lastNameOfWitness: Doe
               emailOfWitness: john@doe.com
-              phoneNumberOfWitness: '08012354678'
-              witnessAgeGroup: ''
+              phoneNumberOfWitness: "08012354678"
+              witnessAgeGroup: ""
               genderOfWitness: Female
               residentialAddressOfWitness: 1, John Av
-              addressLandmark: ''
-              lgaOfWitness: ''
-              stateOfWitness: ''
-              countryOfWitness: ''
-              witnessOccupation: ''
+              addressLandmark: ""
+              lgaOfWitness: ""
+              stateOfWitness: ""
+              countryOfWitness: ""
+              witnessOccupation: ""
               witnessOrganizationType: NGO
-              witnessOrganizationID: ''
-              witnessOrganizationName: ''
-              otherDetailsOfWitness: ''
-              disabilityStatus: ''
-              religion: ''
-              relationshipWithVictim: ''
+              witnessOrganizationID: ""
+              witnessOrganizationName: ""
+              otherDetailsOfWitness: ""
+              disabilityStatus: ""
+              religion: ""
+              relationshipWithVictim: ""
       responses:
-        '201':
+        "201":
           description: witness added
           content:
             application/json:
@@ -3646,10 +3652,10 @@ paths:
                 status: success
                 message: witness created successfully
                 data:
-                  _id: ''
-                  firstNameOfWitness: ''
-                  middleNameOfWitness: ''
-                  lastNameOfWitness: ''
+                  _id: ""
+                  firstNameOfWitness: ""
+                  middleNameOfWitness: ""
+                  lastNameOfWitness: ""
                   __v: 0
   "/witness/{caseID}/all":
     get:
@@ -3657,7 +3663,7 @@ paths:
       tags:
         - Witness
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - description: case ID
           in: path
@@ -3666,7 +3672,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: fetched all witnesses
           content:
             application/json:
@@ -3685,15 +3691,15 @@ paths:
                 status: success
                 message: Fetched All Witnesses
                 data:
-                  - _id: ''
-                    firstNameOfWitness: ''
-                    middleNameOfWitness: ''
-                    lastNameOfWitness: ''
+                  - _id: ""
+                    firstNameOfWitness: ""
+                    middleNameOfWitness: ""
+                    lastNameOfWitness: ""
                     __v: 0
-                  - _id: ''
-                    firstNameOfWitness: ''
-                    middleNameOfWitness: ''
-                    lastNameOfWitness: ''
+                  - _id: ""
+                    firstNameOfWitness: ""
+                    middleNameOfWitness: ""
+                    lastNameOfWitness: ""
                     __v: 0
   "/witness/{id}":
     get:
@@ -3701,7 +3707,7 @@ paths:
       tags:
         - Witness
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - description: witness ID
           in: path
@@ -3710,7 +3716,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: returned witness data
           content:
             application/json:
@@ -3727,35 +3733,35 @@ paths:
                 status: success
                 message: witness fetched successfully
                 data:
-                  _id: ''
-                  caseID: ''
+                  _id: ""
+                  caseID: ""
                   firstNameOfWitness: John
-                  middleNameOfWitness: ''
+                  middleNameOfWitness: ""
                   lastNameOfWitness: Doe
                   emailOfWitness: john@doe.com
-                  phoneNumberOfWitness: '08012354678'
-                  witnessAgeGroup: ''
+                  phoneNumberOfWitness: "08012354678"
+                  witnessAgeGroup: ""
                   genderOfWitness: Female
                   residentialAddressPfWitness: 1, John Av
-                  addressLandmark: ''
-                  lgaOfWitness: ''
-                  stateOfWitness: ''
-                  countryOfWitness: ''
-                  witnessOccupation: ''
+                  addressLandmark: ""
+                  lgaOfWitness: ""
+                  stateOfWitness: ""
+                  countryOfWitness: ""
+                  witnessOccupation: ""
                   witnessOrganizationType: NGO
-                  witnessOrganizationID: ''
-                  witnessOrganizationName: ''
-                  otherDetailsOfWitness: ''
-                  disabilityStatus: ''
-                  religion: ''
-                  relationshipWithVictim: ''
+                  witnessOrganizationID: ""
+                  witnessOrganizationName: ""
+                  otherDetailsOfWitness: ""
+                  disabilityStatus: ""
+                  religion: ""
+                  relationshipWithVictim: ""
   "/witness/{id}/update":
     patch:
       summary: update witness details
       tags:
         - Witness
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - description: witness ID
           in: path
@@ -3770,27 +3776,27 @@ paths:
               "$ref": "#/components/schemas/CaseWitness"
             example:
               firstNameOfWitness: John
-              middleNameOfWitness: ''
+              middleNameOfWitness: ""
               lastNameOfWitness: Doe
               emailOfWitness: john@doe.com
-              phoneNumberOfWitness: '08012354678'
-              witnessAgeGroup: ''
+              phoneNumberOfWitness: "08012354678"
+              witnessAgeGroup: ""
               genderOfWitness: Female
               residentialAddressPfWitness: 1, John Av
-              addressLandmark: ''
-              lgaOfWitness: ''
-              stateOfWitness: ''
-              countryOfWitness: ''
-              witnessOccupation: ''
+              addressLandmark: ""
+              lgaOfWitness: ""
+              stateOfWitness: ""
+              countryOfWitness: ""
+              witnessOccupation: ""
               witnessOrganizationType: NGO
-              witnessOrganizationID: ''
-              witnessOrganizationName: ''
-              otherDetailsOfWitness: ''
-              disabilityStatus: ''
-              religion: ''
-              relationshipWithVictim: ''
+              witnessOrganizationID: ""
+              witnessOrganizationName: ""
+              otherDetailsOfWitness: ""
+              disabilityStatus: ""
+              religion: ""
+              relationshipWithVictim: ""
       responses:
-        '200':
+        "200":
           description: witness updated
           content:
             application/json:
@@ -3807,25 +3813,25 @@ paths:
                     "$ref": "#/components/schemas/CaseWitness"
                     example:
                       firstNameOfWitness: John
-                      middleNameOfWitness: ''
+                      middleNameOfWitness: ""
                       lastNameOfWitness: Doe
                       emailOfWitness: john@doe.com
-                      phoneNumberOfWitness: '08012354678'
-                      witnessAgeGroup: ''
+                      phoneNumberOfWitness: "08012354678"
+                      witnessAgeGroup: ""
                       genderOfWitness: Female
                       residentialAddressPfWitness: 1, John Av
-                      addressLandmark: ''
-                      lgaOfWitness: ''
-                      stateOfWitness: ''
-                      countryOfWitness: ''
-                      witnessOccupation: ''
+                      addressLandmark: ""
+                      lgaOfWitness: ""
+                      stateOfWitness: ""
+                      countryOfWitness: ""
+                      witnessOccupation: ""
                       witnessOrganizationType: NGO
-                      witnessOrganizationID: ''
-                      witnessOrganizationName: ''
-                      otherDetailsOfWitness: ''
-                      disabilityStatus: ''
-                      religion: ''
-                      relationshipWithVictim: ''
+                      witnessOrganizationID: ""
+                      witnessOrganizationName: ""
+                      otherDetailsOfWitness: ""
+                      disabilityStatus: ""
+                      religion: ""
+                      relationshipWithVictim: ""
   "/witness/{id}/delete":
     delete:
       tags:
@@ -3839,7 +3845,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: witness deleted
           content:
             application/json:
@@ -3858,7 +3864,7 @@ paths:
       tags:
         - Branch
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - in: path
           name: partnerID
@@ -3872,7 +3878,7 @@ paths:
             schema:
               "$ref": "#/components/schemas/PartnerBranch"
       responses:
-        '201':
+        "201":
           description: branch created
           content:
             application/json:
@@ -3889,22 +3895,22 @@ paths:
                 status: success
                 message: branch created
                 data:
-                  _id: ''
-                  partnerID: ''
-                  branchID: ''
-                  branchName: ''
-                  address: ''
-                  ward: ''
-                  lga: ''
-                  state: ''
-                  country: ''
+                  _id: ""
+                  partnerID: ""
+                  branchID: ""
+                  branchName: ""
+                  address: ""
+                  ward: ""
+                  lga: ""
+                  state: ""
+                  country: ""
   "/branch/{partnerID}/all":
     get:
       summary: fetch all branches
       tags:
         - Branch
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - in: path
           name: partnerID
@@ -3913,7 +3919,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: fetched all branches
           content:
             application/json:
@@ -3932,22 +3938,22 @@ paths:
                 status: success
                 message: fetched all branches
                 data:
-                  - _id: ''
-                    partnerID: ''
-                    branchID: ''
-                    branchName: ''
-                    address: ''
-                    ward: ''
-                    lga: ''
-                    state: ''
-                    country: ''
+                  - _id: ""
+                    partnerID: ""
+                    branchID: ""
+                    branchName: ""
+                    address: ""
+                    ward: ""
+                    lga: ""
+                    state: ""
+                    country: ""
   "/branch/{id}":
     get:
       summary: fetch branch
       tags:
         - Branch
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -3956,7 +3962,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: fetched branch
           content:
             application/json:
@@ -3973,22 +3979,22 @@ paths:
                 status: success
                 message: fetched a branch
                 data:
-                  _id: ''
-                  partnerID: ''
-                  branchID: ''
-                  branchName: ''
-                  address: ''
-                  ward: ''
-                  lga: ''
-                  state: ''
-                  country: ''
+                  _id: ""
+                  partnerID: ""
+                  branchID: ""
+                  branchName: ""
+                  address: ""
+                  ward: ""
+                  lga: ""
+                  state: ""
+                  country: ""
   "/branch/{id}/update":
     post:
       summary: update branch
       tags:
         - Branch
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -4002,7 +4008,7 @@ paths:
             schema:
               "$ref": "#/components/schemas/PartnerBranch"
       responses:
-        '201':
+        "201":
           description: branch updated
           content:
             application/json:
@@ -4019,22 +4025,22 @@ paths:
                 status: success
                 message: branch updated
                 data:
-                  _id: ''
-                  partnerID: ''
-                  branchID: ''
-                  branchName: ''
-                  address: ''
-                  ward: ''
-                  lga: ''
-                  state: ''
-                  country: ''
+                  _id: ""
+                  partnerID: ""
+                  branchID: ""
+                  branchName: ""
+                  address: ""
+                  ward: ""
+                  lga: ""
+                  state: ""
+                  country: ""
   "/branch/{id}/delete":
     delete:
       tags:
         - Branch
       summary: delete branch
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -4043,7 +4049,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: branch deleted
           content:
             application/json:
@@ -4060,7 +4066,7 @@ paths:
     post:
       summary: create organization
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Organization
       requestBody:
@@ -4077,7 +4083,7 @@ paths:
               address: ""
               addressLandMark: ""
               phone:
-                - '08012365478'
+                - "08012365478"
               lga: ""
               state: ""
               country: ""
@@ -4125,7 +4131,7 @@ paths:
       tags:
         - Organization
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - name: page
           in: query
@@ -4182,7 +4188,7 @@ paths:
       tags:
         - Organization
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -4230,7 +4236,7 @@ paths:
       tags:
         - Organization
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -4251,7 +4257,7 @@ paths:
               address: ""
               addressLandMark: ""
               phone:
-                - '08012365478'
+                - "08012365478"
               lga: ""
               state: ""
               country: ""
@@ -4295,7 +4301,7 @@ paths:
     delete:
       summary: delete organization
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Organization
       parameters:
@@ -4586,9 +4592,9 @@ components:
         areYouTheVictim:
           type: string
           enum:
-            - 'Yes'
-            - 'No'
-          default: 'No'
+            - "Yes"
+            - "No"
+          default: "No"
         reportType:
           type: string
           enum:
@@ -5248,4 +5254,3 @@ components:
           type: string
           format: date-time
           readOnly: true
-
