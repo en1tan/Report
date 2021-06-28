@@ -87,9 +87,8 @@ exports.signup = async function (req, res) {
 
 exports.signin = async (req, res) => {
   const { userName, password } = req.body;
-  userName.toLowerCase();
   try {
-    const user = await User.findOne({ userName }).select("+password");
+    const user = await User.findOne({ userName: userName.toLowerCase()}).select("+password");
     if (
       !user ||
       !(await user.correctPassword(password, user.password))
