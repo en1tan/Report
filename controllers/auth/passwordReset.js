@@ -65,15 +65,17 @@ exports.verifyOtp = async (req, res) => {
 
 exports.sendOtp = async (req, res) => {
   try {
-    const token = await TokenModel.findById(req.body.tokenID);
+    const user = await PublicUser.findOne({
+      phoneNumber: req.body.phoneNumber,
+    });
+    if (!user) return normalError(res, 404, "user not found");
+    const token = await TokenModel.findOne({ userID: user._id });
     if (!token)
       return normalError(
         res,
         400,
         "invalid session. please contact support",
       );
-    const user = await PublicUser.findById(token.userID);
-    if (!user) return normalError(res, 404, "account does not exist");
     const otp = parseInt(Math.random().toString(8).substr(2, 5));
     const newToken = await TokenModel.findByIdAndUpdate(
       token._id,

@@ -291,8 +291,8 @@ paths:
             schema:
               type: object
               properties:
-                tokenID:
-                  description: token ID
+                phoneNumber:
+                  description: phone number
                   type: string
       responses:
         200:
