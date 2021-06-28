@@ -3,10 +3,19 @@ const config = require("../config");
 const fs = require("fs");
 const path = require("path");
 const handlebars = require("handlebars");
-const { normalError, tryCatchError } = require("../utils/errorHandlers");
+const {
+  normalError,
+  tryCatchError,
+} = require("../utils/errorHandlers");
 const { successNoData } = require("../utils/successHandler");
 
-exports.sendMail = async (res, email, subject, payload, template = "") => {
+exports.sendMail = async (
+  res,
+  email,
+  subject,
+  payload,
+  template = "",
+) => {
   try {
     const transporter = nodemailer.createTransport({
       host: config.mail.host,
@@ -17,7 +26,10 @@ exports.sendMail = async (res, email, subject, payload, template = "") => {
       },
     });
 
-    const source = fs.readFileSync(path.join(__dirname, template), "utf-8");
+    const source = fs.readFileSync(
+      path.join(__dirname, template),
+      "utf-8",
+    );
     const compiledTemplate = handlebars.compile(source);
     const options = () => {
       return {
@@ -31,8 +43,14 @@ exports.sendMail = async (res, email, subject, payload, template = "") => {
     // Send email
     transporter.sendMail(options(), (error, info) => {
       if (error) {
-        return normalError(res, 400, "An error occurred. Please try again");
+        console.log(error);
+        // return normalError(
+        //   res,
+        //   400,
+        //   "An error occurred. Please try again",
+        // );
       } else {
+        console.log(info.response);
         return successNoData(res, 200, "mail sent successfully");
       }
     });
