@@ -99,8 +99,28 @@ exports.signin = async (req, res) => {
         "Username or password is incorrrect",
       );
     }
-    if (user && !user.emailVerified)
-      return normalError(res, 403, "email not verified");
+    if (user && !user.emailVerified) {
+const token = await TokenModel.findOne({ userID: user._id });
+      if (token) await token.deleteOne();
+      const activateToken = crypto.randomBytes(32).toString("hex");
+      const newToken = await TokenModel.create({
+        userID: user._id,
+        token: activateToken,
+        createdAt: Date.now(),
+      });
+const activateLink = `${serverURL}/user/verifyEmail/${newToken._id}`;
+      sendMail(
+        res,
+        user.email,
+        "Activate Your Account",
+        {
+          name: `${user.lastName} ${user.firstName}`,
+          link: activateLink,
+        },
+        "../controllers/auth/template/activateAccount.handlebars",
+      );
+      return normalError(res, 403, "email not verified. a verification email as be sent to you kindly click on the link to activated email");
+}
     await User.findByIdAndUpdate(
       user._id,
       { onlineStatus: "online" },
