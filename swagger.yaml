@@ -309,7 +309,7 @@ paths:
                     type: string
                     example: Otp Sent To Your Phone Number. Please Be Patient, The Message May Take A Few Minutes
                   data:
-                    type: string
+                    type: object
                     properties:
                       tokenID:
                         type: string
