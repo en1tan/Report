@@ -40,6 +40,10 @@ const publicUserSchema = new Schema(
       required: [true, "Email is required"],
       lowercase: true,
     },
+    emailVerified: {
+      type: Boolean,
+      default: false,
+    },
 
     // Phone contact of the user: used to recieve notificationa and retrieve password via OTP
     phoneNumber: {
@@ -120,7 +124,7 @@ const publicUserSchema = new Schema(
     // Religious oreintation of the user
     religion: String,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 publicUserSchema.pre("save", async function (next) {
@@ -132,7 +136,7 @@ publicUserSchema.pre("save", async function (next) {
 
 publicUserSchema.methods.correctPassword = async function (
   incomingPassword,
-  userPassword
+  userPassword,
 ) {
   return await bcrypt.compare(incomingPassword, userPassword);
 };

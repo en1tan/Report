@@ -5,12 +5,20 @@ const passwordReset = require("../../controllers/auth/passwordReset");
 const validator = require("../../utils/validator");
 const auth = require("../../middleware/authenticate");
 
-router.post("/signup", validator("signup", "body"), authController.signup);
+router.post(
+  "/signup",
+  validator("signup", "body"),
+  authController.signup,
+);
 router.post("/activate", authController.activateAccount);
+router.get("/verifyEmail/:tokenID", authController.verifyEmail);
 router.post("/login", authController.signin);
 router.get("/profile", auth(true), authController.profile);
 router.patch("/account", auth(true), authController.editAccount);
-router.post("/requestPasswordReset", passwordReset.requestPasswordReset);
+router.post(
+  "/requestPasswordReset",
+  passwordReset.requestPasswordReset,
+);
 router.post("/sendOtp", passwordReset.sendOtp);
 router.post("/resendOtp", passwordReset.resendOtp);
 router.post("/verifyOtp", passwordReset.verifyOtp);

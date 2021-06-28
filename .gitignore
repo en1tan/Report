@@ -4,3 +4,4 @@ config.env
 .git/
 yarn.lock
 .idea/
+yarn.lock

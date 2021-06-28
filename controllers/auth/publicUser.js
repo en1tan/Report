@@ -2,6 +2,10 @@ const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const crypto = require("crypto");
 const User = require("../../models/PublicUser");
+const fs = require("fs");
+const path = require("path");
+const handlebars = require("handlebars");
+
 const {
   tryCatchError,
   normalError,
@@ -14,7 +18,7 @@ const {
 } = require("../../utils/successHandler");
 const { sendMail } = require("../../utils/sendMail");
 const TokenModel = require("../../models/Token");
-const { clientURL } = require("../../config");
+const { serverURL } = require("../../config");
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -57,7 +61,7 @@ exports.signup = async function (req, res) {
         token: activateToken,
         createdAt: Date.now(),
       });
-      const activateLink = `${clientURL}/activate?token=${newToken._id}`;
+      const activateLink = `${serverURL}/user/verifyEmail/${newToken._id}`;
       sendMail(
         res,
         newUser.email,
@@ -95,6 +99,8 @@ exports.signin = async (req, res) => {
         "Username or password is incorrrect",
       );
     }
+    if (user && !user.emailVerified)
+      return normalError(res, 403, "email not verified");
     await User.findByIdAndUpdate(
       user._id,
       { onlineStatus: "online" },
@@ -165,4 +171,32 @@ exports.activateAccount = async (req, res) => {
   } catch (err) {
     return tryCatchError(res, err);
   }
+};
+
+exports.verifyEmail = async (req, res) => {
+  let activateStatus = true;
+  let user;
+  const token = await TokenModel.findById(req.params.tokenID);
+  if (!token) {
+    activateStatus = false;
+  } else {
+    user = await User.findById(token.userID);
+    if (!user) activateStatus = false;
+    else {
+      await User.findByIdAndUpdate(token.userID, {
+        emailVerified: true,
+      });
+    }
+  }
+  const source = fs.readFileSync(
+    path.join(__dirname, "./template/activate.handlebars"),
+    "utf-8",
+  );
+  const compiledTemplate = handlebars.compile(source);
+  return res.status(200).send(
+    compiledTemplate({
+      name: user ? user.lastName : "",
+      activateStatus: activateStatus === true ? activateStatus : null,
+    }),
+  );
 };
