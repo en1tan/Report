@@ -120,6 +120,7 @@ const validators = {
       .valid("Standard", "QuickReport")
       .required(),
     casePleas: Joi.string().optional(),
+    religion: Joi.string().optional(),
     platformOfReport: Joi.string()
       .valid("mobile", "web", "sms")
       .optional(),
