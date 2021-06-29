@@ -33,7 +33,7 @@ exports.sendMail = async (
     const compiledTemplate = handlebars.compile(source);
     const options = () => {
       return {
-        from: config.mail.sourceEmail,
+        from: `Sorosoke Platform <${config.mail.sourceEmail}>`,
         to: email,
         subject: subject,
         html: compiledTemplate(payload),

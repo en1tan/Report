@@ -12,7 +12,7 @@ function queryAuth() {
           " Please download the current mobile app version or " +
           " visit https://sorosoke.com to use the web client"
       );
-    if (req.headers.authorization) {
+    if (req.headers.authorization && req.headers.authorization.split(" ")[1] !== "Bearer") {
       req.authorized = true;
       next();
     } else {
