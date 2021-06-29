@@ -1671,6 +1671,8 @@ paths:
                         type: array
                         items:
                           "$ref": "#/components/schemas/Case"
+                      totalCases:
+                        type: integer
                       total:
                         type: integer
                       page:
@@ -1716,6 +1718,10 @@ paths:
                         - Assault
                         - Assault
                         - Assault
+                 totalCases: 12
+                 total: 1
+                 page: 1
+          
   "/case/{id}/follow":
     patch:
       security:
@@ -1803,6 +1809,12 @@ paths:
                         type: array
                         items:
                           "$ref": "#/components/schemas/Case"
+                      totalCases:
+                        type: integer
+                      total:
+                        type: integer
+                      page:
+                        type: integer
               example:
                 status: success
                 message: Cases Fetched Succesfully
