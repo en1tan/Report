@@ -458,7 +458,7 @@ paths:
                     __v: 0
                   total: 1
                   page: 1
-  "/partner/user/{id}/update":
+  /partner/user/{id}/update:
     patch:
       security:
         - bearerAuth: []
@@ -875,7 +875,7 @@ paths:
                   message:
                     type: string
                     example: Password Reset Successfully
-  "/public/cases":
+  /public/cases:
     get:
       summary: Get all cases
       tags:
@@ -1718,9 +1718,9 @@ paths:
                         - Assault
                         - Assault
                         - Assault
-                 totalCases: 12
-                 total: 1
-                 page: 1
+                  totalCases: 12
+                  total: 1
+                  page: 1
           
   "/case/{id}/follow":
     patch:
