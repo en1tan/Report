@@ -48,7 +48,7 @@ exports.followCase = async (req, res) => {
       });
       return successNoData(res, 200, "Case followed successfully");
     } else {
-      if (follow)
+      if (!follow)
         return successNoData(
           res,
           200,
