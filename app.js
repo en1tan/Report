@@ -6,6 +6,7 @@ const ymljs = require("yamljs");
 const doc = ymljs.load("./swagger.yaml");
 const swaggerUI = require("swagger-ui-express");
 const redoc = require("redoc-express");
+const helmet  = require('helmet');
 
 const app = express();
 
@@ -16,6 +17,7 @@ const path = require("path");
 
 //cors
 app.use(cors());
+app.use(helmet());
 
 // Development logging
 if (process.env.NODE_ENV === "development") {
