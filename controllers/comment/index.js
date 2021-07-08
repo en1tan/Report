@@ -16,6 +16,7 @@ exports.createComment = async (req, res) => {
     });
     const user = await PublicUser.findById(req.user._id);
     const data = {
+      _id: newComment._id
       comment: newComment.comment,
       dateOfComment: newComment.updatedAt,
       avatar: user.avatar,
