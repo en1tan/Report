@@ -751,9 +751,9 @@ exports.getPublicCases = async (req, res) => {
   const publicCases = [];
   const selectedFields = req.user
     ? "_id __v caseAvatar caseTitle caseTypeStatus datePublished categoryGroupID" +
-      " caseSummary"
+      " caseSummary reportType"
     : "_id __v caseAvatar caseTitle caseTypeStatus datePublished categoryGroupID" +
-      " caseSummary";
+      " caseSummary reportType";
   let { page = 1, limit = 20 } = req.query;
   const filter = _.pick(req.query, [
     "resolutionStatus",
