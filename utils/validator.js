@@ -62,6 +62,8 @@ const validators = {
     otherDetailsOfSuspect: Joi.string().optional().allow(null, ''),
     disabilityStatus: Joi.string().optional().allow(null, ''),
     relationshipWithVictim: Joi.string().optional().allow(null, ''),
+    addressLandmark: Joi.string().optional().allow(null, ''),
+    religion: Joi.string().optional().allow(null, '')
   }),
   victim: Joi.object({
     firstNameOfVictim: Joi.string().min(2).max(30).required(),
@@ -82,6 +84,8 @@ const validators = {
     otherDetailsOfVictim: Joi.string().optional().allow(null, ''),
     disabilityStatus: Joi.string().optional().allow(null, ''),
     relationshipWithVictim: Joi.string().optional().allow(null, ''),
+    addressLandmark: Joi.string().optional().allow(null, ''),
+    religion: Joi.string().optional().allow(null, '')
   }),
   witness: Joi.object({
     firstNameOfWitness: Joi.string().min(2).max(30).required(),
@@ -102,6 +106,8 @@ const validators = {
     otherDetailsOfWitness: Joi.string().optional().allow(null, ''),
     disabilityStatus: Joi.string().optional().allow(null, ''),
     relationshipWithVictim: Joi.string().optional().allow(null, ''),
+    addressLandmark: Joi.string().optional().allow(null, ''),
+    religion: Joi.string().optional().allow(null, '')
   }),
   case: Joi.object({
     caseAvatar: Joi.string().optional().allow(null, ''),
