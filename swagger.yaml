@@ -3,17 +3,17 @@ info:
   version: 1.0.0
   title: SorosokeAPI Server
   description: >-
-    API Server for SorosokeAPI. [SorosokeAPI](https://github.com/kuantarium/SorosokeAPI)  
-    
+    API Server for SorosokeAPI. [SorosokeAPI](https://github.com/kuantarium/SorosokeAPI)
+
     Sorosoke is a platform focused on helping people get help fast and free. Recommended to use the swagger documentation and query the server online as trying to set up locally might take too long
-    
-    ## Requirements  
-    
-    * Code Base - NodeJS  
-    
-    * Database - MongoDB  
-    
-    
+
+    ## Requirements
+
+    * Code Base - NodeJS
+
+    * Database - MongoDB
+
+
 servers:
   - url: https://sorosokeapi.onrender.com/api/v1
     description: Production Server
@@ -77,8 +77,6 @@ paths:
                 id:
                   type: string
                   description: user ID
-                token:
-                  type: string
       responses:
         200:
           description: user activated successfully
@@ -1731,7 +1729,7 @@ paths:
                   totalCases: 12
                   total: 1
                   page: 1
-          
+
   "/case/{id}/follow":
     patch:
       security:
