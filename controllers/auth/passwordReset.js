@@ -97,7 +97,7 @@ exports.sendOtp = async (req, res) => {
 // TODO: to move to utils later
 exports.resendOtp = async (req, res) => {
   try {
-    const token = await TokenModel.findById(req.token.tokenID);
+    const token = await TokenModel.findById(req.body.tokenID);
     const user = await PublicUser.findById(token.userID);
     if (!token) {
       return normalError(
