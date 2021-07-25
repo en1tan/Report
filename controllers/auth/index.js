@@ -58,7 +58,7 @@ exports.signup = async (req, res, next) => {
   }
 };
 
-exports.signin = async (req, res, next) => {
+exports.login = async (req, res, next) => {
   const { errors, isValid } = loginValidation(req.body);
   if (!isValid) {
     return normalError(res, 404, "Incomplete Fields", errors);
