@@ -13,7 +13,6 @@ info:
 
     * Database - MongoDB
 
-
 servers:
   - url: https://sorosokeapi.onrender.com/api/v1
     description: Production Server
@@ -177,7 +176,7 @@ paths:
                     onlineStatus: online
                     active: true
                     _id: 60b008fa9c946258111c7271
-                    firstName: Soroke
+                    firstName: Sorosoke
                     lastName: User
                     userName: sorosoke
                     email: user1@sorosoke.com
@@ -334,7 +333,7 @@ paths:
               properties:
                 otp:
                   type: number
-                  example: 595675
+                  example: 5956
       responses:
         200:
           description: otp verified
