@@ -5,8 +5,8 @@ const User = require("../../models/PublicUser");
 const fs = require("fs");
 const path = require("path");
 const handlebars = require("handlebars");
-const {sendSms} = require("../../utils/sendSms");
-const {generateOtp} = require('../../utils/otp');
+const { sendSms } = require("../../utils/sendSms");
+const { generateOtp } = require("../../utils/otp");
 
 const {
   tryCatchError,
@@ -18,12 +18,12 @@ const {
   successWithData,
   successNoData,
 } = require("../../utils/successHandler");
-const {sendMail} = require("../../utils/sendMail");
+const { sendMail } = require("../../utils/sendMail");
 const TokenModel = require("../../models/Token");
-const {serverURL} = require("../../config");
+const { serverURL } = require("../../config");
 
 const signToken = (id) => {
-  return jwt.sign({id}, process.env.JWT_SECRET, {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
@@ -38,14 +38,13 @@ const createSendToken = (user, statusCode, res, message) => {
 };
 
 exports.signup = async function (req, res) {
-  const {email, userName, phoneNumber} = req.body;
+  const { email, userName, phoneNumber } = req.body;
   try {
     const errors = {};
-    if (await User.findOne({email}))
-      errors.email = "email already exists";
-    if (await User.findOne({userName: userName.toLowerCase()}))
+    if (await User.findOne({ email })) errors.email = "email already exists";
+    if (await User.findOne({ userName: userName.toLowerCase() }))
       errors.username = "username already in use";
-    if (await User.findOne({phoneNumber}))
+    if (await User.findOne({ phoneNumber }))
       errors.phoneNumber = "phone number already in use";
     if (!_.isEmpty(errors))
       return normalError(res, 400, "Unable to create user", {
@@ -55,7 +54,7 @@ exports.signup = async function (req, res) {
     req.body.userName = req.body.userName.toLowerCase();
     const newUser = await User.create(req.body);
     if (newUser) {
-      const token = await TokenModel.findOne({userID: newUser._id});
+      const token = await TokenModel.findOne({ userID: newUser._id });
       if (token) await token.deleteOne();
       const activateToken = crypto.randomBytes(32).toString("hex");
       const newToken = await TokenModel.create({
@@ -72,15 +71,11 @@ exports.signup = async function (req, res) {
           name: `${newUser.lastName} ${newUser.firstName}`,
           link: activateLink,
         },
-        "../controllers/auth/template/activateAccount.handlebars",
+        "../controllers/auth/template/activateAccount.handlebars"
       );
       return successNoData(res, 201, "User created successfully");
     } else {
-      return normalError(
-        res,
-        400,
-        "an error occured. please try again",
-      );
+      return normalError(res, 400, "an error occured. please try again");
     }
   } catch (err) {
     return tryCatchError(res, err);
@@ -88,20 +83,16 @@ exports.signup = async function (req, res) {
 };
 
 exports.signin = async (req, res) => {
-  const {userName, password} = req.body;
+  const { userName, password } = req.body;
   try {
-    const user = await User.findOne({userName: userName.toLowerCase()}).select("+password");
-    if (
-      !user ||
-      !(await user.correctPassword(password, user.password))
-    ) {
-      return authorizationError(
-        res,
-        "Username or password is incorrrect",
-      );
+    const user = await User.findOne({
+      userName: userName.toLowerCase(),
+    }).select("+password");
+    if (!user || !(await user.correctPassword(password, user.password))) {
+      return authorizationError(res, "Username or password is incorrrect");
     }
     if (user && !user.emailVerified) {
-      const token = await TokenModel.findOne({userID: user._id});
+      const token = await TokenModel.findOne({ userID: user._id });
       if (token) await token.deleteOne();
       const activateToken = crypto.randomBytes(32).toString("hex");
       const newToken = await TokenModel.create({
@@ -118,23 +109,27 @@ exports.signin = async (req, res) => {
           name: `${user.lastName} ${user.firstName}`,
           link: activateLink,
         },
-        "../controllers/auth/template/activateAccount.handlebars",
+        "../controllers/auth/template/activateAccount.handlebars"
       );
-      return normalError(res, 403, "email not verified. a verification email as be sent to you kindly click on the link to activated email");
+      return normalError(
+        res,
+        403,
+        "email not verified. a verification email as be sent to you kindly click on the link to activated email"
+      );
     }
     if (user && !user.active) {
       const otp = generateOtp();
       await TokenModel.create({
         userID: user._id,
         token: Math.random().toString(),
-        otp
-      })
-      await sendSms(user.phoneNumber, otp)
+        otp,
+      });
+      await sendSms(user.phoneNumber, `Your OTP is ${otp}`);
     }
     await User.findByIdAndUpdate(
       user._id,
-      {onlineStatus: "online"},
-      {new: true},
+      { onlineStatus: "online" },
+      { new: true }
     );
     const data = _.omit(user.toObject(), "password");
     createSendToken(data, 200, res, "User authorized");
@@ -153,18 +148,14 @@ exports.editAccount = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     if (!user) return validationError(res, "Authentication error");
-    const updatedUser = await User.findByIdAndUpdate(
-      user._id,
-      req.body,
-      {
-        new: true,
-      },
-    );
+    const updatedUser = await User.findByIdAndUpdate(user._id, req.body, {
+      new: true,
+    });
     return successWithData(
       res,
       200,
       "User records updated successfully",
-      updatedUser,
+      updatedUser
     );
   } catch (err) {
     return tryCatchError(res, err);
@@ -178,7 +169,7 @@ exports.activateAccount = async (req, res) => {
       return normalError(
         res,
         400,
-        "Account does not exist. Please register your account",
+        "Account does not exist. Please register your account"
       );
     const activateToken = await TokenModel.findOne({
       userID: user._id,
@@ -188,10 +179,10 @@ exports.activateAccount = async (req, res) => {
         res,
         400,
         "otp not verified. please try again or contact support",
-        null,
+        null
       );
     await activateToken.deleteOne();
-    await User.findByIdAndUpdate(req.body.id, {active: true});
+    await User.findByIdAndUpdate(req.body.id, { active: true });
     return successNoData(res, 200, "account activated successfully");
   } catch (err) {
     return tryCatchError(res, err);
@@ -215,13 +206,13 @@ exports.verifyEmail = async (req, res) => {
   }
   const source = fs.readFileSync(
     path.join(__dirname, "./template/activate.handlebars"),
-    "utf-8",
+    "utf-8"
   );
   const compiledTemplate = handlebars.compile(source);
   return res.status(200).send(
     compiledTemplate({
       name: user ? user.lastName : "",
       activateStatus: activateStatus === true ? activateStatus : null,
-    }),
+    })
   );
 };
