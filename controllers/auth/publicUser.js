@@ -43,6 +43,12 @@ const createSendToken = async (user, statusCode, res, message, ip) => {
   return successWithData(res, statusCode, message, data);
 };
 
+/**
+ * User sign up
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Promise<successNoData | normalError | tryCatchError>}
+ */
 exports.signup = async function (req, res) {
   const {email, userName, phoneNumber} = req.body;
   try {
@@ -69,7 +75,7 @@ exports.signup = async function (req, res) {
         createdAt: Date.now(),
       });
       const activateLink = `${serverURL}/user/verifyEmail/${newToken._id}`;
-      sendMail(
+      await sendMail(
         res,
         newUser.email,
         "Activate Your Account",
@@ -88,6 +94,13 @@ exports.signup = async function (req, res) {
   }
 };
 
+
+/**
+ * User sign in
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Promise<successNoData | normalError | tryCatchError>}
+ */
 exports.signin = async (req, res) => {
   const {userName, password} = req.body;
   try {
@@ -105,16 +118,6 @@ exports.signin = async (req, res) => {
         "email not verified. a verification email as be sent to you kindly click on the link to activated email"
       );
     }
-    if (user && !user.active) {
-      const otp = generateOtp();
-      await TokenModel.create({
-        userID: user._id,
-        token: Math.random().toString(),
-        otp,
-      });
-      await sendSms(user.phoneNumber, `Your OTP is ${otp}`);
-    }
-
     await User.findByIdAndUpdate(
       user._id,
       {onlineStatus: "online"},
@@ -127,6 +130,13 @@ exports.signin = async (req, res) => {
   }
 };
 
+
+/**
+ * User profile
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Promise<successNoData | normalError | tryCatchError>}
+ */
 exports.profile = async (req, res) => {
   if (!req.user) return authorizationError(res, "User unauthorized");
   const data = _.omit(req.user.toObject(), "password");
