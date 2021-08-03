@@ -18,8 +18,5 @@ module.exports = {
   accountSid: process.env.TWILIO_ACCOUNT_SID,
   authToken: process.env.TWILIO_AUTH_TOKEN,
   devPhone: process.env.TWILIO_GENERATED_NUMBER,
-  dbURL:
-    process.env.NODE_ENV === "development"
-      ? process.env.DATABASE
-      : process.env.DATABASE_LOCAL,
+  dbURL: process.env.DATABASE,
 };
