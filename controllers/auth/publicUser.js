@@ -117,16 +117,15 @@ exports.signin = async (req, res) => {
         "email not verified. a verification email as be sent to you kindly click on the link to activated email"
       );
     }
-    // commenting this out till a better solution
-    // if (user && !user.active) {
-    //   const otp = generateOtp();
-    //   await TokenModel.create({
-    //     userID: user._id,
-    //     token: Math.random().toString(),
-    //     otp,
-    //   });
-    //   await sendSms(user.phoneNumber, `Your OTP is ${otp}`);
-    // }
+    if (user && !user.active) {
+      const otp = generateOtp();
+      await TokenModel.create({
+        userID: user._id,
+        token: Math.random().toString(),
+        otp,
+      });
+      await sendSms(user.phoneNumber, `Your OTP is ${otp}`);
+    }
     await User.findByIdAndUpdate(
       user._id,
       { onlineStatus: "online" },
