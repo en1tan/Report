@@ -1,12 +1,15 @@
 const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const crypto = require("crypto");
-const User = require("../../models/PublicUser");
 const fs = require("fs");
 const path = require("path");
 const handlebars = require("handlebars");
-const { sendSms } = require("../../utils/sendSms");
-const { generateOtp } = require("../../utils/otp");
+const {sendSms} = require("../../utils/sendSms");
+const {generateOtp} = require("../../utils/otp");
+
+const User = require("../../models/PublicUser");
+const TokenModel = require("../../models/Token");
+const RefreshToken = require("../../models/RefreshToken");
 
 const {
   tryCatchError,
@@ -18,33 +21,36 @@ const {
   successWithData,
   successNoData,
 } = require("../../utils/successHandler");
-const { sendMail } = require("../../utils/sendMail");
-const TokenModel = require("../../models/Token");
-const { serverURL } = require("../../config");
+const {sendMail} = require("../../utils/sendMail");
+const {serverURL} = require("../../config");
 
 const signToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+  return jwt.sign({id}, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
+    algorithm: "HS256",
   });
 };
 
-const createSendToken = (user, statusCode, res, message) => {
-  const token = signToken(user._id, user.userType);
+const createSendToken = async (user, statusCode, res, message, ip) => {
+  const token = signToken(user._id);
+  const refreshToken = generateRefreshToken(user, ip);
+  await refreshToken.save();
   const data = {
     token,
+    refreshToken,
     user,
   };
   return successWithData(res, statusCode, message, data);
 };
 
 exports.signup = async function (req, res) {
-  const { email, userName, phoneNumber } = req.body;
+  const {email, userName, phoneNumber} = req.body;
   try {
     const errors = {};
-    if (await User.findOne({ email })) errors.email = "email already exists";
-    if (await User.findOne({ userName: userName.toLowerCase() }))
+    if (await User.findOne({email})) errors.email = "email already exists";
+    if (await User.findOne({userName: userName.toLowerCase()}))
       errors.username = "username already in use";
-    if (await User.findOne({ phoneNumber }))
+    if (await User.findOne({phoneNumber}))
       errors.phoneNumber = "phone number already in use";
     if (!_.isEmpty(errors))
       return normalError(res, 400, "Unable to create user", {
@@ -54,7 +60,7 @@ exports.signup = async function (req, res) {
     req.body.userName = req.body.userName.toLowerCase();
     const newUser = await User.create(req.body);
     if (newUser) {
-      const token = await TokenModel.findOne({ userID: newUser._id });
+      const token = await TokenModel.findOne({userID: newUser._id});
       if (token) await token.deleteOne();
       const activateToken = crypto.randomBytes(32).toString("hex");
       const newToken = await TokenModel.create({
@@ -83,7 +89,7 @@ exports.signup = async function (req, res) {
 };
 
 exports.signin = async (req, res) => {
-  const { userName, password } = req.body;
+  const {userName, password} = req.body;
   try {
     const user = await User.findOne({
       userName: userName.toLowerCase(),
@@ -92,25 +98,7 @@ exports.signin = async (req, res) => {
       return authorizationError(res, "Username or password is incorrrect");
     }
     if (user && !user.emailVerified) {
-      const token = await TokenModel.findOne({ userID: user._id });
-      if (token) await token.deleteOne();
-      const activateToken = crypto.randomBytes(32).toString("hex");
-      const newToken = await TokenModel.create({
-        userID: user._id,
-        token: activateToken,
-        createdAt: Date.now(),
-      });
-      const activateLink = `${serverURL}/user/verifyEmail/${newToken._id}`;
-      await sendMail(
-        res,
-        user.email,
-        "Activate Your Account",
-        {
-          name: `${user.lastName} ${user.firstName}`,
-          link: activateLink,
-        },
-        "../controllers/auth/template/activateAccount.handlebars"
-      );
+      await generateActivationToken(user, res);
       return normalError(
         res,
         403,
@@ -126,13 +114,14 @@ exports.signin = async (req, res) => {
       });
       await sendSms(user.phoneNumber, `Your OTP is ${otp}`);
     }
+
     await User.findByIdAndUpdate(
       user._id,
-      { onlineStatus: "online" },
-      { new: true }
+      {onlineStatus: "online"},
+      {new: true}
     );
     const data = _.omit(user.toObject(), "password");
-    createSendToken(data, 200, res, "User authorized");
+    await createSendToken(data, 200, res, "User authorized", req.ip);
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -182,7 +171,7 @@ exports.activateAccount = async (req, res) => {
         null
       );
     await activateToken.deleteOne();
-    await User.findByIdAndUpdate(req.body.id, { active: true });
+    await User.findByIdAndUpdate(req.body.id, {active: true});
     return successNoData(res, 200, "account activated successfully");
   } catch (err) {
     return tryCatchError(res, err);
@@ -216,3 +205,68 @@ exports.verifyEmail = async (req, res) => {
     })
   );
 };
+
+exports.refreshToken = async (req, res) => {
+  try {
+    const refreshToken = await getRefreshToken(req.body.token);
+    const {user} = refreshToken;
+
+    // replace old refresh token with a new one and save
+    const newRefreshToken = generateRefreshToken(user, req.ip);
+    refreshToken.revoked = Date.now();
+    refreshToken.revokedByIP = req.ip;
+    refreshToken.replacedByToken = newRefreshToken.token;
+    await refreshToken.save();
+    await newRefreshToken.save();
+
+    const token = signToken(user._id);
+    const data = {
+      token,
+      refreshToken
+    }
+    return successWithData(res,200, "token refreshed", data);
+  } catch (err) {
+    return tryCatchError(res, err);
+  }
+};
+
+async function generateActivationToken(user, res) {
+  const token = await TokenModel.findOne({userID: user._id});
+  if (token) await token.deleteOne();
+  const activateToken = crypto.randomBytes(32).toString("hex");
+  const newToken = await TokenModel.create({
+    userID: user._id,
+    token: activateToken,
+    createdAt: Date.now(),
+  });
+  const activateLink = `${serverURL}/user/verifyEmail/${newToken._id}`;
+  await sendMail(
+    res,
+    user.email,
+    "Activate Your Account",
+    {
+      name: `${user.lastName} ${user.firstName}`,
+      link: activateLink,
+    },
+    "../controllers/auth/template/activateAccount.handlebars"
+  );
+}
+
+function generateRefreshToken(user, ipAddress) {
+  return new RefreshToken({
+    user: user._id,
+    token: randomTokenString(),
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    createdByIP: ipAddress,
+  });
+}
+
+async function getRefreshToken(token) {
+  const refreshToken = await RefreshToken.findOne({token}).populate("user");
+  if (!refreshToken || !refreshToken.isActive) throw "Invalid token";
+  return refreshToken;
+}
+
+function randomTokenString() {
+  return crypto.randomBytes(40).toString("hex");
+}

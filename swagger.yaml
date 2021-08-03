@@ -125,6 +125,30 @@ paths:
                     properties:
                       token:
                         type: string
+                      refreshToken:
+                        type: object
+                        properties:
+                          token:
+                            type: string
+                            expires:
+                              type: string
+                              format: date-time
+                            createdByIP:
+                              type: string
+                            created:
+                              type: string
+                              format: date-time
+                            revoked:
+                              type: string
+                              format: date-time
+                            revokedByIP:
+                              type: string
+                            replacedByToken:
+                              type: string
+                            isExpired:
+                              type: boolean
+                            isActive:
+                              type: boolean
                       user:
                         "$ref": "#/components/schemas/PublicUser"
                 example:
@@ -132,6 +156,13 @@ paths:
                   status: success
                   data:
                     token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYjAwOGZhOWM5NDYyNTgxMTFjNzI3MSIsImlhdCI6MTYyMjE1MDk5NSwiZXhwIjoxNjIyMjM3Mzk1fQ.d488_F5G7Bc--nbcBKnk7AcCHb0iesYxXhaMN8gZ6ZY
+                    refreshToken:
+                      token: af38a1d82360e21922b85d6bbdacbd7402216bf77aa9e78fcefd89d58ebbe4b69ba76c0d565d890a
+                      expires: '2021-08-10T22:16:33.809Z'
+                      createdByIP: "::1"
+                      created: '2021-08-03T22:16:33.809Z'
+                      isExpired: false
+                      isActive: true
                     user:
                       onlineStatus: online
                       active: true
@@ -148,10 +179,64 @@ paths:
                       createdAt: "2021-05-27T21:02:50.182Z"
                       updatedAt: "2021-05-27T21:29:27.976Z"
                       __v: 0
-  /user/profile:
+  /user/refresh-token:
+    post:
+      summary: Refresh Token
+      tags:
+        - User
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                token:
+                  type: string
+                  example: 052e388577952f922c9450be484956baa9b4d8403969f6c2db0f118c8bcee5178ccd70647a3a272f
+      responses:
+        "200":
+          description: Token Refreshed
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      refreshToken:
+                        type: object
+                        properties:
+                          token:
+                            type: string
+                          expires:
+                            type: string
+                            format: date-time
+                          createdByIP:
+                            type: string
+                          created:
+                            type: string
+                            format: date-time
+                          revoked:
+                            type: string
+                            format: date-time
+                          revokedByIP:
+                            type: string
+                          replacedByToken:
+                            type: string
+                          isExpired:
+                            type: boolean
+                          isActive:
+                            type: boolean
+    /user/profile:
     get:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: User profile
       tags:
         - User
@@ -191,7 +276,7 @@ paths:
   /user/account:
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Update user details
       tags:
         - User
@@ -415,7 +500,7 @@ paths:
       tags:
         - Partner Organization
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - description: The partner organization id
           in: path
@@ -468,7 +553,7 @@ paths:
   /partner/user/{id}/update:
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Update partner user details
       tags:
         - Partner Organization
@@ -527,7 +612,7 @@ paths:
   "/partner/user/{id}":
     delete:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: delete partner user
       description: "userTypes: [super-admin,admin]"
       tags:
@@ -703,7 +788,7 @@ paths:
   "/partner/profile":
     get:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Get partner profile
       tags:
         - Partner User
@@ -746,7 +831,7 @@ paths:
   "/partner/account":
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Update partner user details
       tags:
         - Partner User
@@ -888,7 +973,7 @@ paths:
       tags:
         - Public
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - description: Filter by Resolution Status
           in: query
@@ -987,7 +1072,7 @@ paths:
   "/public/cases/{id}":
     get:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Get single public case
       tags:
         - Public
@@ -1131,7 +1216,7 @@ paths:
   "/case/create":
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Create a case report
       tags:
         - Case
@@ -1179,7 +1264,7 @@ paths:
   "/case/all":
     get:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Get all cases
       tags:
         - Case
@@ -1297,7 +1382,7 @@ paths:
   "/case/{id}":
     get:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Get a case
       tags:
         - Case
@@ -1340,7 +1425,7 @@ paths:
   "/case/{id}/update":
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Update an existing case
       tags:
         - Case
@@ -1388,7 +1473,7 @@ paths:
   "/case/{id}/verify":
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Verify a case
       tags:
         - Case
@@ -1446,7 +1531,7 @@ paths:
   "/case/{id}/assign":
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Assign a case to a partner
       tags:
         - Case
@@ -1500,7 +1585,7 @@ paths:
   "/case/{id}/publish":
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Publish case
       tags:
         - Case
@@ -1556,7 +1641,7 @@ paths:
   /case/{id}/published:
     get:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       tags:
         - Case
       summary: get details of a published case
@@ -1596,7 +1681,7 @@ paths:
   "/case/{id}/resolve":
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Resolve case
       tags:
         - Case
@@ -1655,7 +1740,7 @@ paths:
   "/case/personal":
     get:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Fetch all personal cases
       tags:
         - Case
@@ -1732,7 +1817,7 @@ paths:
   "/case/{id}/follow":
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Follow/Unfollow Case case
       tags:
         - Case
@@ -1780,7 +1865,7 @@ paths:
   "/case/followed":
     get:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Get all followed cases
       tags:
         - Case
@@ -1851,7 +1936,7 @@ paths:
   "/case/create/{caseID}/caseWitness":
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Add case witness
       tags:
         - Case
@@ -1911,7 +1996,7 @@ paths:
     post:
       deprecated: true
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Add case other details
       tags:
         - Case
@@ -1946,7 +2031,7 @@ paths:
   "/case/create/{id}/evidence":
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Add case evidence
       tags:
         - Case
@@ -1987,7 +2072,7 @@ paths:
   "/case/{caseID}/evidence":
     get:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: get case evidence
       tags:
         - Case
@@ -2028,7 +2113,7 @@ paths:
       tags:
         - Case
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - description: evidence ID
           in: path
@@ -2053,7 +2138,7 @@ paths:
   "/case/category/groups":
     get:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Get all category groups
       tags:
         - Category Group
@@ -2087,7 +2172,7 @@ paths:
   "/case/category/group/create":
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Add case category group
       description: 'userTypes: ["super-admin","admin"]'
       tags:
@@ -2135,7 +2220,7 @@ paths:
   "/case/category/group/{id}/update":
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - description: Group ID
           in: path
@@ -2178,7 +2263,7 @@ paths:
     delete:
       summary: delete category group
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       tags:
         - Category Group
       parameters:
@@ -2202,7 +2287,7 @@ paths:
   "/case/category/{groupID}/categories":
     get:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Get all categories
       tags:
         - Category
@@ -2240,7 +2325,7 @@ paths:
   "/case/category/group/{id}/create":
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Add case category
       tags:
         - Category
@@ -2288,7 +2373,7 @@ paths:
   "/case/category/{id}/update":
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - description: Category ID
           in: path
@@ -2330,7 +2415,7 @@ paths:
   "/case/category/{id}":
     delete:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       tags:
         - Category
       parameters:
@@ -2358,7 +2443,7 @@ paths:
   "/victim/case/{id}/create":
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Create case victim
       tags:
         - Victim
@@ -2419,7 +2504,7 @@ paths:
     get:
       summary: Get all victims
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - description: Case ID
           in: path
@@ -2464,7 +2549,7 @@ paths:
         - Victim
       summary: Get a victim
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - description: Victim ID
           in: path
@@ -2507,7 +2592,7 @@ paths:
   "/victim/{id}/update":
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Update victim details
       tags:
         - Victim
@@ -2577,7 +2662,7 @@ paths:
   "/victim/{id}/delete":
     delete:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Delete case victim
       tags:
         - Victim
@@ -2606,7 +2691,7 @@ paths:
   "/comment/create/{caseId}":
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Comment on a case
       tags:
         - Comment
@@ -2701,7 +2786,7 @@ paths:
   "/comment/{id}":
     patch:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: update the case comment
       tags:
         - Comment
@@ -2748,7 +2833,7 @@ paths:
   "/comment/:id/delete":
     delete:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: delete case comment
       tags:
         - Comment
@@ -2810,7 +2895,7 @@ paths:
       tags:
         - Contact
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - description: page number
           in: query
@@ -2859,7 +2944,7 @@ paths:
       tags:
         - Contact
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - description: contact ID
           in: path
@@ -2897,7 +2982,7 @@ paths:
   "/partner/create":
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: create partner details
       tags:
         - Super Admin
@@ -2942,7 +3027,7 @@ paths:
   "/partner/{id}/branch/create":
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: create a branch of an organization
       description: "userTypes: [super-admin,admin]"
       tags:
@@ -2990,7 +3075,7 @@ paths:
   "/progress/create/{caseID}":
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Add case progress
       tags:
         - Case Progress
@@ -3013,7 +3098,7 @@ paths:
                   type: string
                 privacyStatus:
                   type: string
-                  enum: ["public", "private"]
+                  enum: [ "public", "private" ]
                 docs:
                   type: array
                   items:
@@ -3069,7 +3154,7 @@ paths:
   "/progress/{caseID}/":
     get:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       tags:
         - Case Progress
       summary: Get case progress
@@ -3132,7 +3217,7 @@ paths:
     patch:
       summary: update case progress
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - description: progress ID
           in: path
@@ -3189,7 +3274,7 @@ paths:
       tags:
         - Case Progress
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - description: progress ID
           in: path
@@ -3240,7 +3325,7 @@ paths:
   "/details/create/{caseID}":
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Add case other details
       tags:
         - Case Other Details
@@ -3292,7 +3377,7 @@ paths:
       tags:
         - Case Other Details
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - description: case ID
           name: caseID
@@ -3370,7 +3455,7 @@ paths:
     delete:
       summary: delete a conversation
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       tags:
         - Case Other Details
       parameters:
@@ -3397,7 +3482,7 @@ paths:
   "/suspect/{caseID}/create":
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       summary: Add case suspect
       tags:
         - Suspect
@@ -3456,7 +3541,7 @@ paths:
     get:
       summary: Get all suspects
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       tags:
         - Suspect
       parameters:
@@ -3494,7 +3579,7 @@ paths:
     get:
       summary: Get one suspect
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - description: Suspect ID
           in: path
@@ -3534,7 +3619,7 @@ paths:
     patch:
       summary: Edit suspect
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       tags:
         - Suspect
       parameters:
@@ -3589,7 +3674,7 @@ paths:
     delete:
       summary: Delete Suspect
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - description: Suspect ID
           in: path
@@ -3617,7 +3702,7 @@ paths:
     post:
       summary: add case witness
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       tags:
         - Witness
       parameters:
@@ -3682,7 +3767,7 @@ paths:
       tags:
         - Witness
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - description: case ID
           in: path
@@ -3726,7 +3811,7 @@ paths:
       tags:
         - Witness
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - description: witness ID
           in: path
@@ -3780,7 +3865,7 @@ paths:
       tags:
         - Witness
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - description: witness ID
           in: path
@@ -3883,7 +3968,7 @@ paths:
       tags:
         - Branch
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - in: path
           name: partnerID
@@ -3929,7 +4014,7 @@ paths:
       tags:
         - Branch
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - in: path
           name: partnerID
@@ -3972,7 +4057,7 @@ paths:
       tags:
         - Branch
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - in: path
           name: id
@@ -4013,7 +4098,7 @@ paths:
       tags:
         - Branch
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - in: path
           name: id
@@ -4059,7 +4144,7 @@ paths:
         - Branch
       summary: delete branch
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - in: path
           name: id
@@ -4085,7 +4170,7 @@ paths:
     post:
       summary: create organization
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       tags:
         - Organization
       requestBody:
@@ -4150,7 +4235,7 @@ paths:
       tags:
         - Organization
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - name: page
           in: query
@@ -4207,7 +4292,7 @@ paths:
       tags:
         - Organization
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - name: id
           in: path
@@ -4255,7 +4340,7 @@ paths:
       tags:
         - Organization
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - name: id
           in: path
@@ -4320,7 +4405,7 @@ paths:
     delete:
       summary: delete organization
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       tags:
         - Organization
       parameters:

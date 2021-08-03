@@ -16,7 +16,9 @@ function authenticate(status = false) {
         )
           token = req.headers.authorization.split(" ")[1];
         if (!token) return authorizationError(res, "You need a token");
-        const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = await jwt.verify(token, process.env.JWT_SECRET, {
+          algorithms: ["HS256"],
+        });
         if (decoded.exp < Date.now().valueOf() / 1000)
           return authorizationError(res, "Invalid token");
         if (!decoded.userType) {

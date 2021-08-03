@@ -13,6 +13,7 @@ router.post(
 router.post("/activate", authController.activateAccount);
 router.get("/verifyEmail/:tokenID", authController.verifyEmail);
 router.post("/login", authController.signin);
+router.post("/refresh-token", authController.refreshToken);
 router.get("/profile", auth(true), authController.profile);
 router.patch("/account", auth(true), authController.editAccount);
 router.post(

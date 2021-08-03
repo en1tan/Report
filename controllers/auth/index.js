@@ -30,14 +30,8 @@ exports.signup = async (req, res, next) => {
   if (!isValid) {
     return normalError(res, 404, "Incomplete Fields", errors);
   }
-  const {
-    firstName,
-    lastName,
-    email,
-    password,
-    phoneNumber,
-    userType,
-  } = req.body;
+  const { firstName, lastName, email, password, phoneNumber, userType } =
+    req.body;
   try {
     const user = await User.findOne({ email });
     if (user) {
@@ -53,27 +47,6 @@ exports.signup = async (req, res, next) => {
       userType,
     });
     createSendToken(newUser, 201, res, "User created succesfully");
-  } catch (err) {
-    return tryCatchError(res, err);
-  }
-};
-
-exports.login = async (req, res, next) => {
-  const { errors, isValid } = loginValidation(req.body);
-  if (!isValid) {
-    return normalError(res, 404, "Incomplete Fields", errors);
-  }
-  const { userName, password } = req.body;
-  try {
-    const user = await User.findOne({ userName }).select("+password");
-    if (
-      !user ||
-      !(await user.correctPassword(password, user.password))
-    ) {
-      return validationError(res, "Authentication error");
-    }
-
-    createSendToken(user, 200, res, "User authorized");
   } catch (err) {
     return tryCatchError(res, err);
   }

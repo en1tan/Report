@@ -20,7 +20,7 @@ const errorHandler = {
   tryCatchError(res, error) {
     console.error(error);
     return res.status(500).json({
-      message: error.message,
+      message: error.message || error,
       status: "error",
     });
   },
