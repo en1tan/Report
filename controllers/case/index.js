@@ -465,7 +465,7 @@ exports.getCaseEvidence = async (req, res) => {
     const existingCase = await Case.findById(req.params.caseID);
     if (!existingCase)
       return normalError(res, 404, "case not found", existingCase);
-    if (!req.user !== existingCase.publicUser || !req.user.userType)
+    if (req.user !== existingCase.publicUser || !req.user.userType)
       return normalError(res, 404, "Resource not found");
     const evidence = await CaseEvidence.find({
       caseID: req.params.caseID,
