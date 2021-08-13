@@ -1,33 +1,33 @@
-const jwt = require("jsonwebtoken");
-const _ = require("lodash");
-const crypto = require("crypto");
-const fs = require("fs");
-const path = require("path");
-const handlebars = require("handlebars");
-const {sendSms} = require("../../utils/sendSms");
-const {generateOtp} = require("../../utils/otp");
+const jwt = require('jsonwebtoken');
+const _ = require('lodash');
+const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
+const handlebars = require('handlebars');
+const { sendSms } = require('../../utils/sendSms');
+const { generateOtp } = require('../../utils/otp');
 
-const User = require("../../models/PublicUser");
-const TokenModel = require("../../models/Token");
-const RefreshToken = require("../../models/RefreshToken");
+const User = require('../../models/PublicUser');
+const TokenModel = require('../../models/Token');
+const RefreshToken = require('../../models/RefreshToken');
 
 const {
   tryCatchError,
   normalError,
   authorizationError,
   validationError,
-} = require("../../utils/errorHandlers");
+} = require('../../utils/errorHandlers');
 const {
   successWithData,
   successNoData,
-} = require("../../utils/successHandler");
-const {sendMail} = require("../../utils/sendMail");
-const {serverURL} = require("../../config");
+} = require('../../utils/successHandler');
+const { sendMail } = require('../../utils/sendMail');
+const { serverURL } = require('../../config');
 
 const signToken = (id) => {
-  return jwt.sign({id}, process.env.JWT_SECRET, {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
-    algorithm: "HS256",
+    algorithm: 'HS256',
   });
 };
 
@@ -50,25 +50,25 @@ const createSendToken = async (user, statusCode, res, message, ip) => {
  * @returns {Promise<successNoData | normalError | tryCatchError>}
  */
 exports.signup = async function (req, res) {
-  const {email, userName, phoneNumber} = req.body;
+  const { email, userName, phoneNumber } = req.body;
   try {
     const errors = {};
-    if (await User.findOne({email})) errors.email = "email already exists";
-    if (await User.findOne({userName: userName.toLowerCase()}))
-      errors.username = "username already in use";
-    if (await User.findOne({phoneNumber}))
-      errors.phoneNumber = "phone number already in use";
+    if (await User.findOne({ email })) errors.email = 'email already exists';
+    if (await User.findOne({ userName: userName.toLowerCase() }))
+      errors.username = 'username already in use';
+    if (await User.findOne({ phoneNumber }))
+      errors.phoneNumber = 'phone number already in use';
     if (!_.isEmpty(errors))
-      return normalError(res, 400, "Unable to create user", {
+      return normalError(res, 400, 'Unable to create user', {
         errors,
       });
 
     req.body.userName = req.body.userName.toLowerCase();
     const newUser = await User.create(req.body);
     if (newUser) {
-      const token = await TokenModel.findOne({userID: newUser._id});
+      const token = await TokenModel.findOne({ userID: newUser._id });
       if (token) await token.deleteOne();
-      const activateToken = crypto.randomBytes(32).toString("hex");
+      const activateToken = crypto.randomBytes(32).toString('hex');
       const newToken = await TokenModel.create({
         userID: newUser._id,
         token: activateToken,
@@ -78,22 +78,21 @@ exports.signup = async function (req, res) {
       await sendMail(
         res,
         newUser.email,
-        "Activate Your Account",
+        'Activate Your Account',
         {
           name: `${newUser.lastName} ${newUser.firstName}`,
           link: activateLink,
         },
-        "../controllers/auth/template/activateAccount.handlebars"
+        '../controllers/auth/template/activateAccount.handlebars'
       );
-      return successNoData(res, 201, "User created successfully");
+      return successNoData(res, 201, 'User created successfully');
     } else {
-      return normalError(res, 400, "an error occured. please try again");
+      return normalError(res, 400, 'an error occured. please try again');
     }
   } catch (err) {
     return tryCatchError(res, err);
   }
 };
-
 
 /**
  * User sign in
@@ -102,34 +101,33 @@ exports.signup = async function (req, res) {
  * @returns {Promise<successNoData | normalError | tryCatchError>}
  */
 exports.signin = async (req, res) => {
-  const {userName, password} = req.body;
+  const { userName, password } = req.body;
   try {
     const user = await User.findOne({
       userName: userName.toLowerCase(),
-    }).select("+password");
+    }).select('+password');
     if (!user || !(await user.correctPassword(password, user.password))) {
-      return authorizationError(res, "Username or password is incorrrect");
+      return authorizationError(res, 'Username or password is incorrrect');
     }
     if (user && !user.emailVerified) {
       await generateActivationToken(user, res);
       return normalError(
         res,
         403,
-        "email not verified. a verification email as be sent to you kindly click on the link to activated email"
+        'email not verified. a verification email as be sent to you kindly click on the link to activated email'
       );
     }
     await User.findByIdAndUpdate(
       user._id,
-      {onlineStatus: "online"},
-      {new: true}
+      { onlineStatus: 'online' },
+      { new: true }
     );
-    const data = _.omit(user.toObject(), "password");
-    await createSendToken(data, 200, res, "User authorized", req.ip);
+    const data = _.omit(user.toObject(), 'password');
+    await createSendToken(data, 200, res, 'User authorized', req.ip);
   } catch (err) {
     return tryCatchError(res, err);
   }
 };
-
 
 /**
  * User profile
@@ -138,22 +136,22 @@ exports.signin = async (req, res) => {
  * @returns {Promise<successNoData | normalError | tryCatchError>}
  */
 exports.profile = async (req, res) => {
-  if (!req.user) return authorizationError(res, "User unauthorized");
-  const data = _.omit(req.user.toObject(), "password");
-  return successWithData(res, 200, "User details", data);
+  if (!req.user) return authorizationError(res, 'User unauthorized');
+  const data = _.omit(req.user.toObject(), 'password');
+  return successWithData(res, 200, 'User details', data);
 };
 
 exports.editAccount = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
-    if (!user) return validationError(res, "Authentication error");
+    if (!user) return validationError(res, 'Authentication error');
     const updatedUser = await User.findByIdAndUpdate(user._id, req.body, {
       new: true,
     });
     return successWithData(
       res,
       200,
-      "User records updated successfully",
+      'User records updated successfully',
       updatedUser
     );
   } catch (err) {
@@ -168,7 +166,7 @@ exports.activateAccount = async (req, res) => {
       return normalError(
         res,
         400,
-        "Account does not exist. Please register your account"
+        'Account does not exist. Please register your account'
       );
     const activateToken = await TokenModel.findOne({
       userID: user._id,
@@ -177,12 +175,12 @@ exports.activateAccount = async (req, res) => {
       return normalError(
         res,
         400,
-        "otp not verified. please try again or contact support",
+        'otp not verified. please try again or contact support',
         null
       );
     await activateToken.deleteOne();
-    await User.findByIdAndUpdate(req.body.id, {active: true});
-    return successNoData(res, 200, "account activated successfully");
+    await User.findByIdAndUpdate(req.body.id, { active: true });
+    return successNoData(res, 200, 'account activated successfully');
   } catch (err) {
     return tryCatchError(res, err);
   }
@@ -204,13 +202,13 @@ exports.verifyEmail = async (req, res) => {
     }
   }
   const source = fs.readFileSync(
-    path.join(__dirname, "./template/activate.handlebars"),
-    "utf-8"
+    path.join(__dirname, './template/activate.handlebars'),
+    'utf-8'
   );
   const compiledTemplate = handlebars.compile(source);
   return res.status(200).send(
     compiledTemplate({
-      name: user ? user.lastName : "",
+      name: user ? user.lastName : '',
       activateStatus: activateStatus === true ? activateStatus : null,
     })
   );
@@ -219,7 +217,7 @@ exports.verifyEmail = async (req, res) => {
 exports.refreshToken = async (req, res) => {
   try {
     const refreshToken = await getRefreshToken(req.body.token);
-    const {user} = refreshToken;
+    const { user } = refreshToken;
 
     // replace old refresh token with a new one and save
     const newRefreshToken = generateRefreshToken(user, req.ip);
@@ -232,18 +230,18 @@ exports.refreshToken = async (req, res) => {
     const token = signToken(user._id);
     const data = {
       token,
-      refreshToken
-    }
-    return successWithData(res,200, "token refreshed", data);
+      refreshToken,
+    };
+    return successWithData(res, 200, 'token refreshed', data);
   } catch (err) {
     return tryCatchError(res, err);
   }
 };
 
 async function generateActivationToken(user, res) {
-  const token = await TokenModel.findOne({userID: user._id});
+  const token = await TokenModel.findOne({ userID: user._id });
   if (token) await token.deleteOne();
-  const activateToken = crypto.randomBytes(32).toString("hex");
+  const activateToken = crypto.randomBytes(32).toString('hex');
   const newToken = await TokenModel.create({
     userID: user._id,
     token: activateToken,
@@ -253,12 +251,12 @@ async function generateActivationToken(user, res) {
   await sendMail(
     res,
     user.email,
-    "Activate Your Account",
+    'Activate Your Account',
     {
       name: `${user.lastName} ${user.firstName}`,
       link: activateLink,
     },
-    "../controllers/auth/template/activateAccount.handlebars"
+    '../controllers/auth/template/activateAccount.handlebars'
   );
 }
 
@@ -272,11 +270,11 @@ function generateRefreshToken(user, ipAddress) {
 }
 
 async function getRefreshToken(token) {
-  const refreshToken = await RefreshToken.findOne({token}).populate("user");
-  if (!refreshToken || !refreshToken.isActive) throw "Invalid token";
+  const refreshToken = await RefreshToken.findOne({ token }).populate('user');
+  if (!refreshToken || !refreshToken.isActive) throw 'Invalid token';
   return refreshToken;
 }
 
 function randomTokenString() {
-  return crypto.randomBytes(40).toString("hex");
+  return crypto.randomBytes(40).toString('hex');
 }

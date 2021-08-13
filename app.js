@@ -7,6 +7,7 @@ const doc = ymljs.load("./swagger.yaml");
 const swaggerUI = require("swagger-ui-express");
 const redoc = require("redoc-express");
 const helmet  = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 
@@ -18,6 +19,15 @@ const path = require("path");
 //cors
 app.use(cors());
 app.use(helmet());
+
+app.use(
+  rateLimit({
+    windowMs: 12 * 60 * 60 * 1000,
+    max: 20,
+    message: "You have exceeded the rate limit!",
+    headers: true,
+  })
+);
 
 // Development logging
 if (process.env.NODE_ENV === "development") {
