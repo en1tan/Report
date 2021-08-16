@@ -233,7 +233,7 @@ paths:
                             type: boolean
                           isActive:
                             type: boolean
-    /user/profile:
+  /user/profile:
     get:
       security:
         - bearerAuth: [ ]
