@@ -684,7 +684,6 @@ exports.getPublicCases = async (req, res) => {
     'state',
     'lga',
   ]);
-  filter.verificationStatus = 'verified';
   filter.publishStatus = 'published';
   try {
     const cases = await Case.find({
