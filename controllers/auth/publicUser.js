@@ -76,14 +76,14 @@ exports.signup = async function (req, res) {
         createdAt: Date.now(),
       });
       const activateLink = `${serverURL}/user/verifyEmail/${newToken._id}`;
-      const link = await shUrl(activateLink);
+      // const link = await shUrl(activateLink); Causing error
       await sendMail(
         res,
         newUser.email,
         'Activate Your Account',
         {
           name: `${newUser.lastName} ${newUser.firstName}`,
-          link: link.shortUrl,
+          link: activateLink,
         },
         '../controllers/auth/template/activateAccount.handlebars'
       );
