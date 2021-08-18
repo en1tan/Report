@@ -493,7 +493,7 @@ paths:
                   message:
                     type: string
                     example: Password Reset Successfully
-  "/partner/{id}/users":
+  /partner/{id}/users:
     get:
       summary: Get all partner users
       description: Returns all users of a partner organization
@@ -609,7 +609,7 @@ paths:
                   createdAt: "2021-05-29T00:55:06.510Z"
                   updatedAt: "2021-05-29T00:55:06.510Z"
                   __v: 0
-  "/partner/user/{id}":
+  /partner/user/{id}:
     delete:
       security:
         - bearerAuth: [ ]
@@ -640,7 +640,7 @@ paths:
               example:
                 status: success
                 message: partner user deleted succesfully
-  "/partner/signup":
+  /partner/signup:
     post:
       summary: Add partner account
       tags:
@@ -706,7 +706,7 @@ paths:
                     createdAt: "2021-05-29T00:55:06.510Z"
                     updatedAt: "2021-05-29T00:55:06.510Z"
                     __v: 0
-  "/partner/login":
+  /partner/login:
     post:
       summary: Login partner user
       tags:
@@ -785,7 +785,7 @@ paths:
                     createdAt: "2021-05-29T00:55:06.510Z"
                     updatedAt: "2021-05-29T00:55:06.510Z"
                     __v: 0
-  "/partner/profile":
+  /partner/profile:
     get:
       security:
         - bearerAuth: [ ]
@@ -828,7 +828,7 @@ paths:
                   createdAt: "2021-05-29T00:55:06.510Z"
                   updatedAt: "2021-05-29T00:55:06.510Z"
                   __v: 0
-  "/partner/account":
+  /partner/account:
     patch:
       security:
         - bearerAuth: [ ]
@@ -1069,7 +1069,7 @@ paths:
                       followStatus: false
                   total: 1
                   page: 1
-  "/public/cases/{id}":
+  /public/cases/{id}:
     get:
       security:
         - bearerAuth: [ ]
@@ -1154,7 +1154,7 @@ paths:
                         _id: 60bb9a66ae288b566f0428f5
                         firstName: Admin
                         lastName: Sorosoke
-  "/public/category/groups":
+  /public/category/groups:
     get:
       summary: Get all category groups
       tags:
@@ -1183,7 +1183,7 @@ paths:
                       groupName: Human Rights
                       imageIcon: https://api.placeholder.com/150
                       _v: 0
-  "/public/group/{groupID}/categories":
+  /public/group/{groupID}/categories:
     get:
       summary: Get all categories
       tags:
@@ -1604,8 +1604,11 @@ paths:
               properties:
                 publishStatus:
                   type: string
+                caseSummary:
+                  type: string
             example:
               publishStatus: published
+              caseSummary: "Yes this case is good to go"
       responses:
         "200":
           description: Case published

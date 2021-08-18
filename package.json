@@ -51,6 +51,7 @@
     "redoc-express": "^1.0.0",
     "swagger-ui-express": "^4.1.6",
     "twilio": "^3.64.0",
+    "url-minify": "^2.2.11",
     "uuid": "^8.3.0",
     "validator": "^13.1.1",
     "yamljs": "^0.3.0"

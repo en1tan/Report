@@ -4,8 +4,6 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const handlebars = require('handlebars');
-const { sendSms } = require('../../utils/sendSms');
-const { generateOtp } = require('../../utils/otp');
 
 const User = require('../../models/PublicUser');
 const TokenModel = require('../../models/Token');
@@ -22,6 +20,7 @@ const {
   successNoData,
 } = require('../../utils/successHandler');
 const { sendMail } = require('../../utils/sendMail');
+const { shUrl } = require('../../utils/shortenUrl');
 const { serverURL } = require('../../config');
 
 const signToken = (id) => {
@@ -75,19 +74,20 @@ exports.signup = async function (req, res) {
         createdAt: Date.now(),
       });
       const activateLink = `${serverURL}/user/verifyEmail/${newToken._id}`;
+      const link = await shUrl(activateLink);
       await sendMail(
         res,
         newUser.email,
         'Activate Your Account',
         {
           name: `${newUser.lastName} ${newUser.firstName}`,
-          link: activateLink,
+          link: link.shortUrl,
         },
         '../controllers/auth/template/activateAccount.handlebars'
       );
       return successNoData(res, 201, 'User created successfully');
     } else {
-      return normalError(res, 400, 'an error occured. please try again');
+      return normalError(res, 400, 'an error occurred. please try again');
     }
   } catch (err) {
     return tryCatchError(res, err);

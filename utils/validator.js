@@ -1,4 +1,4 @@
-const Joi = require("joi");
+const Joi = require('joi');
 
 const validators = {
   signup: Joi.object({
@@ -8,7 +8,7 @@ const validators = {
     userName: Joi.string().min(3).max(20).lowercase().required(),
     email: Joi.string().email().lowercase().required(),
     phoneNumber: Joi.string().required(),
-    gender: Joi.string().valid("Male", "Female"),
+    gender: Joi.string().valid('Male', 'Female'),
     address: Joi.string().required(),
     password: Joi.string().min(8).required().strict(),
     userAgeGroup: Joi.string().optional().allow(null, ''),
@@ -33,13 +33,13 @@ const validators = {
     userName: Joi.string().min(3).max(20).lowercase().required(),
     email: Joi.string().email().lowercase().required(),
     phoneNumber: Joi.string().required(),
-    gender: Joi.string().valid("Male", "Female"),
+    gender: Joi.string().valid('Male', 'Female'),
     address: Joi.string().required(),
     stateOfAssignment: Joi.string().optional().allow(null, ''),
     password: Joi.string().min(8).required().strict(),
     lga: Joi.string().optional().allow(null, ''),
     userType: Joi.string()
-      .valid("super-admin", "admin", "verifier", "staff")
+      .valid('super-admin', 'admin', 'verifier', 'staff')
       .required(),
   }),
   suspect: Joi.object({
@@ -49,7 +49,7 @@ const validators = {
     emailOfSuspect: Joi.string().email().lowercase().optional().allow(null, ''),
     phoneNumberOfSuspect: Joi.string().optional().allow(null, ''),
     suspectAgeGroup: Joi.string().optional().allow(null, ''),
-    genderOfSuspect: Joi.string().valid("Male", "Female"),
+    genderOfSuspect: Joi.string().valid('Male', 'Female'),
     guiltStatus: Joi.string().optional().allow(null, ''),
     residentialAddressOfSuspect: Joi.string().required(),
     lgaOfSuspect: Joi.string().optional().allow(null, ''),
@@ -63,7 +63,7 @@ const validators = {
     disabilityStatus: Joi.string().optional().allow(null, ''),
     relationshipWithVictim: Joi.string().optional().allow(null, ''),
     addressLandmark: Joi.string().optional().allow(null, ''),
-    religion: Joi.string().optional().allow(null, '')
+    religion: Joi.string().optional().allow(null, ''),
   }),
   victim: Joi.object({
     firstNameOfVictim: Joi.string().min(2).max(30).required(),
@@ -72,7 +72,7 @@ const validators = {
     emailOfVictim: Joi.string().email().lowercase().optional().allow(null, ''),
     phoneNumberOfVictim: Joi.string().optional().allow(null, ''),
     victimAgeGroup: Joi.string().optional().allow(null, ''),
-    genderOfVictim: Joi.string().valid("Male", "Female"),
+    genderOfVictim: Joi.string().valid('Male', 'Female'),
     residentialAddressOfVictim: Joi.string().required(),
     lgaOfVictim: Joi.string().optional().allow(null, ''),
     stateOfVictim: Joi.string().optional().allow(null, ''),
@@ -85,7 +85,7 @@ const validators = {
     disabilityStatus: Joi.string().optional().allow(null, ''),
     relationshipWithVictim: Joi.string().optional().allow(null, ''),
     addressLandmark: Joi.string().optional().allow(null, ''),
-    religion: Joi.string().optional().allow(null, '')
+    religion: Joi.string().optional().allow(null, ''),
   }),
   witness: Joi.object({
     firstNameOfWitness: Joi.string().min(2).max(30).required(),
@@ -94,7 +94,7 @@ const validators = {
     emailOfWitness: Joi.string().email().lowercase().optional().allow(null, ''),
     phoneNumberOfWitness: Joi.string().optional().allow(null, ''),
     witnessAgeGroup: Joi.string().optional().allow(null, ''),
-    genderOfWitness: Joi.string().valid("Male", "Female"),
+    genderOfWitness: Joi.string().valid('Male', 'Female'),
     residentialAddressOfWitness: Joi.string().required(),
     lgaOfWitness: Joi.string().optional().allow(null, ''),
     stateOfWitness: Joi.string().optional().allow(null, ''),
@@ -107,7 +107,7 @@ const validators = {
     disabilityStatus: Joi.string().optional().allow(null, ''),
     relationshipWithVictim: Joi.string().optional().allow(null, ''),
     addressLandmark: Joi.string().optional().allow(null, ''),
-    religion: Joi.string().optional().allow(null, '')
+    religion: Joi.string().optional().allow(null, ''),
   }),
   case: Joi.object({
     caseAvatar: Joi.string().optional().allow(null, ''),
@@ -121,15 +121,14 @@ const validators = {
     state: Joi.string().optional().allow(null, ''),
     lga: Joi.string().optional().allow(null, ''),
     descriptionOfIncident: Joi.string().optional().allow(null, ''),
-    areYouTheVictim: Joi.string().valid("Yes", "No").required(),
-    reportType: Joi.string()
-      .valid("Standard", "QuickReport")
-      .required(),
+    areYouTheVictim: Joi.string().valid('Yes', 'No').required(),
+    reportType: Joi.string().valid('Standard', 'QuickReport').required(),
     casePleas: Joi.string().optional().allow(null, ''),
     religion: Joi.string().optional().allow(null, ''),
     platformOfReport: Joi.string()
-      .valid("mobile", "web", "sms")
-      .optional().allow(null, ''),
+      .valid('mobile', 'web', 'sms')
+      .optional()
+      .allow(null, ''),
   }),
   contact: Joi.object({
     senderName: Joi.string().min(2).max(50).optional().allow(null, ''),
@@ -137,6 +136,10 @@ const validators = {
     email: Joi.string().email().required(),
     subject: Joi.string().required(),
     message: Joi.string().required(),
+  }),
+  publishCase: Joi.object({
+    caseSummary: Joi.string().required(),
+    publishStatus: Joi.string().valid('published', 'unpublish').required(),
   }),
 };
 
@@ -153,17 +156,17 @@ module.exports = (validator, property) => async (req, res, next) => {
     return res.status(500).send({
       status: false,
       statusCode: 500,
-      message: "Request cannot be validated. Please try again",
+      message: 'Request cannot be validated. Please try again',
       data: null,
     });
   const { error } = validatorFunc.validate(req[property]);
   if (error) {
     const { details } = error;
-    const message = details.map((err) => err.message).join(",");
+    const message = details.map((err) => err.message).join(',');
     return res.status(400).send({
       status: false,
       statusCode: 400,
-      message: message.replace(/['"]/g, ""),
+      message: message.replace(/['"]/g, ''),
       data: null,
     });
   }
