@@ -8,6 +8,8 @@ const handlebars = require('handlebars');
 const User = require('../../models/PublicUser');
 const TokenModel = require('../../models/Token');
 const RefreshToken = require('../../models/RefreshToken');
+const Case = require('../../models/cases/Case');
+const FollowCase = require('../../models/cases/FollowCase');
 
 const {
   tryCatchError,
@@ -117,6 +119,7 @@ exports.signin = async (req, res) => {
         'email not verified. a verification email as be sent to you kindly click on the link to activated email'
       );
     }
+
     await User.findByIdAndUpdate(
       user._id,
       { onlineStatus: 'online' },
@@ -136,9 +139,24 @@ exports.signin = async (req, res) => {
  * @returns {Promise<successNoData | normalError | tryCatchError>}
  */
 exports.profile = async (req, res) => {
-  if (!req.user) return authorizationError(res, 'User unauthorized');
-  const data = _.omit(req.user.toObject(), 'password');
-  return successWithData(res, 200, 'User details', data);
+  try {
+    if (!req.user) return authorizationError(res, 'User unauthorized');
+    const data = _.omit(req.user.toObject(), 'password');
+    const count = await Case.countDocuments({
+      publicUserID: data._id,
+    });
+    const f = await FollowCase.find({ publicUserID: data._id });
+    const c = [];
+    for (let i = 0; i < f.length; i++) {
+      c.push(f[i].caseID);
+    }
+    const followedCases = await Case.countDocuments().where('_id').in(c).exec();
+    data.personalCases = count;
+    data.followedCases = followedCases;
+    return successWithData(res, 200, 'User details', data);
+  } catch (err) {
+    return tryCatchError(res, err);
+  }
 };
 
 exports.editAccount = async (req, res) => {
