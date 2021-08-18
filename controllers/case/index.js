@@ -690,7 +690,7 @@ exports.getPublicCases = async (req, res) => {
       caseTitle: { $regex: new RegExp(req.query.search, 'i') },
       ...filter,
     })
-      .sort('-createdAt')
+      .sort('-datePublished')
       .limit(limit * 1)
       .skip(((page < 1 ? 1 : page) - 1) * limit)
       .exec();
