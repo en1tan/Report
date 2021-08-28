@@ -1,6 +1,5 @@
-const mongoose = require("mongoose");
-const PartnerUser = require("../partners/PartnerUser");
-const { genIDs } = require("../../utils/genID");
+const mongoose = require('mongoose');
+const { genIDs } = require('../../utils/genID');
 
 const Schema = mongoose.Schema;
 
@@ -15,7 +14,7 @@ const caseSchema = new Schema(
     // Unique ID of the User reporting the case
     publicUserID: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "PublicUser",
+      ref: 'PublicUser',
       required: true,
       immutable: true,
     },
@@ -28,7 +27,7 @@ const caseSchema = new Schema(
     // Category ID of the case
     categoryGroupID: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "CaseCategoryGroup",
+      ref: 'CaseCategoryGroup',
       required: true,
     },
 
@@ -36,14 +35,14 @@ const caseSchema = new Schema(
     // Default "NotYetAssigned"
     assignedPartnerUserId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "PartnerUser",
+      ref: 'PartnerUser',
     },
 
     // Title of the Case given when publishing the case
     // Default "NotYetAssigned"
     caseTitle: {
       type: String,
-      default: "NotYetAssigned",
+      default: 'NotYetAssigned',
     },
 
     // Where exactly the incident took place
@@ -77,15 +76,15 @@ const caseSchema = new Schema(
     // If the user reporting is the victim
     areYouTheVictim: {
       type: String,
-      enum: ["Yes", "No"],
-      default: "No",
+      enum: ['Yes', 'No'],
+      default: 'No',
       required: true,
     },
 
     // Type of Report
     reportType: {
       type: String,
-      enum: ["Standard", "QuickReport"],
+      enum: ['Standard', 'QuickReport'],
       required: true,
       immutable: true,
     },
@@ -96,8 +95,8 @@ const caseSchema = new Schema(
     // Status of the case- "Incidence" when not confirmed- "case" when incident has be confirmed and filed
     caseTypeStatus: {
       type: String,
-      enum: ["Incidence", "Case", "QuickReport"],
-      default: "Incidence",
+      enum: ['Incidence', 'Case', 'QuickReport'],
+      default: 'Incidence',
       required: true,
     },
 
@@ -108,14 +107,14 @@ const caseSchema = new Schema(
     // Status if case is visible to the public or not
     publishStatus: {
       type: String,
-      enum: ["published", "unPublished"],
-      default: "unPublished",
+      enum: ['published', 'unPublished'],
+      default: 'unPublished',
     },
 
     // ID of the official that published the case; you can only publish a record whose case status is "case"
     publishedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "PartnerUser",
+      ref: 'PartnerUser',
     },
     datePublished: {
       type: String,
@@ -124,40 +123,40 @@ const caseSchema = new Schema(
     // If the case has been resolved and closed or unresolved and open. by default for Quick report the value will be "onlyReport"
     resolutionStatus: {
       type: String,
-      enum: ["resolved", "unResolved", "onlyReport"],
-      default: "unResolved",
+      enum: ['resolved', 'unResolved', 'onlyReport'],
+      default: 'unResolved',
     },
 
     // If the case has been verified, by default for Quick report the value will be "onlyReport"
     verificationStatus: {
       type: String,
-      enum: ["verified", "unVerified", "onlyReport"],
-      default: "unVerified",
+      enum: ['verified', 'unVerified', 'onlyReport'],
+      default: 'unVerified',
     },
 
     followedBy: [
       {
         type: Schema.Types.ObjectId,
-        ref: "FollowCase",
+        ref: 'FollowCase',
       },
     ],
 
     // Which of the sorosoke platforms was used in reporting the case
     platformOfReport: {
       type: String,
-      enum: ["mobile", "web", "sms"],
-      default: "web",
+      enum: ['mobile', 'web', 'sms'],
+      default: 'web',
       immutable: true,
     },
   },
   { timestamps: true }
 );
 
-caseSchema.pre("save", function (next) {
-  this.caseID = genIDs("SCSE");
+caseSchema.pre('save', function (next) {
+  this.caseID = genIDs('SCSE');
   next();
 });
 
-const Case = mongoose.model("Case", caseSchema);
+const Case = mongoose.model('Case', caseSchema);
 
 module.exports = Case;

@@ -10,6 +10,7 @@ const TokenModel = require('../../models/Token');
 const RefreshToken = require('../../models/RefreshToken');
 const Case = require('../../models/cases/Case');
 const FollowCase = require('../../models/cases/FollowCase');
+const DeactivateAccount = require('../../models/DeactivateAccounts');
 
 const {
   tryCatchError,
@@ -54,7 +55,7 @@ exports.signup = async function (req, res) {
   const { email, userName, phoneNumber } = req.body;
   try {
     const errors = {};
-    if (await User.findOne({ email })) errors.email = 'email already exists';
+    if (await User.findOne({ email })) errors.email = 'email already in use';
     if (await User.findOne({ userName: userName.toLowerCase() }))
       errors.username = 'username already in use';
     if (await User.findOne({ phoneNumber }))
@@ -111,6 +112,14 @@ exports.signin = async (req, res) => {
     if (!user || !(await user.correctPassword(password, user.password))) {
       return authorizationError(res, 'Username or password is incorrrect');
     }
+    const accountMarkedForDeactivation = await DeactivateAccount.findOne({
+      publicUserID: user._id,
+    });
+    if (user && accountMarkedForDeactivation)
+      return authorizationError(
+        res,
+        'Account marked for deletion as requested by you. If you want to revert this operation, contact support'
+      );
     if (user && !user.emailVerified) {
       await generateActivationToken(user, res);
       return normalError(

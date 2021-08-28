@@ -139,7 +139,7 @@ const validators = {
   }),
   publishCase: Joi.object({
     caseSummary: Joi.string().required(),
-    publishStatus: Joi.string().valid('published', 'unpublish').required(),
+    publishStatus: Joi.string().valid('published', 'unPublished').required(),
   }),
 };
 

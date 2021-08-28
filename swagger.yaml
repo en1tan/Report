@@ -495,6 +495,176 @@ paths:
                   message:
                     type: string
                     example: Password Reset Successfully
+  /user/deactivate:
+    post:
+      summary: deactivate user account
+      tags:
+        - User
+        - Misc
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                password:
+                  type: string
+      responses:
+        201:
+          description: application successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Application for account deletion successful
+  /user/cancel-deactivation:
+    put:
+      summary: cancel account deactivation
+      tags:
+        - User
+        - Misc
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  required: true
+                password:
+                  type: string
+                  format: password
+      responses:
+        200:
+          description: account deletion cancelled successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+  /device/register:
+    post:
+      summary: register user device
+      tags:
+        - Device
+        - User
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deviceUUID:
+                  type: string
+                  description: device UUID
+                  example: ''
+                  required: true
+                registrationToken:
+                  type: string
+                  description: device registration token
+                  example: ''
+                  required: true
+      responses:
+        201:
+          description: device registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Device created successfully
+                  data:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      deviceUUID:
+                        type: string
+                      registrationToken:
+                        type: string
+                      createdAt:
+                        type: string
+                        format: date-time
+                      updatedAt:
+                        type: string
+                        format: date-time
+  /device/refresh:
+    post:
+      summary: Refresh device data
+      tags:
+        - Device
+        - User
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deviceUUID:
+                  type: string
+                  description: device UUID
+                  example: ''
+                  required: true
+                registrationToken:
+                  type: string
+                  description: device registration token
+                  example: ''
+                  required: true
+      responses:
+        201:
+          description: device registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Device refreshed successfully
+                  data:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      deviceUUID:
+                        type: string
+                      registrationToken:
+                        type: string
+                      createdAt:
+                        type: string
+                        format: date-time
+                      updatedAt:
+                        type: string
+                        format: date-time
+
   /partner/{id}/users:
     get:
       summary: Get all partner users
