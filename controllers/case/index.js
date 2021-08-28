@@ -413,8 +413,8 @@ exports.getCaseEvidence = async (req, res) => {
     const existingCase = await Case.findById(req.params.caseID);
     if (!existingCase)
       return normalError(res, 404, 'case not found', existingCase);
-    // if (req.user._id !== existingCase.publicUserID || !req.user.userType)
-    //   return normalError(res, 404, 'Resource not found');
+    if (req.user._id !== existingCase.publicUserID || !req.user.userType)
+      return normalError(res, 404, 'Resource not found');
     const evidence = await CaseEvidence.find({
       caseID: req.params.caseID,
     });
@@ -551,21 +551,30 @@ exports.publishCase = async (req, res) => {
         200,
         'Case already has status: ' + req.body.publishStatus
       );
+    const datePublished =
+      existingCase.publishStatus === 'published'
+        ? existingCase.datePublished
+        : new Date(Date.now()).toISOString();
+
     const publishedCase = await Case.findByIdAndUpdate(
       existingCase._id,
       {
         ...req.body,
         publishedBy: req.user,
-        datePublished:
-          existingCase.publishStatus === 'published'
-            ? existingCase.datePublished
-            : new Date(Date.now()).toISOString(),
+        datePublished,
       },
       { new: true }
     ).select(
       '-followedBy -verificationStatus -resolutionStatus' +
         ' -areYouTheVictim -assignedPartnerUserId'
     );
+
+    if (publishedCase.publishStatus === 'published') {
+      const follow = await FollowCase.create({
+        caseID: publishedCase._id,
+        publicUserID: publishedCase.publicUserID,
+      });
+    }
     return successWithData(
       res,
       200,
